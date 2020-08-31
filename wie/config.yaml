@@ -1,0 +1,5 @@
+bindAddr: :8080
+publicKey: 8e9cdbfac1f7724477e5b4c5520c127b8f4f52d0f1b982f05467e2584bf88c77
+irmaServerUrl: https://metrics.privacybydesign.foundation/irmaserver/
+irmaConfigPath: /home/bas/tmp/irma/irma_config
+url: https://sw.w-nz.com/wie
