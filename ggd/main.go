@@ -4,8 +4,8 @@ import (
 	"github.com/bwesterb/go-ristretto"
 	"github.com/urfave/cli"
 
-	"crypto/aes"
-	"crypto/cipher"
+	"github.com/privacybydesign/irma-gast/common"
+
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -18,106 +18,6 @@ import (
 var (
 	keyFile = "ggd-irmagast-secret.key"
 )
-
-type What struct {
-	TelNo string
-	EMail string
-}
-
-type Entry struct {
-	What []byte // encrypted What
-	When time.Time
-}
-
-type Data map[string][]Entry
-
-func encryptWhat(pk *ristretto.Point, w What) []byte {
-	buf, err := json.Marshal(w)
-	if err != nil {
-		panic(err)
-	}
-	return encryptPadded(pk, buf)
-}
-
-func decryptWhat(sk *ristretto.Scalar, cipherText []byte) (*What, error) {
-	var ret What
-	buf, err := decryptPadded(sk, cipherText)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(buf, &ret)
-	if err != nil {
-		return nil, err
-	}
-	return &ret, nil
-}
-
-func decryptPadded(sk *ristretto.Scalar, cipherText []byte) ([]byte, error) {
-	pt, err := decrypt(sk, cipherText)
-	if err != nil {
-		return nil, err
-	}
-	return pt[1 : pt[0]+1], nil
-}
-
-func encryptPadded(pk *ristretto.Point, plaintext []byte) []byte {
-	var padded [101]byte
-	if len(plaintext) > 100 {
-		panic("Plaintext too large")
-	}
-	padded[0] = byte(len(plaintext))
-	copy(padded[1:], plaintext[:])
-	return encrypt(pk, padded[:])
-}
-
-func decrypt(sk *ristretto.Scalar, cipherText []byte) ([]byte, error) {
-	var symKey, rB, c, blind ristretto.Point
-	var nonce [12]byte
-	err := c.UnmarshalBinary(cipherText[:32])
-	if err != nil {
-		return nil, fmt.Errorf("Parsing c: %v", err)
-	}
-	err = rB.UnmarshalBinary(cipherText[32:64])
-	if err != nil {
-		return nil, fmt.Errorf("Parsing rB: %v", err)
-	}
-	blind.ScalarMult(&rB, sk)
-	symKey.Sub(&c, &blind)
-	block, _ := aes.NewCipher(symKey.Bytes())
-	gcm, _ := cipher.NewGCM(block)
-	pt, err := gcm.Open(nil, nonce[:], cipherText[64:], nil)
-	if err != nil {
-		return nil, fmt.Errorf("AES GCM: %v", err)
-	}
-	return pt, nil
-}
-
-func encrypt(pk *ristretto.Point, plaintext []byte) []byte {
-	// We generate a random Ristretto point whose binary representation we'll
-	// use as AES256 GCM key.  This point we encrypt using El'Gamal for
-	// the public key.
-	var symKey, rB, c ristretto.Point
-	var r ristretto.Scalar
-	var nonce [12]byte // zero IV is fine as we don't reuse symKey
-
-	r.Rand()
-	rB.ScalarMultBase(&r)
-	symKey.Rand()
-	c.ScalarMult(pk, &r)
-	c.Add(&c, &symKey) // c = symKey + r pk
-
-	block, _ := aes.NewCipher(symKey.Bytes())
-	gcm, _ := cipher.NewGCM(block)
-	symCt := gcm.Seal(nil, nonce[:], plaintext[:], nil)
-
-	return append(
-		append(
-			c.Bytes(),
-			rB.Bytes()...,
-		),
-		symCt...,
-	)
-}
 
 func gotKeyFile() bool {
 	info, err := os.Stat(keyFile)
@@ -194,12 +94,12 @@ func cmdDecrypt(c *cli.Context) error {
 			fmt.Sprintf("Error reading %s: %v", c.String("in"), err), 4)
 	}
 
-	buf, err := decrypt(privateKey, encBuf)
+	buf, err := common.Decrypt(privateKey, encBuf)
 	if err != nil {
 		return err
 	}
 
-	var data Data
+	var data common.Data
 	err = json.Unmarshal(buf, &data)
 
 	if err != nil {
@@ -225,7 +125,7 @@ func cmdDecrypt(c *cli.Context) error {
 	n := 0
 	for where, entries := range data {
 		for _, entry := range entries {
-			what, err := decryptWhat(privateKey, entry.What)
+			what, err := common.DecryptWhat(privateKey, entry.What)
 			if err != nil {
 				return cli.NewExitError(
 					fmt.Sprintf("%s: failed to decrypt entry: %v",
@@ -263,27 +163,27 @@ func cmdTest(c *cli.Context) error {
 
 	when := time.Now()
 
-	data := Data{
-		"Cafe Bart": []Entry{
+	data := common.Data{
+		"Cafe Bart": []common.Entry{
 			{
 				When: when,
-				What: encryptWhat(&pk, What{EMail: "name@domain.nl"}),
+				What: common.EncryptWhat(&pk, common.What{EMail: "name@domain.nl"}),
 			},
 			{
 				When: when,
-				What: encryptWhat(&pk, What{TelNo: "0612345678"}),
+				What: common.EncryptWhat(&pk, common.What{TelNo: "0612345678"}),
 			},
 		},
-		"Cafe Jean": []Entry{
+		"Cafe Jean": []common.Entry{
 			{
 				When: when,
-				What: encryptWhat(&pk, What{EMail: "a@bc.de", TelNo: "044421144"}),
+				What: common.EncryptWhat(&pk, common.What{EMail: "a@bc.de", TelNo: "044421144"}),
 			},
 		},
 	}
 
 	buf, _ := json.Marshal(data)
-	encrypted := encrypt(&pk, buf)
+	encrypted := common.Encrypt(&pk, buf)
 
 	err = ioutil.WriteFile(c.String("out"), encrypted, 0644)
 	if err != nil {

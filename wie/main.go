@@ -1,10 +1,15 @@
 package main
 
 import (
+	"github.com/privacybydesign/irma-gast/common"
+
+	"github.com/bwesterb/go-ristretto"
 	"github.com/privacybydesign/irmago"
 	"github.com/privacybydesign/irmago/server"
 	"gopkg.in/yaml.v2"
 
+	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -13,6 +18,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -32,6 +38,12 @@ type Conf struct {
 
 	// Path to Irma configuration
 	IrmaConfigPath string `yaml:"irmaConfigPath"`
+
+	// Path to the What server
+	WhatUrl string `yaml:"whatUrl"`
+
+	// Key to use to authenticate to what server
+	WhatKey string `yaml:"whatKey"`
 }
 
 type Session struct {
@@ -46,10 +58,14 @@ var (
 		IrmaConfigPath: "irma_config",
 		IrmaServerUrl:  "http://localhost:8088",
 		Url:            "http://localhost:8080",
+		WhatUrl:        "http://localhost:8081",
 	}
 
 	irmaConf *irma.Configuration
+	pk       ristretto.Point
+
 	sessions = make(map[string]Session)
+	mux      sync.Mutex // protects sessions
 )
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
@@ -59,35 +75,68 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	mux.Lock()
 	session, ok := sessions[tokens[0]]
+	if ok {
+		delete(sessions, tokens[0])
+	}
+	mux.Unlock()
 	if !ok {
 		http.Error(w, "no such session", http.StatusBadRequest)
 		return
 	}
 
+	// Retrieve the result
 	result := &server.SessionResult{}
 	transport := irma.NewHTTPTransport(conf.IrmaServerUrl+"session/"+
 		session.token+"/", false)
 	err := transport.Get("result", result)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("failed to retrieve result: %v", err)
+		return
 	}
 
 	// XXX do we need to check the status field?
-	var email, telno string
+	var what common.What
+	var entry common.Entry
+	entry.When = time.Now()
+
 	for _, as := range result.Disclosed {
 		for _, a := range as {
-			if a.Identifier == "pbdf.pbdf.mobilenumber.mobilenumber" {
-				email = *a.RawValue
-			} else if a.Identifier == "pbdf.pbdf.email.email" {
-				telno = *a.RawValue
+			id := a.Identifier.String()
+			if id == "pbdf.pbdf.mobilenumber.mobilenumber" {
+				what.TelNo = *a.RawValue
+			} else if id == "pbdf.pbdf.email.email" {
+				what.EMail = *a.RawValue
 			} else {
-				log.Fatalf("Unknown attribute: %s", a.Identifier)
+				log.Printf("Unknown attribute: %s", id)
+				return
 			}
 		}
 	}
 
-	fmt.Fprintf(w, "%v", result)
+	// Prepare request to waar server
+	entry.What = common.EncryptWhat(&pk, what)
+	cb := common.WieCallback{Token: tokens[0], Entry: entry, Key: conf.WhatKey}
+	cbb, _ := json.Marshal(cb)
+
+	resp, err := http.Post(
+		conf.WhatUrl,
+		"application/json",
+		bytes.NewBuffer(cbb),
+	)
+	log.Printf("posting %v", what)
+	if err != nil {
+		log.Printf("failed to post to waar server: %v", err)
+		return
+	}
+	if resp.StatusCode != 200 {
+		log.Printf("waar server responded with %v", resp)
+		return
+	}
+
+	// XXX prettier page or redirect.
+	fmt.Fprintf(w, "Thank you, your attendance has been registered!")
 }
 
 func handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -121,12 +170,16 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 	pkg := &server.SessionPackage{}
 	err := transport.Post("session", pkg, request)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("failed to start session: %v", err)
+		return
 	}
 
 	qr, _ := json.Marshal(pkg.SessionPtr)
 
-	sessions[tokens[0]] = Session{pkg.Token, time.Now()}
+	session := Session{pkg.Token, time.Now()}
+	mux.Lock()
+	sessions[tokens[0]] = session
+	mux.Unlock()
 
 	http.Redirect(
 		w,
@@ -144,6 +197,7 @@ func main() {
 		"path to configuration file")
 	flag.Parse()
 
+	// Load config
 	if _, err := os.Stat(confPath); os.IsNotExist(err) {
 		fmt.Printf("Error: could not find configuration file: %s\n\n", confPath)
 		fmt.Printf("Example configuration file:\n\n")
@@ -162,6 +216,17 @@ func main() {
 		}
 	}
 
+	// Load public key
+	buf, err := hex.DecodeString(conf.PublicKey)
+	if err != nil {
+		log.Fatalf("Coudldn't parse public key: %v", err)
+	}
+	err = pk.UnmarshalBinary(buf)
+	if err != nil {
+		log.Fatalf("Coudldn't load public key: %v", err)
+	}
+
+	// Prepare Irma client
 	irmaConf, err = irma.NewConfiguration(conf.IrmaConfigPath, irma.ConfigurationOptions{})
 	if err != nil {
 		log.Fatal(err)
@@ -171,8 +236,24 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Prepare webserver
 	http.HandleFunc("/register", handleRegister)
 	http.HandleFunc("/callback", handleCallback)
+
+	// Prune sessions older than 5 minutes
+	ticker := time.NewTicker(60 * time.Second)
+	go func() {
+		for _ = range ticker.C {
+			mux.Lock()
+			threshold := time.Now().Add(-5 * 60 * time.Second)
+			for k, session := range sessions {
+				if session.started.Before(threshold) {
+					delete(sessions, k)
+				}
+			}
+			mux.Unlock()
+		}
+	}()
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
 	log.Fatal(http.ListenAndServe(conf.BindAddr, nil))
