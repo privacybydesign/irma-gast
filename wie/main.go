@@ -53,12 +53,12 @@ type Session struct {
 
 var (
 	conf = Conf{
-		BindAddr:       ":8080",
+		BindAddr:       ":8081",
 		PublicKey:      "8e9cdbfac1f7724477e5b4c5520c127b8f4f52d0f1b982f05467e2584bf88c77",
 		IrmaConfigPath: "irma_config",
 		IrmaServerUrl:  "http://localhost:8088",
-		Url:            "http://localhost:8080",
-		WhatUrl:        "http://localhost:8081",
+		Url:            "http://localhost:8081",
+		WhatUrl:        "http://localhost:8080",
 	}
 
 	irmaConf *irma.Configuration
@@ -69,6 +69,7 @@ var (
 )
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Handling callback")
 	tokens := r.URL.Query()["token"]
 	if len(tokens) != 1 {
 		http.Error(w, "expected token GET param", http.StatusBadRequest)
@@ -121,7 +122,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	cbb, _ := json.Marshal(cb)
 
 	resp, err := http.Post(
-		conf.WhatUrl,
+		conf.WhatUrl+"/gastsession_results.php",
 		"application/json",
 		bytes.NewBuffer(cbb),
 	)
@@ -129,10 +130,11 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("failed to post to waar server: %v", err)
 		return
-	}
-	if resp.StatusCode != 200 {
+	} else if resp.StatusCode != 200 {
 		log.Printf("waar server responded with %v", resp)
 		return
+	} else {
+		log.Printf("waar server responded with %v", resp)
 	}
 
 	// XXX prettier page or redirect.
@@ -187,6 +189,7 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 		"https://irma.app/-/session#"+url.QueryEscape(string(qr)),
 		http.StatusFound,
 	)
+	log.Printf("Register complete, waiting for callback")
 }
 
 func main() {
@@ -227,14 +230,14 @@ func main() {
 	}
 
 	// Prepare Irma client
-	irmaConf, err = irma.NewConfiguration(conf.IrmaConfigPath, irma.ConfigurationOptions{})
-	if err != nil {
-		log.Fatal(err)
-	}
+	//irmaConf, err = irma.NewConfiguration(conf.IrmaConfigPath, irma.ConfigurationOptions{})
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
-	if err = irmaConf.ParseFolder(); err != nil {
-		log.Fatal(err)
-	}
+	//if err = irmaConf.ParseFolder(); err != nil {
+	//	log.Fatal(err)
+	//}
 
 	// Prepare webserver
 	http.HandleFunc("/register", handleRegister)
