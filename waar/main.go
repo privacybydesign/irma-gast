@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"html/template"
 
 	irma "github.com/privacybydesign/irmago"
@@ -51,6 +52,19 @@ type User struct {
 	Email         string
 	Authenticated bool
 	Token         string // irma session token for the to-be-authenticated user
+}
+
+type Location struct {
+	Id       string
+	Name     string
+	Location string
+	QR       string
+}
+
+type OverviewData struct {
+	Title     string
+	Email     string
+	Locations []*Location
 }
 
 var (
@@ -125,11 +139,11 @@ func IrmaSessionStart(w http.ResponseWriter, r *http.Request) {
 			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.email.email")},
 		},
 	}
-	log.Printf("sending session request to: %v", conf.IrmaServerURL+"/session/")
+	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
 	requestBytes, _ := json.Marshal(request)
 	resp, err := http.Post(conf.IrmaServerURL+"/session/", "application/json", bytes.NewBuffer(requestBytes))
 	if err != nil {
-		log.Printf("failed to post session request to irma server: %v", err)
+		log.Printf("Failed to post session request to irma server: %v", err)
 		return
 	}
 	answer, _ := ioutil.ReadAll(resp.Body)
@@ -142,7 +156,7 @@ func IrmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	// Start a user session
 	session, err := store.Get(r, "irmagast")
 	if err != nil {
-		log.Printf("error getting new session: %v", err)
+		log.Printf("Error getting new session: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -153,27 +167,39 @@ func IrmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	}
 	err = session.Save(r, w)
 	if err != nil {
-		log.Printf("error saving new session: %v", err)
+		log.Printf("Error saving new session: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	fmt.Fprint(w, jsonStr) // Print the sessionPkg
 }
 
-func IrmaSessionFinish(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
+// Checks cookie for a current ongoing session
+// if arg "authenticated" is true then it checks if the email is already authenticated
+func checkCookie(w http.ResponseWriter, r *http.Request, authenticated bool) (*User, error) {
 	session, err := store.Get(r, "irmagast")
 	if err != nil {
-		log.Printf("no session found: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		http.Error(w, "Not authenticated", http.StatusForbidden)
+		return nil, err
 	}
+	user, ok := session.Values["user"].(User)
+	if !ok {
+		http.Error(w, "Not authenticated", http.StatusForbidden)
+		return nil, errors.New("No user found")
+	}
+	if !user.Authenticated && authenticated {
+		http.Error(w, "Not authenticated", http.StatusForbidden)
+		return nil, errors.New("User not authenticated")
+	}
+	return &user, nil
+}
 
-	currUser := User{}
-	if user, ok := session.Values["user"].(User); ok {
-		currUser = user
-	} else {
-		log.Println("user not found in map")
+func IrmaSessionFinish(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
+
+	currUser, err := checkCookie(w, r, false)
+	if err != nil {
+		log.Printf("Authentication error: %v", err)
 		return
 	}
 
@@ -184,31 +210,29 @@ func IrmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Couldn't get session results: %v", err)
 		return
 	}
+
 	email := *result.Disclosed[0][0].RawValue
 	log.Printf("Finished email authentication, updating user with: %v", email)
 	currUser.Email = email
 	currUser.Authenticated = true
+	session, _ := store.Get(r, "irmagast")
 	session.Values["user"] = currUser
+
 	err = session.Save(r, w)
 	if err != nil {
-		log.Printf("error saving cookie: %v", err)
+		log.Printf("Error saving cookie: %v", err)
 	}
+
 	http.Redirect(w, r, "overview", http.StatusPermanentRedirect)
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	session, err := store.Get(r, "irmagast")
+	user, err := checkCookie(w, r, true)
 	if err != nil {
-		log.Printf("no session: %v", err)
+		log.Printf("Authentication error: %v", err)
 		return
 	}
-	var email string
-	if user, ok := session.Values["user"].(User); ok {
-		email = user.Email
-	} else {
-		log.Println("user not found")
-		return
-	}
+
 	switch r.Method {
 	case "GET":
 		http.ServeFile(w, r, "views/register.html")
@@ -225,55 +249,30 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			stmt, err := db.Prepare("INSERT INTO locations (name, location, email) VALUES (?, ?, ?)")
 			defer stmt.Close()
 			if err != nil {
-				log.Printf("wrong prepared statement: %v", err)
+				log.Printf("Wrong prepared statement: %v", err)
 			}
-			_, err = stmt.Exec(name, location, email)
+			_, err = stmt.Exec(name, location, user.Email)
 			if err != nil {
-				log.Printf("failed: %v", err)
+				log.Printf("Storing entry failed: %v", err)
 			}
 
 		}
 	default:
-		fmt.Fprintf(w, "only GET and POST methods are supported.")
+		fmt.Fprintf(w, "Only GET and POST methods are supported.")
 	}
-}
-
-type Location struct {
-	Id       string
-	Name     string
-	Location string
-	QR       string
-}
-
-type OverviewData struct {
-	Title     string
-	Email     string
-	Locations []*Location
 }
 
 func Overview(w http.ResponseWriter, r *http.Request) {
-	session, err := store.Get(r, "irmagast")
+	user, err := checkCookie(w, r, true)
 	if err != nil {
-		log.Println("Cookie not found")
-		http.Error(w, "Not authenticated", http.StatusForbidden)
-		return
-	}
-	user, ok := session.Values["user"].(User)
-	if !ok {
-		log.Println("User not found in cookie")
-		http.Error(w, "Not authenticated", http.StatusForbidden)
-		return
-	}
-	if !user.Authenticated || user.Email == "" {
-		log.Println("No email or not authenticated")
-		http.Error(w, "Not authenticated", http.StatusForbidden)
+		log.Printf("Authentication error: %v", err)
 		return
 	}
 
 	rows, err := db.Query("SELECT location_id, name, location FROM locations WHERE email=?", user.Email)
 	defer rows.Close()
 	if err != nil {
-		log.Printf("wrong prepared statement: %v", err)
+		log.Printf("Wrong prepared statement: %v", err)
 	}
 
 	locations := []*Location{}
@@ -282,11 +281,11 @@ func Overview(w http.ResponseWriter, r *http.Request) {
 		var name string
 		var location string
 		if err = rows.Scan(&id, &name, &location); err != nil {
-			log.Printf("scan error: %v", err)
+			log.Printf("Scan error: %v", err)
 		}
 		qrPng, err := qrcode.Encode(conf.WhoServerUrl+"gastsession?id="+id, qrcode.Medium, 256)
 		if err != nil {
-			log.Printf("couldnt create QR: %v", err)
+			log.Printf("Couldnt create QR: %v", err)
 			return
 		}
 		str := base64.StdEncoding.EncodeToString(qrPng)
@@ -296,7 +295,7 @@ func Overview(w http.ResponseWriter, r *http.Request) {
 	viewData := &OverviewData{Title: "Overview", Email: user.Email, Locations: locations}
 	t, err := template.ParseFiles("views/overview.gohtml")
 	if err != nil {
-		log.Printf("couldnt parse template: %v", err)
+		log.Printf("Couldnt parse template: %v", err)
 	}
 	t.Execute(w, viewData)
 }
@@ -310,7 +309,7 @@ func GastSession(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		// Handle incoming results from wie-server with token for GUEST_SESSION
 	default:
-		fmt.Fprintln(w, "only GET and POST")
+		fmt.Fprintln(w, "Only GET and POST")
 	}
 }
 
@@ -346,6 +345,6 @@ func main() {
 	log.Printf("Listening on %s\n", conf.BindAddr)
 	err = http.ListenAndServe(conf.BindAddr, nil)
 	if err != nil {
-		log.Fatalf("err: %v", err)
+		log.Fatalf("Error: %v", err)
 	}
 }
