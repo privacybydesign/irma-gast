@@ -17,6 +17,7 @@ require (
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/go-errors/errors v1.1.1 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.1
 	github.com/hashicorp/go-retryablehttp v0.6.7 // indirect
@@ -31,6 +32,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/privacybydesign/gabi v0.0.0-20200823153621-467696543652 // indirect
 	github.com/privacybydesign/irmago v0.5.0-rc.5
+	github.com/segmentio/ksuid v1.0.3
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/templexxx/cpu v0.0.7 // indirect
