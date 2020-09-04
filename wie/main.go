@@ -121,23 +121,18 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	cb := common.WieCallback{Token: tokens[0], Entry: entry, Key: conf.WhatKey}
 	cbb, _ := json.Marshal(cb)
 
-	resp, err := http.Post(
-		conf.WhatUrl+"/gastsession_results.php",
+	_, err = http.Post(
+		conf.WhatUrl+"/gastsession",
 		"application/json",
 		bytes.NewBuffer(cbb),
 	)
-	log.Printf("posting %v", what)
+	log.Printf("Posting results to waar-server: %v", what)
 	if err != nil {
 		log.Printf("failed to post to waar server: %v", err)
 		return
-	} else if resp.StatusCode != 200 {
-		log.Printf("waar server responded with %v", resp)
-		return
-	} else {
-		log.Printf("waar server responded with %v", resp)
 	}
 
-	// XXX prettier page or redirect.
+	// TODO: Prettier success page
 	fmt.Fprintf(w, "Thank you, your attendance has been registered!")
 }
 
@@ -159,12 +154,14 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	request.SessionRequest().(*irma.DisclosureRequest).Disclose = irma.AttributeConDisCon{
 		irma.AttributeDisCon{
-			// irma.AttributeCon{
-			//     irma.NewAttributeRequest("pbdf.pbdf.email.email"),
-			//     irma.NewAttributeRequest("pbdf.pbdf.mobilenumber.mobilenumber"),
-			// },
-			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.mobilenumber.mobilenumber")},
-			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.email.email")},
+			irma.AttributeCon{
+				irma.NewAttributeRequest("pbdf.pbdf.email.email"),
+			},
+		},
+		irma.AttributeDisCon{
+			irma.AttributeCon{
+				irma.NewAttributeRequest("pbdf.pbdf.mobilenumber.mobilenumber"),
+			},
 		},
 	}
 
