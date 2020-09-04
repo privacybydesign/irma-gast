@@ -6,7 +6,7 @@ SET GLOBAL event_scheduler = ON;
 USE irmagastdb;
 
 CREATE TABLE locations (
-  location_id int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  location_id varchar(27) NOT NULL PRIMARY KEY,
   name varchar(35) NOT NULL,
   location varchar(35) NOT NULL,
   email varchar(35) NOT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE locations (
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 
 CREATE TABLE gastsessions (
-  location_id int unsigned NOT NULL,
-  token varchar(10) NOT NULL,
+  location_id varchar(27) NOT NULL,
+  token varchar(27) NOT NULL,
   time TIMESTAMP NOT NULL DEFAULT current_timestamp(),
   constraint unique_token
     UNIQUE KEY(token),
@@ -26,10 +26,9 @@ CREATE TABLE gastsessions (
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 
 create table checkins (
-  location_id int unsigned NOT NULL,
+  location_id varchar(27) NOT NULL,
   time TIMESTAMP NOT NULL DEFAULT current_timestamp(),
-  email_ct varchar(100),
-  mobile_ct varchar(100),
+  ct BLOB NOT NULL,
   constraint fk_id2
     FOREIGN KEY(location_id)
     REFERENCES locations(location_id)

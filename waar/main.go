@@ -7,6 +7,7 @@ import (
 	"errors"
 	"html/template"
 
+	"github.com/privacybydesign/irma-gast/common"
 	irma "github.com/privacybydesign/irmago"
 	server "github.com/privacybydesign/irmago/server"
 	"gopkg.in/yaml.v2"
@@ -21,8 +22,10 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/segmentio/ksuid"
 	qrcode "github.com/skip2/go-qrcode"
 )
 
@@ -119,18 +122,19 @@ func initSessionStorage() {
 		MaxAge:   60 * 5,
 		HttpOnly: true,
 	}
+
 	gob.Register(User{})
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "views/index.html")
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func login(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "views/login.html")
 }
 
-func IrmaSessionStart(w http.ResponseWriter, r *http.Request) {
+func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	log.Println("Starting email authentication")
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 	request := irma.NewDisclosureRequest()
@@ -194,7 +198,7 @@ func checkCookie(w http.ResponseWriter, r *http.Request, authenticated bool) (*U
 	return &user, nil
 }
 
-func IrmaSessionFinish(w http.ResponseWriter, r *http.Request) {
+func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 
 	currUser, err := checkCookie(w, r, false)
@@ -226,7 +230,7 @@ func IrmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "overview", http.StatusPermanentRedirect)
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
+func register(w http.ResponseWriter, r *http.Request) {
 	user, err := checkCookie(w, r, true)
 	if err != nil {
 		log.Printf("Authentication error: %v", err)
@@ -241,28 +245,29 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
 			return
 		}
+		id := ksuid.New().String()
 		name := r.FormValue("name")
 		location := r.FormValue("location")
 		terms := r.FormValue("terms")
 		fmt.Fprintf(w, "%s %s %s", location, name, terms)
 		if terms == "yes" {
-			stmt, err := db.Prepare("INSERT INTO locations (name, location, email) VALUES (?, ?, ?)")
+			stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email) VALUES (?, ?, ?, ?)")
 			defer stmt.Close()
 			if err != nil {
 				log.Printf("Wrong prepared statement: %v", err)
 			}
-			_, err = stmt.Exec(name, location, user.Email)
+			_, err = stmt.Exec(id, name, location, user.Email)
 			if err != nil {
 				log.Printf("Storing entry failed: %v", err)
 			}
-
+			http.Redirect(w, r, "overview", http.StatusPermanentRedirect)
 		}
 	default:
 		fmt.Fprintf(w, "Only GET and POST methods are supported.")
 	}
 }
 
-func Overview(w http.ResponseWriter, r *http.Request) {
+func overview(w http.ResponseWriter, r *http.Request) {
 	user, err := checkCookie(w, r, true)
 	if err != nil {
 		log.Printf("Authentication error: %v", err)
@@ -283,7 +288,7 @@ func Overview(w http.ResponseWriter, r *http.Request) {
 		if err = rows.Scan(&id, &name, &location); err != nil {
 			log.Printf("Scan error: %v", err)
 		}
-		qrPng, err := qrcode.Encode(conf.WhoServerUrl+"gastsession?id="+id, qrcode.Medium, 256)
+		qrPng, err := qrcode.Encode(conf.Url+"/gastsession?id="+id, qrcode.Medium, 256)
 		if err != nil {
 			log.Printf("Couldnt create QR: %v", err)
 			return
@@ -300,17 +305,69 @@ func Overview(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, viewData)
 }
 
-// for gast sessions, NOT admin
-func GastSession(w http.ResponseWriter, r *http.Request) {
+func gastSession(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Got request: %v", r.Method)
 	switch r.Method {
 	case "GET":
-		// Start GUEST_SESSION
-		// Handle redirects to self, delete location information from url
+		if params, ok := r.URL.Query()["id"]; ok && len(params) == 1 {
+			location := params[0]
+			token := ksuid.New().String()
+			stmt, err := db.Prepare("INSERT INTO gastsessions (location_id, token) VALUES(?, ?)")
+			if err != nil {
+				log.Printf("Statement error: %v", err)
+				return
+			}
+			defer stmt.Close()
+
+			_, err = stmt.Exec(location, token)
+			if err != nil {
+				log.Printf("Storing location and token failed: %v", err)
+				return
+			}
+			log.Print("Redirecting to location-less url")
+			http.Redirect(w, r, conf.Url+"/gastsession?token="+token, http.StatusTemporaryRedirect)
+		} else {
+			if params, ok := r.URL.Query()["token"]; ok && len(params) == 1 {
+				log.Print("Redirecting to who-server")
+				http.Redirect(w, r, conf.WhoServerUrl+"/register?token="+params[0], http.StatusPermanentRedirect)
+			}
+		}
+	// Handle incoming results from wie-server
 	case "POST":
-		// Handle incoming results from wie-server with token for GUEST_SESSION
+		// TODO: make sure only data from who-server is accepted
+		log.Printf("Got data from who-server")
+		data, _ := ioutil.ReadAll(r.Body)
+		var received common.WieCallback
+		json.Unmarshal(data, &received)
+
+		// Get location_id associated with token
+		var location_id string
+		err := db.QueryRow("SELECT location_id FROM gastsessions WHERE token=?", received.Token).Scan(&location_id)
+		if err != nil {
+			log.Printf("Could not get location_id from token: %v", err)
+		}
+
+		// Insert into checkins
+		stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+		if err != nil {
+			log.Printf("Couldnt prepare statement: %v", err)
+			return
+		}
+		defer stmt.Close()
+
+		log.Printf("Inserting: location %v, data: %v", location_id, received.Entry.What)
+		_, err = stmt.Exec(location_id, received.Entry.What)
+		if err != nil {
+			log.Printf("Error storing checkin entry: %v", err)
+			return
+		}
+		log.Print("Succesfull check-in")
 	default:
-		fmt.Fprintln(w, "Only GET and POST")
+		fmt.Fprintln(w, "Only GET and POST are allowed")
 	}
+}
+
+func favicon(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
@@ -329,19 +386,21 @@ func main() {
 
 	initSessionStorage()
 
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
-	http.HandleFunc("/", Index)
+	r := mux.NewRouter()
+	r.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
+	r.HandleFunc("/", index)
 
-	// "admin" endpoints
-	http.HandleFunc("/login", Login)
-	http.HandleFunc("/register", Register)
-	http.HandleFunc("/overview", Overview)
-	http.HandleFunc("/irmasession_start", IrmaSessionStart)
-	http.HandleFunc("/irmasession_finish", IrmaSessionFinish)
+	// admin endpoints
+	r.HandleFunc("/login", login)
+	r.HandleFunc("/register", register)
+	r.HandleFunc("/overview", overview)
+	r.HandleFunc("/irmasession_start", irmaSessionStart)
+	r.HandleFunc("/irmasession_finish", irmaSessionFinish)
+	// gastsession endpoints to start and finish a gastsession
+	r.HandleFunc("/gastsession", gastSession)
+	r.HandleFunc("/favicon.ico", favicon)
 
-	// "gastsession" endpoints to start and finish a gastsession
-	http.HandleFunc("/gastsession", GastSession)
-
+	http.Handle("/", r)
 	log.Printf("Listening on %s\n", conf.BindAddr)
 	err = http.ListenAndServe(conf.BindAddr, nil)
 	if err != nil {
