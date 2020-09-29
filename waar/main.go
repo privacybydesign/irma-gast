@@ -258,16 +258,12 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 type registerData struct {
 	Name     string `json:"name"`
 	Location string `json:"location"`
+	Onetime  bool   `json:"onetime"`
 }
 
 // Registers a new location/meeting for an authenticated admin
 func register(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r.Context())
-
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
-	}
 
 	var received registerData
 	decoder := json.NewDecoder(r.Body)
@@ -278,13 +274,13 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := ksuid.New().String()
-	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email) VALUES (?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email, onetime) VALUES (?, ?, ?, ?, ?)")
 	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		return
 	}
-	_, err = stmt.Exec(id, received.Name, received.Location, user.Email)
+	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime)
 	if err != nil {
 		log.Printf("Storing entry failed: %v", err)
 		return

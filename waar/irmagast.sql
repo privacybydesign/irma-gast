@@ -10,9 +10,11 @@ CREATE TABLE locations (
   name varchar(35) NOT NULL,
   location varchar(35) NOT NULL,
   email varchar(35) NOT NULL,
+  onetime boolean,
+) ENGINE=InnoDB DEFAULT charset=utf8;
+
 --  constraint unique_name
 --    UNIQUE KEY(name)
-) ENGINE=InnoDB DEFAULT charset=utf8;
 
 --CREATE TABLE gastsessions (
 --  location_id varchar(27) NOT NULL,
