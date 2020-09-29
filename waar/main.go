@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -262,8 +263,6 @@ type registerData struct {
 func register(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r.Context())
 
-	log.Printf("registering with user: %+v", user)
-
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
@@ -276,8 +275,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error decoding json: %v", err)
 		return
 	}
-
-	log.Printf("Got data: %v", received)
 
 	id := ksuid.New().String()
 	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email) VALUES (?, ?, ?, ?)")
@@ -335,9 +332,13 @@ func overview(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(viewData)
 }
 
-type resultData struct {
+type resultEntry struct {
 	Time string `json:"time"`
-	Ct   []byte `json:"ct"`
+	Ct   string `json:"ct"`
+}
+
+type resultData struct {
+	Entries []*resultEntry `json:"entries"`
 }
 
 // Sends encrypted blobs for a location of an admin
@@ -364,20 +365,27 @@ func results(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cts := []*resultData{}
-	rows, err := db.Query("SELECT (time, ct) from checkins WHERE location_id=?", id)
+	entries := []*resultEntry{}
+	rows, err := db.Query("SELECT time, ct from checkins WHERE location_id=?", id)
+	if err != nil {
+		log.Printf("Error querying database: %v", err)
+		return
+	}
+	defer rows.Close()
+
 	var time string
-	ct := make([]byte, 200)
+	var ct []byte
 	for rows.Next() {
 		if err = rows.Scan(&time, &ct); err != nil {
 			log.Printf("Scan error: %v", err)
 		}
-		cts = append(cts, &resultData{Time: time, Ct: ct})
+		base64ct := base64.StdEncoding.EncodeToString(ct)
+		entries = append(entries, &resultEntry{Time: time, Ct: base64ct})
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(cts)
+	json.NewEncoder(w).Encode(resultData{entries})
 }
 
 type gastData struct {
@@ -390,7 +398,12 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	var received gastData
 	json.NewDecoder(r.Body).Decode(&received)
 
-	// Insert into checkins
+	ct_bytes, err := base64.StdEncoding.DecodeString(received.Ciphertext)
+	if err != nil {
+		log.Printf("Error decoding string from gast data: %v", err)
+		return
+	}
+
 	stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
 	if err != nil {
 		log.Printf("Couldnt prepare statement: %v", err)
@@ -398,8 +411,8 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	log.Printf("Inserting: location %v", received.Location_id)
-	_, err = stmt.Exec(received.Location_id, received.Ciphertext)
+	log.Printf("Inserting gast data at location %v", received.Location_id)
+	_, err = stmt.Exec(received.Location_id, ct_bytes)
 	if err != nil {
 		log.Printf("Error storing checkin entry: %v", err)
 		return
