@@ -4,7 +4,7 @@ function start_session() {
     session: {
       url: "http://localhost:8080",
       start: {
-        url: (o) => `${o.url}/irmasession_start`,
+        url: (o) => `${o.url}/admin/irmasession_start`,
         method: "GET",
         headers: {},
       },
@@ -18,7 +18,7 @@ function start_session() {
 
   popup
     .start()
-    .then(() => window.location.replace("irmasession_finish"))
+    .then(() => window.location.replace("/admin/irmasession_finish"))
     .catch((error) => console.error("IRMA session failed:", error));
 }
 

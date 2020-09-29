@@ -2,12 +2,11 @@ package main
 
 import (
 	"bytes"
-	"encoding/base64"
+	"context"
 	"encoding/json"
 	"errors"
-	"html/template"
+	"strings"
 
-	"github.com/privacybydesign/irma-gast/common"
 	irma "github.com/privacybydesign/irmago"
 	server "github.com/privacybydesign/irmago/server"
 	"gopkg.in/yaml.v2"
@@ -26,7 +25,6 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/segmentio/ksuid"
-	qrcode "github.com/skip2/go-qrcode"
 )
 
 // Configuration
@@ -36,9 +34,6 @@ type Conf struct {
 
 	// Address to bind to
 	BindAddr string `yaml:"bindAddr"`
-
-	// Path to the who-server
-	WhoServerUrl string `yaml:"whoServerUrl"`
 
 	// IRMA server url for email authentication
 	IrmaServerURL string `yaml:"irmaServerURL"`
@@ -58,23 +53,15 @@ type User struct {
 }
 
 type Location struct {
-	Id       string
-	Name     string
-	Location string
-	QR       string
-}
-
-type OverviewData struct {
-	Title     string
-	Email     string
-	Locations []*Location
+	Id       string `json:"location_id"`
+	Name     string `json:"name"`
+	Location string `json:"location"`
 }
 
 var (
 	// A standard configuration
 	conf = Conf{
 		Url:           "http://localhost:8080",
-		WhoServerUrl:  "http://localhost:8081",
 		IrmaServerURL: "http://localhost:8088",
 		DbDriver:      "mysql",
 		DbHost:        "localhost",
@@ -109,6 +96,17 @@ func readConfig(confPath string) {
 	}
 }
 
+func initDatabase() {
+	var err error
+	db, err = sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
+	if err != nil {
+		log.Fatalf("Could not connect to the DB %v", err)
+	}
+	if err = db.Ping(); err != nil {
+		log.Fatalf("Database could not be pinged: %v", err)
+	}
+}
+
 func initSessionStorage() {
 	authKeyOne := securecookie.GenerateRandomKey(64)
 	encryptionKeyOne := securecookie.GenerateRandomKey(32)
@@ -121,13 +119,54 @@ func initSessionStorage() {
 	store.Options = &sessions.Options{
 		MaxAge:   60 * 5,
 		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	gob.Register(User{})
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "views/index.html")
+// Checks cookie for a current ongoing session
+// if arg "authenticated" is true then it checks if the email is already authenticated
+func checkCookie(w http.ResponseWriter, r *http.Request, userExists, userAuthenticated bool) (*User, error) {
+	session, err := store.Get(r, "irmagast")
+	if err != nil {
+		http.Error(w, "No session", http.StatusForbidden)
+		return nil, err
+	}
+	user, ok := session.Values["user"].(User)
+	if !ok && userExists {
+		http.Error(w, "No user", http.StatusForbidden)
+		return nil, errors.New("No user found")
+	}
+	if !user.Authenticated && userAuthenticated {
+		http.Error(w, "User not authenticated", http.StatusForbidden)
+		return nil, errors.New("User not authenticated")
+	}
+	return &user, nil
+}
+
+// Authenticates a user and passes along through request.Context
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var ctx context.Context
+		ctx = r.Context()
+
+		userExists := !strings.HasSuffix(r.URL.Path, "login") && !strings.HasSuffix(r.URL.Path, "irmasession_start")
+		userAuthenticated := !strings.HasSuffix(r.URL.Path, "login") && !strings.HasSuffix(r.URL.Path, "irmasession_start") && !strings.HasSuffix(r.URL.Path, "irmasession_finish")
+
+		user, err := checkCookie(w, r, userExists, userAuthenticated)
+		if err != nil {
+			log.Printf("Authentication error: %v", err)
+			return
+		}
+
+		ctx = context.WithValue(ctx, "user", user)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func getUser(ctx context.Context) *User {
+	return ctx.Value("user").(*User)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -137,12 +176,14 @@ func login(w http.ResponseWriter, r *http.Request) {
 func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	log.Println("Starting email authentication")
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
+
 	request := irma.NewDisclosureRequest()
 	request.Disclose = irma.AttributeConDisCon{
 		irma.AttributeDisCon{
 			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.email.email")},
 		},
 	}
+
 	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
 	requestBytes, _ := json.Marshal(request)
 	resp, err := http.Post(conf.IrmaServerURL+"/session/", "application/json", bytes.NewBuffer(requestBytes))
@@ -150,12 +191,9 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Failed to post session request to irma server: %v", err)
 		return
 	}
-	answer, _ := ioutil.ReadAll(resp.Body)
-	jsonStr := string(answer)
-	log.Printf("Got response: %v", jsonStr)
 
 	var pkg server.SessionPackage
-	json.Unmarshal(answer, &pkg)
+	json.NewDecoder(resp.Body).Decode(&pkg)
 
 	// Start a user session
 	session, err := store.Get(r, "irmagast")
@@ -164,121 +202,104 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	session.Values["user"] = &User{
 		Email:         "",
 		Authenticated: false,
 		Token:         pkg.Token,
 	}
+
 	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("Error saving new session: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprint(w, jsonStr) // Print the sessionPkg
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(pkg)
 }
 
-// Checks cookie for a current ongoing session
-// if arg "authenticated" is true then it checks if the email is already authenticated
-func checkCookie(w http.ResponseWriter, r *http.Request, authenticated bool) (*User, error) {
-	session, err := store.Get(r, "irmagast")
-	if err != nil {
-		http.Error(w, "Not authenticated", http.StatusForbidden)
-		return nil, err
-	}
-	user, ok := session.Values["user"].(User)
-	if !ok {
-		http.Error(w, "Not authenticated", http.StatusForbidden)
-		return nil, errors.New("No user found")
-	}
-	if !user.Authenticated && authenticated {
-		http.Error(w, "Not authenticated", http.StatusForbidden)
-		return nil, errors.New("User not authenticated")
-	}
-	return &user, nil
-}
-
+// Finishes authentication for an admin
 func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 
-	currUser, err := checkCookie(w, r, false)
-	if err != nil {
-		log.Printf("Authentication error: %v", err)
-		return
-	}
-
+	user := getUser(r.Context())
 	result := &server.SessionResult{}
-	transport := irma.NewHTTPTransport(conf.IrmaServerURL+"/session/"+currUser.Token, false)
-	err = transport.Get("result", result)
+	transport := irma.NewHTTPTransport(conf.IrmaServerURL+"/session/"+user.Token, false)
+	err := transport.Get("result", result)
 	if err != nil {
 		log.Printf("Couldn't get session results: %v", err)
 		return
 	}
 
+	if result.ProofStatus != irma.ProofStatusValid {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	email := *result.Disclosed[0][0].RawValue
 	log.Printf("Finished email authentication, updating user with: %v", email)
-	currUser.Email = email
-	currUser.Authenticated = true
+	user.Email = email
+	user.Authenticated = true
 	session, _ := store.Get(r, "irmagast")
-	session.Values["user"] = currUser
+	session.Values["user"] = user
 
 	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("Error saving cookie: %v", err)
 	}
 
-	http.Redirect(w, r, "overview", http.StatusPermanentRedirect)
+	w.WriteHeader(http.StatusOK)
 }
 
+type registerData struct {
+	Name     string `json:"name"`
+	Location string `json:"location"`
+}
+
+// Registers a new location/meeting for an authenticated admin
 func register(w http.ResponseWriter, r *http.Request) {
-	user, err := checkCookie(w, r, true)
-	if err != nil {
-		log.Printf("Authentication error: %v", err)
+	user := getUser(r.Context())
+
+	log.Printf("registering with user: %+v", user)
+
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
 	}
 
-	switch r.Method {
-	case "GET":
-		http.ServeFile(w, r, "views/register.html")
-	case "POST":
-		if err := r.ParseForm(); err != nil {
-			fmt.Fprintf(w, "ParseForm() err: %v", err)
-			return
-		}
-		id := ksuid.New().String()
-		name := r.FormValue("name")
-		location := r.FormValue("location")
-		terms := r.FormValue("terms")
-		fmt.Fprintf(w, "%s %s %s", location, name, terms)
-		if terms == "yes" {
-			stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email) VALUES (?, ?, ?, ?)")
-			defer stmt.Close()
-			if err != nil {
-				log.Printf("Wrong prepared statement: %v", err)
-			}
-			_, err = stmt.Exec(id, name, location, user.Email)
-			if err != nil {
-				log.Printf("Storing entry failed: %v", err)
-			}
-			http.Redirect(w, r, "overview", http.StatusPermanentRedirect)
-		}
-	default:
-		fmt.Fprintf(w, "Only GET and POST methods are supported.")
-	}
-}
-
-func overview(w http.ResponseWriter, r *http.Request) {
-	user, err := checkCookie(w, r, true)
+	var received registerData
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&received)
 	if err != nil {
-		log.Printf("Authentication error: %v", err)
+		log.Printf("error decoding json: %v", err)
 		return
 	}
 
-	rows, err := db.Query("SELECT location_id, name, location FROM locations WHERE email=?", user.Email)
-	defer rows.Close()
+	log.Printf("Got data: %v", received)
+
+	id := ksuid.New().String()
+	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email) VALUES (?, ?, ?, ?)")
+	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 	}
+	_, err = stmt.Exec(id, received.Name, received.Location, user.Email)
+	if err != nil {
+		log.Printf("Storing entry failed: %v", err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (user *User) getLocations() ([]*Location, error) {
+	rows, err := db.Query("SELECT location_id, name, location FROM locations WHERE email=?", user.Email)
+	if err != nil {
+		log.Printf("Wrong prepared statement: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
 
 	locations := []*Location{}
 	for rows.Next() {
@@ -288,122 +309,136 @@ func overview(w http.ResponseWriter, r *http.Request) {
 		if err = rows.Scan(&id, &name, &location); err != nil {
 			log.Printf("Scan error: %v", err)
 		}
-		qrPng, err := qrcode.Encode(conf.Url+"/gastsession?id="+id, qrcode.Medium, 256)
-		if err != nil {
-			log.Printf("Couldnt create QR: %v", err)
-			return
-		}
-		str := base64.StdEncoding.EncodeToString(qrPng)
-		locations = append(locations, &Location{Id: id, Name: name, Location: location, QR: str})
+		locations = append(locations, &Location{Id: id, Name: name, Location: location})
 	}
 
-	viewData := &OverviewData{Title: "Overview", Email: user.Email, Locations: locations}
-	t, err := template.ParseFiles("views/overview.gohtml")
+	return locations, nil
+}
+
+type overviewData struct {
+	Email     string      `json:"email"`
+	Locations []*Location `json:"locations"`
+}
+
+// Returns an overview for an authenticated admin
+func overview(w http.ResponseWriter, r *http.Request) {
+	user := getUser(r.Context())
+	locs, err := user.getLocations()
 	if err != nil {
-		log.Printf("Couldnt parse template: %v", err)
+		log.Printf("error getting locations for user: %s", err)
+		return
 	}
-	t.Execute(w, viewData)
+
+	viewData := &overviewData{Email: user.Email, Locations: locs}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(viewData)
 }
 
-func gastSession(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Got request: %v", r.Method)
-	switch r.Method {
-	case "GET":
-		if params, ok := r.URL.Query()["id"]; ok && len(params) == 1 {
-			location := params[0]
-			token := ksuid.New().String()
-			stmt, err := db.Prepare("INSERT INTO gastsessions (location_id, token) VALUES(?, ?)")
-			if err != nil {
-				log.Printf("Statement error: %v", err)
-				return
-			}
-			defer stmt.Close()
-
-			_, err = stmt.Exec(location, token)
-			if err != nil {
-				log.Printf("Storing location and token failed: %v", err)
-				return
-			}
-			log.Print("Redirecting to location-less url")
-			http.Redirect(w, r, conf.Url+"/gastsession?token="+token, http.StatusTemporaryRedirect)
-		} else {
-			if params, ok := r.URL.Query()["token"]; ok && len(params) == 1 {
-				log.Print("Redirecting to who-server")
-				http.Redirect(w, r, conf.WhoServerUrl+"/register?token="+params[0], http.StatusPermanentRedirect)
-			}
-		}
-	// Handle incoming results from wie-server
-	case "POST":
-		// TODO: make sure only data from who-server is accepted
-		log.Printf("Got data from who-server")
-		data, _ := ioutil.ReadAll(r.Body)
-		var received common.WieCallback
-		json.Unmarshal(data, &received)
-
-		// Get location_id associated with token
-		var location_id string
-		err := db.QueryRow("SELECT location_id FROM gastsessions WHERE token=?", received.Token).Scan(&location_id)
-		if err != nil {
-			log.Printf("Could not get location_id from token: %v", err)
-		}
-
-		// Insert into checkins
-		stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
-		if err != nil {
-			log.Printf("Couldnt prepare statement: %v", err)
-			return
-		}
-		defer stmt.Close()
-
-		log.Printf("Inserting: location %v, data: %v", location_id, received.Entry.What)
-		_, err = stmt.Exec(location_id, received.Entry.What)
-		if err != nil {
-			log.Printf("Error storing checkin entry: %v", err)
-			return
-		}
-		log.Print("Succesfull check-in")
-	default:
-		fmt.Fprintln(w, "Only GET and POST are allowed")
-	}
+type resultData struct {
+	Time string `json:"time"`
+	Ct   []byte `json:"ct"`
 }
 
-func favicon(w http.ResponseWriter, r *http.Request) {
+// Sends encrypted blobs for a location of an admin
+func results(w http.ResponseWriter, r *http.Request) {
+	user := getUser(r.Context())
+	id := mux.Vars(r)["id"]
+
+	locs, err := user.getLocations()
+	if err != nil {
+		log.Printf("error finding locations for user: %v", err)
+		return
+	}
+
+	found := false
+	for _, loc := range locs {
+		if loc.Id == id {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		log.Printf("location not registered with user")
+		return
+	}
+
+	cts := []*resultData{}
+	rows, err := db.Query("SELECT (time, ct) from checkins WHERE location_id=?", id)
+	var time string
+	ct := make([]byte, 200)
+	for rows.Next() {
+		if err = rows.Scan(&time, &ct); err != nil {
+			log.Printf("Scan error: %v", err)
+		}
+		cts = append(cts, &resultData{Time: time, Ct: ct})
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(cts)
+}
+
+type gastData struct {
+	Location_id string `json:"location_id"`
+	Ciphertext  string `json:"ct"`
+}
+
+// Receives encrypted ciphertexts
+func postGastSession(w http.ResponseWriter, r *http.Request) {
+	var received gastData
+	json.NewDecoder(r.Body).Decode(&received)
+
+	// Insert into checkins
+	stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+	if err != nil {
+		log.Printf("Couldnt prepare statement: %v", err)
+		return
+	}
+	defer stmt.Close()
+
+	log.Printf("Inserting: location %v", received.Location_id)
+	_, err = stmt.Exec(received.Location_id, received.Ciphertext)
+	if err != nil {
+		log.Printf("Error storing checkin entry: %v", err)
+		return
+	}
+	log.Print("Succesfull check-in")
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func main() {
 	var confPath string
-	var err error
 
 	flag.StringVar(&confPath, "config", "config.yaml", "path to configuration file")
 	flag.Parse()
 
 	readConfig(confPath)
-
-	db, err = sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
-	if err != nil {
-		log.Fatalf("Could not connect to the DB %v", err)
-	}
-
+	initDatabase()
 	initSessionStorage()
 
 	r := mux.NewRouter()
-	r.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
-	r.HandleFunc("/", index)
 
-	// admin endpoints
-	r.HandleFunc("/login", login)
-	r.HandleFunc("/register", register)
-	r.HandleFunc("/overview", overview)
-	r.HandleFunc("/irmasession_start", irmaSessionStart)
-	r.HandleFunc("/irmasession_finish", irmaSessionFinish)
-	// gastsession endpoints to start and finish a gastsession
-	r.HandleFunc("/gastsession", gastSession)
-	r.HandleFunc("/favicon.ico", favicon)
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 
-	http.Handle("/", r)
+	// admin endpoints, authenticated by cookie
+	adminRouter := r.PathPrefix("/admin/").Subrouter()
+	adminRouter.Use(AuthMiddleware)
+
+	adminRouter.HandleFunc("/login", login).Methods("GET")
+	adminRouter.HandleFunc("/irmasession_start", irmaSessionStart).Methods("GET")
+	adminRouter.HandleFunc("/irmasession_finish", irmaSessionFinish).Methods("GET")
+	adminRouter.HandleFunc("/register", register).Methods("POST")
+	adminRouter.HandleFunc("/overview", overview).Methods("GET")
+	adminRouter.HandleFunc("/results/{id}", results).Methods("GET")
+
+	// gastsession endpoints
+	r.HandleFunc("/gast/gastsession", postGastSession).Methods("POST")
+
 	log.Printf("Listening on %s\n", conf.BindAddr)
-	err = http.ListenAndServe(conf.BindAddr, nil)
-	if err != nil {
-		log.Fatalf("Error: %v", err)
+	if err := http.ListenAndServe(conf.BindAddr, r); err != nil {
+		log.Fatalf("Error while serving: %v", err)
 	}
 }

@@ -10,20 +10,20 @@ CREATE TABLE locations (
   name varchar(35) NOT NULL,
   location varchar(35) NOT NULL,
   email varchar(35) NOT NULL,
-  constraint unique_name
-    UNIQUE KEY(name)
+--  constraint unique_name
+--    UNIQUE KEY(name)
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 
-CREATE TABLE gastsessions (
-  location_id varchar(27) NOT NULL,
-  token varchar(27) NOT NULL,
-  time TIMESTAMP NOT NULL DEFAULT current_timestamp(),
-  constraint unique_token
-    UNIQUE KEY(token),
-  constraint fk_id1
-    FOREIGN KEY(location_id)
-    REFERENCES locations(location_id)
-) ENGINE=InnoDB DEFAULT charset=utf8;
+--CREATE TABLE gastsessions (
+--  location_id varchar(27) NOT NULL,
+--  token varchar(27) NOT NULL,
+--  time TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+--  constraint unique_token
+--    UNIQUE KEY(token),
+--  constraint fk_id1
+--    FOREIGN KEY(location_id)
+--    REFERENCES locations(location_id)
+--) ENGINE=InnoDB DEFAULT charset=utf8;
 
 create table checkins (
   location_id varchar(27) NOT NULL,
