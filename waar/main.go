@@ -249,6 +249,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("Error saving cookie: %v", err)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -281,10 +282,12 @@ func register(w http.ResponseWriter, r *http.Request) {
 	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
+		return
 	}
 	_, err = stmt.Exec(id, received.Name, received.Location, user.Email)
 	if err != nil {
 		log.Printf("Storing entry failed: %v", err)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -305,6 +308,7 @@ func (user *User) getLocations() ([]*Location, error) {
 		var location string
 		if err = rows.Scan(&id, &name, &location); err != nil {
 			log.Printf("Scan error: %v", err)
+			return
 		}
 		locations = append(locations, &Location{Id: id, Name: name, Location: location})
 	}
@@ -378,6 +382,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		if err = rows.Scan(&time, &ct); err != nil {
 			log.Printf("Scan error: %v", err)
+			return
 		}
 		base64ct := base64.StdEncoding.EncodeToString(ct)
 		entries = append(entries, &resultEntry{Time: time, Ct: base64ct})
@@ -422,6 +427,21 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func logout(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "irmagast")
+	if err != nil {
+		log.Printf("Error finding cookie: %v", err)
+		return
+	}
+	session.Values["user"] = User{}
+	session.Options.MaxAge = -1
+	err = session.Save()
+	if err != nil {
+		log.Printf("error saving cookie: %v", err)
+		return
+	}
+}
+
 func main() {
 	var confPath string
 
@@ -446,6 +466,7 @@ func main() {
 	adminRouter.HandleFunc("/register", register).Methods("POST")
 	adminRouter.HandleFunc("/overview", overview).Methods("GET")
 	adminRouter.HandleFunc("/results/{id}", results).Methods("GET")
+	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
 	// gastsession endpoints
 	r.HandleFunc("/gast/gastsession", postGastSession).Methods("POST")
