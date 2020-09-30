@@ -1,0 +1,39 @@
+<!doctype html><html><head>
+<div id="qrcode"></div>
+
+<!-- Required dependency.  TODO include within irmaseal.js -->
+<script type="text/javascript" src="qrcode.min.js">
+</script>
+
+<script type="module">
+import Client from "./irmaseal.js";
+
+(async function() {
+    // Create a new irmaseal-pkg client.
+    let client = await Client.build("http://localhost:8087");
+
+    // Encrypts a json object for an e-mail address.
+    console.time("encrypt");
+    let ct = client.encrypt("bas@westerbaan.name", {a: "b", c:"d"});
+    console.timeEnd("encrypt");
+    console.log("Ciphertext: " + ct.toString());
+
+    // Extract the timestamp from the ciphertext (required to request the
+    // right key from the pkg.)
+    console.time("extract_timestamp");
+    let ts = client.extractTimestamp(ct);
+    console.timeEnd("extract_timestamp");
+    console.log("Timestamp: " + ts.toString());
+
+    // Now, request the key.  This involves an IRMA disclosure.
+    let key = await client.requestKey("bas@westerbaan.name", ts, "qrcode");
+    console.log("Key: " + key.toString());
+
+    // And decrypt.
+    console.time("decrypt");
+    let pt = client.decrypt(key, ct);
+    console.timeEnd("decrypt");
+    alert("plaintext: " + JSON.stringify(pt));
+})();
+
+</script></head></html>
