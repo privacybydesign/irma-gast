@@ -2,8 +2,6 @@ import init, {encrypt, decrypt, extract_timestamp} from "./wasm.js";
 
 // TODO Check hmac
 // TODO Handle parse errors more gracefully
-// TODO Use new version of irmaseal-core once Wouter updated ibe with improved
-//      performance.
 // TODO Use PBKDF server.
 
 class Client {

@@ -10,7 +10,7 @@ import Client from "./irmaseal.js";
 
 (async function() {
     // Create a new irmaseal-pkg client.
-    let client = await Client.build("http://localhost:8087");
+    let client = await Client.build("https://pkg.irma-welkom.nl/pkg");
 
     // Encrypts a json object for an e-mail address.
     console.time("encrypt");
