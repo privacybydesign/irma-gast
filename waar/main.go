@@ -304,7 +304,7 @@ func (user *User) getLocations() ([]*Location, error) {
 		var location string
 		if err = rows.Scan(&id, &name, &location); err != nil {
 			log.Printf("Scan error: %v", err)
-			return
+			return nil, err
 		}
 		locations = append(locations, &Location{Id: id, Name: name, Location: location})
 	}
@@ -431,7 +431,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	}
 	session.Values["user"] = User{}
 	session.Options.MaxAge = -1
-	err = session.Save()
+	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("error saving cookie: %v", err)
 		return
