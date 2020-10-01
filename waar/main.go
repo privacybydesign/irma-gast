@@ -16,7 +16,6 @@ import (
 	"encoding/gob"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -39,12 +38,16 @@ type Conf struct {
 	// IRMA server url for email authentication
 	IrmaServerURL string `yaml:"irmaServerURL"`
 
-	// Database stuff
-	DbDriver string `yaml:"db"`
+	// Database
+	DbDriver string `yaml:"dbDriver"`
 	DbHost   string `yaml:"dbHost"`
 	DbUser   string `yaml:"dbUser"`
 	DbPass   string `yaml:"dbPass"`
 	DbName   string `yaml:"dbName"`
+
+	// HTTPS
+	PrivKeyPath     string `yaml:"privKeyPath"`
+	CertificatePath string `yaml:"certificatePath"`
 }
 
 type User struct {
@@ -60,21 +63,8 @@ type Location struct {
 }
 
 var (
-	// A standard configuration
-	conf = Conf{
-		Url:           "http://localhost:8080",
-		IrmaServerURL: "http://localhost:8088",
-		DbDriver:      "mysql",
-		DbHost:        "localhost",
-		DbUser:        "irmagast",
-		DbPass:        "irmagast",
-		DbName:        "test",
-	}
-
-	// The database
-	db *sql.DB
-
-	// Session storage
+	conf  Conf
+	db    *sql.DB
 	store *sessions.CookieStore
 )
 
@@ -86,11 +76,14 @@ func readConfig(confPath string) {
 		fmt.Printf("%s\n", buf)
 		return
 	} else {
-		buf, err := ioutil.ReadFile(confPath)
+		log.Printf("Reading configuration file at: %v", confPath)
+		conf = Conf{}
+		file, err := os.Open(confPath)
 		if err != nil {
 			log.Fatalf("Could not read %s: %v", confPath, err)
 		}
-		err = yaml.Unmarshal(buf, &conf)
+		defer file.Close()
+		yaml.NewDecoder(file).Decode(&conf)
 		if err != nil {
 			log.Fatalf("Could not parse config files: %v", err)
 		}
@@ -468,7 +461,17 @@ func main() {
 	r.HandleFunc("/gast/gastsession", postGastSession).Methods("POST")
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
-	if err := http.ListenAndServe(conf.BindAddr, r); err != nil {
-		log.Fatalf("Error while serving: %v", err)
+	log.Printf("conf: %v", conf)
+
+	var err error
+
+	if conf.CertificatePath != "" && conf.PrivKeyPath != "" {
+		log.Println("HTTPS enabled")
+		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, r)
+	} else {
+		err = http.ListenAndServe(conf.BindAddr, r)
+	}
+	if err != nil {
+		log.Printf("Error while serving: %v", err)
 	}
 }
