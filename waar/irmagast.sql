@@ -2,7 +2,7 @@ CREATE DATABASE irmagastdb;
 CREATE USER 'irmagast'@'localhost' IDENTIFIED BY 'irmagast';
 GRANT ALL PRIVILEGES on irmagastdb.* TO 'irmagast' IDENTIFIED BY 'irmagast';
 FLUSH PRIVILEGES;
-SET GLOBAL event_scheduler = ON;
+--SET GLOBAL event_scheduler = ON;
 USE irmagastdb;
 
 CREATE TABLE locations (
@@ -37,7 +37,7 @@ create table checkins (
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 
 -- Cleanup the check-in table 
-CREATE EVENT cleaning ON SCHEDULE EVERY 1 HOUR ENABLE DO DELETE FROM checkins WHERE time <=DATE_SUB(NOW(), INTERVAL 2 WEEK);
+--CREATE EVENT cleaning ON SCHEDULE EVERY 1 HOUR ENABLE DO DELETE FROM checkins WHERE time <=DATE_SUB(NOW(), INTERVAL 2 WEEK);
 
 -- Cleanup event for the ongoing sessions
-CREATE EVENT session_cleanup ON SCHEDULE EVERY 1 MINUTE ENABLE DO DELETE FROM gastsessions WHERE time <=DATE_SUB(NOW(), INTERVAL 5 MINUTE);
+--CREATE EVENT session_cleanup ON SCHEDULE EVERY 1 MINUTE ENABLE DO DELETE FROM gastsessions WHERE time <=DATE_SUB(NOW(), INTERVAL 5 MINUTE);

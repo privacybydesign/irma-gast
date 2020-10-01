@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strings"
+	"time"
 
 	irma "github.com/privacybydesign/irmago"
 	server "github.com/privacybydesign/irmago/server"
@@ -117,6 +118,46 @@ func initSessionStorage() {
 	}
 
 	gob.Register(User{})
+}
+
+func cleanup() {
+	log.Printf("Running cleanup")
+	stmt, err := db.Prepare("DELETE FROM checkins WHERE time <=DATE_SUB(NOW(), INTERVAL 2 WEEK)")
+	if err != nil {
+		log.Printf("Error in statement for cleaup")
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec()
+
+	if err != nil {
+		log.Printf("Failed to run cleanup: %v", err)
+		return
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return
+	}
+	log.Printf("Cleanup, deleted %v entries", rows)
+}
+
+func schedule(f func(), delay time.Duration) chan bool {
+	ticker := time.NewTicker(delay)
+	stop := make(chan bool)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				f()
+			case <-stop:
+				return
+			}
+		}
+	}()
+
+	return stop
 }
 
 // Checks cookie for a current ongoing session
@@ -460,6 +501,8 @@ func main() {
 	readConfig(confPath)
 	initDatabase()
 	initSessionStorage()
+	c := schedule(cleanup, 14*24*time.Hour)
+	defer close(c)
 
 	r := mux.NewRouter()
 
