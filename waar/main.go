@@ -501,7 +501,7 @@ func main() {
 	readConfig(confPath)
 	initDatabase()
 	initSessionStorage()
-	c := schedule(cleanup, 14*24*time.Hour)
+	c := schedule(cleanup, 1*time.Hour)
 	defer close(c)
 
 	r := mux.NewRouter()
