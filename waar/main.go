@@ -83,7 +83,7 @@ func readConfig(confPath string) {
 			log.Fatalf("Could not read %s: %v", confPath, err)
 		}
 		defer file.Close()
-		yaml.NewDecoder(file).Decode(&conf)
+		err = yaml.NewDecoder(file).Decode(&conf)
 		if err != nil {
 			log.Fatalf("Could not parse config files: %v", err)
 		}
@@ -159,8 +159,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func getUser(ctx context.Context) *User {
-	return ctx.Value("user").(*User)
+func getUser(ctx context.Context) (*User, error) {
+	if user, ok := ctx.Value("user").(*User); ok {
+		return user, nil
+	}
+	return nil, errors.New("No user")
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -218,10 +221,14 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 
-	user := getUser(r.Context())
+	user, err := getUser(r.Context())
+	if err != nil {
+		log.Printf("Couldn't get user")
+		return
+	}
 	result := &server.SessionResult{}
 	transport := irma.NewHTTPTransport(conf.IrmaServerURL+"/session/"+user.Token, false)
-	err := transport.Get("result", result)
+	err = transport.Get("result", result)
 	if err != nil {
 		log.Printf("Couldn't get session results: %v", err)
 		return
@@ -256,11 +263,14 @@ type registerData struct {
 
 // Registers a new location/meeting for an authenticated admin
 func register(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r.Context())
-
+	user, err := getUser(r.Context())
+	if err != nil {
+		log.Printf("Couldn't get user")
+		return
+	}
 	var received registerData
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&received)
+	err = decoder.Decode(&received)
 	if err != nil {
 		log.Printf("error decoding json: %v", err)
 		return
@@ -312,7 +322,12 @@ type overviewData struct {
 
 // Returns an overview for an authenticated admin
 func overview(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r.Context())
+	user, err := getUser(r.Context())
+	if err != nil {
+		log.Printf("Couldn't get user")
+		return
+	}
+
 	locs, err := user.getLocations()
 	if err != nil {
 		log.Printf("error getting locations for user: %s", err)
@@ -336,7 +351,12 @@ type resultData struct {
 
 // Sends encrypted blobs for a location of an admin
 func results(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r.Context())
+	user, err := getUser(r.Context())
+	if err != nil {
+		log.Printf("Couldn't get user")
+		return
+	}
+
 	id := mux.Vars(r)["id"]
 
 	locs, err := user.getLocations()
