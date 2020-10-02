@@ -72,7 +72,7 @@ export default function GuestList(props) {
   // state of the delete confirmation dialogue
   const [dialog, setDialog] = React.useState(false);
   const handleDelete = () => {
-    props.onDelete(props.id);
+    props.onDelete();
     setDialog(false);
   };
   const handleClose = () => {
@@ -129,7 +129,6 @@ export default function GuestList(props) {
           <CardActions className={classes.noPadding} disableSpacing>
             {qrReady ? (
               <QRCodePDF
-                key={props.id}
                 title={props.name}
                 date={props.date}
                 host={props.host}
@@ -191,7 +190,6 @@ export default function GuestList(props) {
             </DialogActions>
           </Dialog>
           <ContactsPDF
-            key={props.id}
             title={props.name}
             date={props.date}
             host={props.host}
