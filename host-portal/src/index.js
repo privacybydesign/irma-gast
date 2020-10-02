@@ -6,7 +6,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   typography: {
-    caption: {
+    h6: {
       fontWeight: 700,
       fontSize: 16,
     },
@@ -40,12 +40,3 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById("root")
 );
-
-// ReactDOM.render(
-//   <BrowserRouter>
-//     {/* <MuiThemeProvider theme={theme}> */}
-//     <App />
-//     {/* </MuiThemeProvider> */}
-//   </BrowserRouter>,
-//   document.getElementById("root")
-// );

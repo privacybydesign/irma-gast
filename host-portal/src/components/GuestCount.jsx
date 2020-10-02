@@ -15,7 +15,7 @@ function GuestCount(props) {
           ? "binnen de afgelopen twee weken "
           : "tot nu toe "}
       </Typography>
-      <Typography variant="caption" component="span">
+      <Typography variant="h6" component="span">
         {props.count > 0 ? props.count + " " : "geen "}
       </Typography>
       <Typography variant="body1" component="span">

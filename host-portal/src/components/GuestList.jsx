@@ -174,7 +174,7 @@ export default function GuestList(props) {
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
                 Als je doorgaat verwijder je de lijst{" "}
-                <Typography variant="caption" component="span">
+                <Typography variant="h6" component="span">
                   {props.name}, {props.date}
                 </Typography>{" "}
                 en alle contactgegevens die op deze lijst geregistreerd staan.
@@ -189,11 +189,7 @@ export default function GuestList(props) {
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF
-            title={props.name}
-            date={props.date}
-            host={props.host}
-          />
+          <ContactsPDF title={props.name} date={props.date} host={props.host} />
         </CardContent>
       </Collapse>
     </Card>

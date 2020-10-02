@@ -35,11 +35,14 @@ a:hover {
   cursor: pointer;
 }
 
-h2, h3 {
+h3, h2 {
   position: relative;
   max-width: 960px;
-  margin: 50px auto 20px auto;
+}
+
+h2 {
   text-align: center;
+  margin: 50px auto 20px auto;
 }
 
 .info-title {
