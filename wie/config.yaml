@@ -1,7 +1,0 @@
-url: http://localhost:8081
-bindAddr: :8081
-whatUrl: http://localhost:8080
-
-publicKey: 722f08bc486b762ac7aa165d596b4a547b7ba4803d25afe29c7fc16214d56c4b
-irmaServerUrl: http://localhost:8088/
-irmaConfigPath: /home/bas/tmp/irma/irma_config
