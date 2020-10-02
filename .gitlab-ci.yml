@@ -20,4 +20,5 @@ build:
       - artifacts/*
   script:
     - mkdir -p artifacts
-    - go build -a -ldflags '-extldflags "-static"' -o "/artifacts/irma-gast" waar
+    - cd waar
+    - go build -a -ldflags '-extldflags "-static"' -o "../artifacts/irma-gast" .
