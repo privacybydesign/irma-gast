@@ -35,7 +35,7 @@ a:hover {
   cursor: pointer;
 }
 
-h2 {
+h2, h3 {
   position: relative;
   max-width: 960px;
   margin: 50px auto 20px auto;
@@ -97,10 +97,42 @@ form.create-meeting button:hover {
   color: #15222e;
 }
 
+.content {
+  width: 80%;
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+  color: #15222e;
+}
+
 .footer-info a {
   color: #004c92;
 }
 
 .site-footer a:hover {
   color: #15222e;
+}
+
+.btn {
+  font-size: 16px;
+  border-radius: 30px;
+  padding: 15px 30px;
+  min-width: 150px;
+}
+
+.irma-btn:hover {
+  top: -2px;
+  background: #004C92;
+  border-color: #004C92;
+  color: #fff;
+}
+
+.irma-btn {
+  top: -2px;
+  background: #004C92;
+  border-color: #004C92;
+  color: #fff;
+  display: inline;
+  text-decoration: none;
+  font-weight: bold;
 }
