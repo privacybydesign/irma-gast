@@ -1,5 +1,6 @@
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -12,8 +13,10 @@ function Header() {
         </span>
       </h1>
       <p>
-        <a href="https://irma.app">Logout</a>
-        {/* TODO: replace URL */}
+        <Link to="/guest">
+          <p>Logout</p>
+        </Link>
+        {/* TODO: replace link destination with landing page */}
       </p>
     </header>
   );

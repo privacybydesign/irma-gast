@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import App from "./components/App";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
@@ -31,8 +32,20 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <App />
-  </MuiThemeProvider>,
+  <BrowserRouter>
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+    {/* The various pages will be displayed by the `Main` component. */}
+  </BrowserRouter>,
   document.getElementById("root")
 );
+
+// ReactDOM.render(
+//   <BrowserRouter>
+//     {/* <MuiThemeProvider theme={theme}> */}
+//     <App />
+//     {/* </MuiThemeProvider> */}
+//   </BrowserRouter>,
+//   document.getElementById("root")
+// );
