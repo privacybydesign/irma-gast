@@ -20,6 +20,7 @@ function Portal() {
       }
       newList.name = value;
     }
+    newList['location_id'] = Date.now(); // TODO: Use data from server here.
     // add this guestlist to the collection of guestlists
     setGuestLists((prevLists) => {
       return [newList, ...prevLists];
@@ -27,19 +28,37 @@ function Portal() {
   }
 
   function deleteGuestList(id) {
+    // TODO: Send to the go server.
     setGuestLists((prevLists) => {
-      return prevLists.filter((listItem, index) => {
-        return index !== id;
+      return prevLists.filter((listItem) => {
+        return listItem['location_id'] !== id;
       });
     });
   }
-  // TODO: known bug when deleting guestlists the expanded-state of the remaining lists is incorrect
+
+  function renderGuestLists() {
+    return guestLists.map((list) => {
+      return (
+        <GuestList
+          key={list['location_id']}
+          onDelete={() => deleteGuestList(list['location_id'])}
+          id={list['location_id']}
+          date={list['date']}
+          name={list['name']}
+          listType={list['type']}
+          host="todo" // TODO replace with actual host
+        />
+      );
+    })
+  }
 
   return (
     <div className="App">
       <Header />
-      <h2>Meld je aan met IRMA</h2>
-
+      <h2>Je bezoekerslijsten</h2>
+      <CreateListForm onAdd={addGuestList} />
+      {renderGuestLists()}
+      <AutoDeleteText />
       <div style={{ height: "30px" }}></div>
       <Footer />
     </div>
