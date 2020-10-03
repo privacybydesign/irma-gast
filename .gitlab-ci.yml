@@ -28,11 +28,7 @@ docker:
   tags:
   - docker
   image: docker:stable
-  variables:
-    REGISTRY: gitlabregistry.pep.cs.ru.nl
-    REGISTRY_TOKEN: "Szs1yQDcZHNBnheVcmN1"
-    IMAGE: gitlabregistry.pep.cs.ru.nl/irma/irma-welkom
   script:
-  - docker login -u project_42_bot -p $REGISTRY_TOKEN $REGISTRY
+  - docker login -u irma-access -p $REGISTRY_TOKEN $REGISTRY
   - docker build -f Dockerfile -t $IMAGE .
   - docker push $IMAGE
