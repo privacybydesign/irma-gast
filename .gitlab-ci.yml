@@ -22,3 +22,17 @@ build:
     - mkdir -p artifacts
     - cd waar
     - go build -a -ldflags '-extldflags "-static"' -o "../artifacts/irma-gast" .
+
+docker:
+  stage: package
+  tags:
+  - docker
+  image: docker:stable
+  variables:
+    REGISTRY: gitlabregistry.pep.cs.ru.nl
+    REGISTRY_TOKEN: "Szs1yQDcZHNBnheVcmN1"
+    IMAGE: gitlabregistry.pep.cs.ru.nl/irma/irma-welkom
+  script:
+  - docker login -u project_42_bot -p $REGISTRY_TOKEN $REGISTRY
+  - docker build -f Dockerfile -t $IMAGE .
+  - docker push $IMAGE
