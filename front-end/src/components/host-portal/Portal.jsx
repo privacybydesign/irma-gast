@@ -54,13 +54,13 @@ function Portal() {
 
   return (
     <div className="App">
-      <Header />
-      <h2>Je bezoekerslijsten</h2>
-      <CreateListForm onAdd={addGuestList} />
-      {renderGuestLists()}
-      <AutoDeleteText />
-      <div style={{ height: "30px" }}></div>
-      <div className="irma-grey">
+      <div className="container">
+        <Header />
+        <h2>Je bezoekerslijsten</h2>
+        <CreateListForm onAdd={addGuestList} />
+        {renderGuestLists()}
+        <AutoDeleteText />
+        <div style={{ height: "30px" }}></div>
         <Footer />
       </div>
     </div>

@@ -27,10 +27,7 @@ function LandingPage(props) {
       <div className="irma-grey">
         <PrivacyPolicy />
       </div>
-
-      <div className="irma-blue">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
