@@ -9,7 +9,7 @@ import Welcome from "./content/Welcome";
 
 function LandingPage(props) {
   return (
-    <div>
+    <div className="container">
       <Header link="login" />
       <p></p>
       <div className="irma-light">
@@ -27,6 +27,7 @@ function LandingPage(props) {
       <div className="irma-grey">
         <PrivacyPolicy />
       </div>
+
       <div className="irma-blue">
         <Footer />
       </div>
