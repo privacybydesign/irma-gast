@@ -8,12 +8,12 @@ function Portal() {
       <div className="content">
         <h2>Meld je aan met IRMA</h2>
         <p>
-          Laat je email-address achter zo dat je in het geval van een
-          coronamelding een email kunt ontvangen.
+          Meld je aan met je e-mailaddress zodat je in het geval van een
+          coronamelding een waarschuwing kunt ontvangen.
         </p>
         <div style={{ height: "30px" }}></div>
         <a href="#" className="irma-btn btn">
-          Email doorgeven met IRMA
+          E-mail doorgeven met IRMA
         </a>
         <div style={{ height: "60px" }}></div>
         <h3>Nog geen IRMA app?</h3>
