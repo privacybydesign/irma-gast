@@ -102,17 +102,25 @@ form.create-meeting button:hover {
 
 .content {
   width: 80%;
-  max-width: 700px;
+  max-width: 800px;
   margin: auto;
-  text-align: center;
   color: #15222e;
+}
+
+.content .subheading {
+  font-size: 20;
+  font-weight: bold;
+}
+
+.footer-info {
+  text-align: center;
 }
 
 .footer-info a {
   color: #004c92;
 }
 
-.site-footer a:hover {
+.footer-info a:hover {
   color: #15222e;
 }
 
