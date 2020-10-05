@@ -3,7 +3,7 @@ import Header from "../Header";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";
-import Footer from "../Footer";
+import Footer from "../footer/Footer";
 
 function Portal() {
   const [guestLists, setGuestLists] = useState([]);
