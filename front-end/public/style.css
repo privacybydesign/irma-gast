@@ -83,14 +83,6 @@ form.create-meeting button:hover {
   background-color: #00B1E6;
 }
 
-.footer {
-  width: 100%;
-  bottom: 0;
-  padding: 0;
-  margin: 0;
-  background-color: #E0E6ED;
-}
-
 .footer-info {
   width: 80%;
   max-width: 700px;
@@ -103,13 +95,19 @@ form.create-meeting button:hover {
 .content {
   width: 80%;
   max-width: 800px;
+  font-size: medium;
   margin: auto;
   color: #15222e;
+  padding: 40px 0px 40px 0px;
 }
 
 .content .subheading {
   font-size: 20;
   font-weight: bold;
+}
+
+.content h2 {
+  margin: auto;
 }
 
 .footer-info {
@@ -146,4 +144,30 @@ form.create-meeting button:hover {
   display: inline;
   text-decoration: none;
   font-weight: bold;
+}
+
+/* Colors */
+
+.irma-grey {
+  background-color: #DFE6EE;
+}
+
+.irma-light {
+  background-color: #F2F5F8;
+}
+
+.irma-blue {
+  background-color: #004C92;
+}
+
+.irma-blue p, .irma-blue h4 {
+  color: #fff;
+}
+
+.irma-blue .footer-info a {
+  color: #DFE6EE;
+}
+
+.irma-white {
+  background-color: #fff;
 }

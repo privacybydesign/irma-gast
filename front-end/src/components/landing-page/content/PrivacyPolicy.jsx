@@ -23,11 +23,11 @@ function PrivacyPolicy(props) {
       <div className="subheading">Host, account en samenkomsten</div>
 
       <p>
-        Een *host* is een persoon die een keer ingelogd is op de website
-        irma-welkom.nl door zich daar bekend te maken met een e-mailadres uit de
-        eigen IRMA app. Hierbij worden alleen door ProcoliX gegevens verwerkt,
-        waaronder het e-mailadres van de host. De wettelijke basis voor deze
-        verwerking is: toestemming van de host.
+        Een <emph>host</emph> is een persoon die een keer ingelogd is op de
+        website irma-welkom.nl door zich daar bekend te maken met een
+        e-mailadres uit de eigen IRMA app. Hierbij worden alleen door ProcoliX
+        gegevens verwerkt, waaronder het e-mailadres van de host. De wettelijke
+        basis voor deze verwerking is: toestemming van de host.
       </p>
 
       <p>
@@ -57,15 +57,15 @@ function PrivacyPolicy(props) {
 
       <ul>
         <li>
-          * De persoonsgegevens (met name e-mailadressen van bezoekers) die via
-          de QR-code verzameld worden door hem/haar enkel gebruikt zullen worden
-          om deze bezoekers te informeren, mogelijk via de GGD, enkel in het
-          geval dat er sprake is van een coronabesmetting die gerelateerd is aan
-          de betreffende samenkomst.
+          De persoonsgegevens (met name e-mailadressen van bezoekers) die via de
+          QR-code verzameld worden door hem/haar enkel gebruikt zullen worden om
+          deze bezoekers te informeren, mogelijk via de GGD, enkel in het geval
+          dat er sprake is van een coronabesmetting die gerelateerd is aan de
+          betreffende samenkomst.
         </li>
 
         <li>
-          * De hierbovengenoemde drie organisaties achter de website
+          De hierbovengenoemde drie organisaties achter de website
           irma-welkom.nl de persoonsgegevens die via deze QR-code verzameld
           worden in zijn/haar opdracht verwerken. Daarmee is de host
           verwerkingsverantwoordelijke voor deze specifieke samenkomst.
@@ -74,18 +74,18 @@ function PrivacyPolicy(props) {
 
       <p>
         De e-mailadressen van de bezoekers van de samenkomst worden door
-        ProcoliX versleuteld opgeslagen. Het *tijdstip* van toevoeging van een
-        versleuteld e-mailadres wordt onversleuteld opgeslagen. Dit tijdstip
-        wordt gebruikt om versleutelde e-mailadressen na 14 dagen automatisch te
-        verwijderen. Wanneer alle versleutelde e-mailadressen van een samenkomst
-        verwijderd zijn wordt de samenkomst zelf verwijderd uit het account van
-        de host.
+        ProcoliX versleuteld opgeslagen. Het<emph>tijdstip</emph>van toevoeging
+        van een versleuteld e-mailadres wordt onversleuteld opgeslagen. Dit
+        tijdstip wordt gebruikt om versleutelde e-mailadressen na 14 dagen
+        automatisch te verwijderen. Wanneer alle versleutelde e-mailadressen van
+        een samenkomst verwijderd zijn wordt de samenkomst zelf verwijderd uit
+        het account van de host.
       </p>
 
       <div className="subheading">Bezoekers, bekendmaking en versleuteling</div>
 
       <p>
-        De host zal *bezoekers* aan zijn/haar samenkomst verzoeken de
+        De host zal<emph>bezoekers</emph>aan zijn/haar samenkomst verzoeken de
         bijbehorende QR-code te scannen. Daarbij komt een bezoeker eerst terecht
         op een website waar informatie beschikbaar is, grotendeels via links,
         over IRMA-welkom en over de privacy policy. Vervolgens kan de bezoeker
@@ -113,11 +113,11 @@ function PrivacyPolicy(props) {
         ProcoliX bijgehouden wordt. ProcoliX verwerkt aldus de e-mailadressen
         van alle hosts, maar niet van bezoekers. Voor de IRMA server op de
         Radboud Universiteit is dit andersom: wel van bezoekers maar niet van
-        hosts. De versleuteling is *identity-based*: uit het e-mailadres van de
-        host wordt een public key afgeleid die gebruikt wordt voor de
-        versleuteling van de gegevens voor de samenkomst(en) van de host. De
-        versleuteling vindt plaats in de browser van de bezoeker (en niet bij
-        ProcoliX).
+        hosts. De versleuteling is<emph>identity-based</emph>: uit het
+        e-mailadres van de host wordt een public key afgeleid die gebruikt wordt
+        voor de versleuteling van de gegevens voor de samenkomst(en) van de
+        host. De versleuteling vindt plaats in de browser van de bezoeker (en
+        niet bij ProcoliX).
       </p>
 
       <div className="subheading">Hosts en ontsleuteling</div>
@@ -135,15 +135,15 @@ function PrivacyPolicy(props) {
 
       <p>
         Voor die ontsleuteling toont de host via de IRMA app nogmaals het
-        e-mailadres van het eigen account, maar nu aan aparte een *key
-        generating server*, die beheerd wordt door de stichting Privacy by
-        Design. De stichting verwerkt daarbij kortstondig het e-mailadres van de
-        host, op basis van diens toestemming. De genoemde server levert de
-        private sleutel horend bij het e-mailadres van de host, waarmee de
-        e-mailadressen in de webbrowser van de host ontsleuteld worden.
-        Vervolgens is het de verantwoordelijkheid van de host om de betrokkenen
-        (per e-mail) zelf te waarschuwen, of om deze e-mailadressen door te
-        geven aan de GGD.
+        e-mailadres van het eigen account, maar nu aan aparte een{" "}
+        <emph>key generating server</emph>, die beheerd wordt door de stichting
+        Privacy by Design. De stichting verwerkt daarbij kortstondig het
+        e-mailadres van de host, op basis van diens toestemming. De genoemde
+        server levert de private sleutel horend bij het e-mailadres van de host,
+        waarmee de e-mailadressen in de webbrowser van de host ontsleuteld
+        worden. Vervolgens is het de verantwoordelijkheid van de host om de
+        betrokkenen (per e-mail) zelf te waarschuwen, of om deze e-mailadressen
+        door te geven aan de GGD.
       </p>
 
       <p>

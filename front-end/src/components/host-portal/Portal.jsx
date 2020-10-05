@@ -60,7 +60,9 @@ function Portal() {
       {renderGuestLists()}
       <AutoDeleteText />
       <div style={{ height: "30px" }}></div>
-      <Footer />
+      <div className="irma-grey">
+        <Footer />
+      </div>
     </div>
   );
 }

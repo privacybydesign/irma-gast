@@ -2,7 +2,7 @@ import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header(props) {
   return (
     <header>
       <h1>
@@ -13,9 +13,15 @@ function Header() {
         </span>
       </h1>
       <p>
-        <Link to="/guest">
-          <p>Logout</p>
-        </Link>
+        {props.link === "login" ? (
+          <Link to="/host">
+            <p>Host login</p>
+          </Link>
+        ) : (
+          <Link to="/">
+            <p>Logout</p>
+          </Link>
+        )}
         {/* TODO: replace link destination with landing page */}
       </p>
     </header>
