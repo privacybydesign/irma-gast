@@ -139,7 +139,26 @@ func cleanup() {
 	if err != nil {
 		return
 	}
-	log.Printf("Cleanup, deleted %v entries", rows)
+
+	stmt, err = db.Prepare("DELETE from locations where last_checkin <= DATE_SUB(NOW(), INTERVAL 2 WEEK)")
+	if err != nil {
+		log.Printf("Error in statement: %v", err)
+		return
+	}
+	defer stmt.Close()
+
+	res2, err := stmt.Exec()
+	if err != nil {
+		log.Printf("Error in purging in-active locations: %v", err)
+		return
+	}
+
+	locationsRows, err := res2.RowsAffected()
+	if err != nil {
+		return
+	}
+
+	log.Printf("Cleanup:\ncheck-in entries deleted: %v\ninactive locations purged: %v", rows, locationsRows)
 }
 
 func schedule(f func(), delay time.Duration) chan bool {
@@ -472,8 +491,30 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error storing checkin entry: %v", err)
 		return
 	}
-	log.Print("Succesfull check-in")
 
+	// Retrieve the last inserted timestamp
+	var time string
+	err = db.QueryRow("SELECT time FROM checkins where location_id = ? ORDER by time DESC LIMIT 1", received.Location_id).Scan(&time)
+	if err != nil {
+		log.Printf("Error finding last checkin timestamp: %v", err)
+		return
+	}
+
+	// Update last checking in location table
+	stmt, err = db.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
+	if err != nil {
+		log.Printf("Error in statement: %v", err)
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(time, received.Location_id)
+	if err != nil {
+		log.Printf("Error updating last checkin: %v", err)
+		return
+	}
+
+	log.Print("Succesfull check-in")
 	w.WriteHeader(http.StatusOK)
 }
 
