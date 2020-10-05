@@ -12,25 +12,25 @@ body {
   position: relative;
 }
 
-header {
+.page-header {
   background-color: #fff;
   margin: auto;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
   padding: 16px 32px;
 }
 
-header h1 {
+.page-header h1 {
   color: #15222e;
   font-family: "Karla", sans-serif;
   float: left;
   margin-top: 2px;
 }
 
-header h1 span {
+.page-header h1 span {
   font-weight: 200;
 }
 
-header p {
+.page-header p {
   text-align: right;
 }
 
@@ -58,7 +58,7 @@ h2 {
 }
 
 .info-title {
-  font-size: 16;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -118,7 +118,7 @@ footer {
 }
 
 .content .subheading {
-  font-size: 20;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -127,7 +127,7 @@ footer {
 }
 
 footer {
-  position: absolute;
+  position: relative;
   left: 0;
   bottom: 0;
   right: 0;
