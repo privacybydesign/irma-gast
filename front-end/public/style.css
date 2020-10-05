@@ -53,6 +53,10 @@ h2 {
   margin: 50px auto 20px auto;
 }
 
+.content h3 {
+  text-align: center;
+}
+
 .info-title {
   font-size: 16;
   font-weight: bold;
@@ -160,9 +164,28 @@ footer {
   background: #004C92;
   border-color: #004C92;
   color: #fff;
-  display: inline;
   text-decoration: none;
   font-weight: bold;
+  display: block;
+  margin: auto;
+  width: 250px;
+  text-align: center;
+}
+
+.irma-btn-secondary {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 30px;
+  padding: 10px 30px;
+  margin: 10px;
+  min-width: 150px;
+  border-width: 2px;
+  background: #fff;
+  border-color: #004C92;
+  color: #004C92;
+  position: relative;
+  top: 0;
 }
 
 /* Colors */

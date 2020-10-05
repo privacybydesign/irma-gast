@@ -9,9 +9,7 @@ function ErrorPage(props) {
       <Header link="login" />
       <p></p>
       <Error />
-      <div className="irma-blue">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
