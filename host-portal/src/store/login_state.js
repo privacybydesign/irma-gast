@@ -1,5 +1,4 @@
 const initialState = {
-  loading: false,
   state: 'unknown',
 };
 
