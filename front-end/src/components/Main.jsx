@@ -9,10 +9,10 @@ import ErrorPage from "./error-page/ErrorPage";
 const Main = () => {
   return (
     <Switch>
-      <Route exact path="/guest" component={GuestPage}></Route>
-      <Route exact path="/host" component={Portal}></Route>
-      <Route exact path="/" component={LandingPage}></Route>
-      <Route exact path="/error" component={ErrorPage}></Route>
+      <Route exact path="/guest" component={GuestPage}/>
+      <Route exact path="/host" component={Portal}/>
+      <Route exact path="/" component={LandingPage}/>
+      <Route exact path="/error" component={ErrorPage}/>
     </Switch>
   );
 };
