@@ -45,7 +45,7 @@ class GuestPage extends React.Component {
     }
   }
 
-  startPage() {
+  _renderStartPage() {
     return (
       <>
         <h2>Meld je aan met IRMA</h2>
@@ -63,7 +63,7 @@ class GuestPage extends React.Component {
     );
   }
 
-  messagePage(message) {
+  _renderMessagePage(message) {
     // TODO: Make a bit nice.
     return (
       <p>
@@ -72,20 +72,20 @@ class GuestPage extends React.Component {
     )
   }
 
-  renderState() {
+  _renderState() {
     switch (this.props.state) {
       case 'start':
-        return this.startPage();
+        return this._renderStartPage();
       case 'encrypting':
-        return this.messagePage('Gegevens aan het versleutelen...');
+        return this._renderMessagePage('Gegevens aan het versleutelen...');
       case 'sending':
-        return this.messagePage('Gegevens aan het verzenden...');
+        return this._renderMessagePage('Gegevens aan het verzenden...');
       case 'done':
-        return this.messagePage('Gegevens verzonden.');
+        return this._renderMessagePage('Gegevens verzonden.');
       case 'error':
-        return this.messagePage(`De volgende fout is opgetreden:<br>${this.props.error}`)
+        return this._renderMessagePage(`De volgende fout is opgetreden:<br>${this.props.error}`);
       default:
-        return this.messagePage('Een moment geduld...');
+        return this._renderMessagePage('Een moment geduld...');
     }
   }
 
@@ -94,7 +94,7 @@ class GuestPage extends React.Component {
       <div className="App">
         <Header link="login" />
         <div className="content">
-          {this.renderState()}
+          {this._renderState()}
         </div>
         <Footer/>
       </div>

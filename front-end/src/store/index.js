@@ -12,7 +12,7 @@ const irmaServerUrl = 'http://localhost:8088'; // TODO: Find a nice place to get
  *  - dispatch({type: 'loggedIn'}) can be done to indicate that the login irma session has been succeeded.
  *    The IRMA-frontend session object on how to do the IRMA session can be found in the `irmaSession` field
  *    of the login redux state.
-*   - dispatch({type: 'initLogin'}) inits the login process.
+ *  - dispatch({type: 'initLogin'}) inits the login process.
  *  - dispatch({type: 'logOut'}) can be done to force a logout to the redux state. This will also handle
  *    the session deletion at the server.
  */
@@ -68,7 +68,7 @@ function handleLogin({getState, dispatch}) {
  *      name: '<Name of new guest list>',
  *      location: '<Location of new guest list>'
  *      onetime: true/false, // Boolean to indicate whether the guest list is for a one-time-event.
-*     })
+ *    })
  */
 function handleAddGuestList({dispatch}) {
   return next => action => {
@@ -185,7 +185,7 @@ function handleGuestPage({dispatch}) {
     } else if (action.type === 'sendGuestData') {
       // TODO: Encrypt guest data
       let data = null;
-      // TODO: Send errorGuestPage if encryping fails.
+      // TODO: Send errorGuestPage if encrypting fails.
       dispatch({type: 'guestDataEncrypted', locationId: action.locationId, ciphertext: data});
     } else if (action.type === 'guestDataEncrypted') {
       fetch(`${serverUrl}/gast/gastsession`, {
