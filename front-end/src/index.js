@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./components/App";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import {Provider} from 'react-redux';
+import store from './store'
 
 const theme = createMuiTheme({
   typography: {
@@ -34,7 +36,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <BrowserRouter>
     <MuiThemeProvider theme={theme}>
-      <App />
+      <Provider store={store()}>
+        <App />
+      </Provider>
     </MuiThemeProvider>
     {/* The various pages will be displayed by the `Main` component. */}
   </BrowserRouter>,

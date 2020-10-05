@@ -5,32 +5,29 @@ body {
 }
 
 .container {
-  /* height of footer */
-  padding-bottom: 270px;
-  /* height without footer */
-  min-height: calc(100vh - 270px);
+  min-height: 100vh;
   position: relative;
 }
 
-header {
+.page-header {
   background-color: #fff;
   margin: auto;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
   padding: 16px 32px;
 }
 
-header h1 {
+.page-header h1 {
   color: #15222e;
   font-family: "Karla", sans-serif;
   float: left;
   margin-top: 2px;
 }
 
-header h1 span {
+.page-header h1 span {
   font-weight: 200;
 }
 
-header p {
+.page-header p {
   text-align: right;
 }
 
@@ -43,7 +40,8 @@ a:hover {
   cursor: pointer;
 }
 
-h3, h2 {
+h3,
+h2 {
   position: relative;
   max-width: 960px;
 }
@@ -58,11 +56,12 @@ h2 {
 }
 
 .info-title {
-  font-size: 16;
+  font-size: 16px;
   font-weight: bold;
 }
 
-form, .guest-list {
+form,
+.guest-list {
   position: relative;
   max-width: 960px;
   width: 80%;
@@ -70,10 +69,14 @@ form, .guest-list {
   background: #fff;
   padding: 36px;
   border-radius: 25px;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-form input, form textarea, form label, form h3 {
+form input,
+form textarea,
+form label,
+form h3 {
   width: 100%;
   border: none;
   outline: none;
@@ -92,7 +95,7 @@ form.create-meeting button {
 }
 
 form.create-meeting button:hover {
-  background-color: #00B1E6;
+  background-color: #00b1e6;
 }
 
 footer {
@@ -118,7 +121,7 @@ footer {
 }
 
 .content .subheading {
-  font-size: 20;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -127,7 +130,7 @@ footer {
 }
 
 footer {
-  position: absolute;
+  position: relative;
   left: 0;
   bottom: 0;
   right: 0;
@@ -154,15 +157,15 @@ footer {
 
 .irma-btn:hover {
   top: -2px;
-  background: #004C92;
-  border-color: #004C92;
+  background: #004c92;
+  border-color: #004c92;
   color: #fff;
 }
 
 .irma-btn {
   top: -2px;
-  background: #004C92;
-  border-color: #004C92;
+  background: #004c92;
+  border-color: #004c92;
   color: #fff;
   text-decoration: none;
   font-weight: bold;
@@ -182,8 +185,8 @@ footer {
   min-width: 150px;
   border-width: 2px;
   background: #fff;
-  border-color: #004C92;
-  color: #004C92;
+  border-color: #004c92;
+  color: #004c92;
   position: relative;
   top: 0;
 }
@@ -191,23 +194,24 @@ footer {
 /* Colors */
 
 .irma-grey {
-  background-color: #DFE6EE;
+  background-color: #dfe6ee;
 }
 
 .irma-light {
-  background-color: #F2F5F8;
+  background-color: #f2f5f8;
 }
 
 .irma-blue {
-  background-color: #004C92;
+  background-color: #004c92;
 }
 
-.irma-blue p, .irma-blue h4 {
+.irma-blue p,
+.irma-blue h4 {
   color: #fff;
 }
 
 .irma-blue .footer-info a {
-  color: #DFE6EE;
+  color: #dfe6ee;
 }
 
 .irma-white {

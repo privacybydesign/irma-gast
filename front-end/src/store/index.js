@@ -2,14 +2,17 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import login_state from './login_state';
 import guest_lists from './guest_lists';
 import checkins from './checkins';
+import guest_page from './guest_page';
 
 const serverUrl = ''; // TODO: Find a nice place to get the server url from
+const irmaServerUrl = 'http://localhost:8088'; // TODO: Find a nice place to get the IRMA/Where server url from
 
 /**
  * Handles all dispatches for changing the login state
  *  - dispatch({type: 'loggedIn'}) can be done to indicate that the login irma session has been succeeded.
  *    The IRMA-frontend session object on how to do the IRMA session can be found in the `irmaSession` field
  *    of the login redux state.
+ *  - dispatch({type: 'initLogin'}) inits the login process.
  *  - dispatch({type: 'logOut'}) can be done to force a logout to the redux state. This will also handle
  *    the session deletion at the server.
  */
@@ -65,7 +68,7 @@ function handleLogin({getState, dispatch}) {
  *      name: '<Name of new guest list>',
  *      location: '<Location of new guest list>'
  *      onetime: true/false, // Boolean to indicate whether the guest list is for a one-time-event.
-*     })
+ *    })
  */
 function handleAddGuestList({dispatch}) {
   return next => action => {
@@ -123,7 +126,7 @@ function handleUpdateGuestLists({getState, dispatch}) {
 
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
- * dispatch({type: 'loadCheckins', locationId: <Location ID of guest list to load checkins of>})
+ *  - dispatch({type: 'loadCheckins', locationId: <Location ID of guest list to load checkins of>})
  */
 function handleUpdateCheckins({dispatch}) {
   return next => action => {
@@ -147,18 +150,79 @@ function handleUpdateCheckins({dispatch}) {
   };
 }
 
+/**
+ * Handles all dispatch calls for updating the checkins of a certain guest list
+ *  - dispatch({type: 'sendGuestData', data: ...})
+ *  - dispatch({type: 'initGuestPage'}) to (re-)start the process of a guest showing his data.
+ */
+function handleGuestPage({dispatch}) {
+  return next => action => {
+    if (action.type === 'initGuestPage') {
+      dispatch({
+        type: 'startGuestPage',
+        irmaSession: {
+          url: irmaServerUrl,
+          start: {
+            url: o => `${o.url}/session`,
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              "@context": "https://irma.app/ld/request/disclosure/v2",
+              "disclose": [
+                [
+                  ["pbdf.pbdf.email.email"],
+                  ["pbdf.sidn-pbdf.email.email"]
+                ]
+              ]
+            }),
+          },
+          result: {
+            url: (o, {sessionToken}) => `${o.url}/session/${sessionToken}/result-jwt`,
+            parseResponse: r => r.text(),
+          },
+        },
+      });
+    } else if (action.type === 'sendGuestData') {
+      // TODO: Encrypt guest data
+      let data = null;
+      // TODO: Send errorGuestPage if encrypting fails.
+      dispatch({type: 'guestDataEncrypted', locationId: action.locationId, ciphertext: data});
+    } else if (action.type === 'guestDataEncrypted') {
+      fetch(`${serverUrl}/gast/gastsession`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          location_id: action.locationId,
+          ciphertext: action.ciphertext,
+        }),
+      })
+        .then(resp => {
+          if (resp.status !== 200) throw resp.status;
+          dispatch({type: 'guestDataSent'});
+        })
+        .catch(err => {
+          dispatch({type: 'errorGuestPage', error: err});
+        })
+    }
+    return(next(action))
+  };
+}
+
 export default function() {
   return createStore(
     combineReducers({
       login: login_state,
       guestLists: guest_lists,
       checkins: checkins,
+      guestPage: guest_page,
     }),
     applyMiddleware(
       handleLogin,
       handleAddGuestList,
       handleUpdateGuestLists,
       handleUpdateCheckins,
+      handleGuestPage,
     ),
   );
 }

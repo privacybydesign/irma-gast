@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Header(props) {
   return (
-    <header>
+    <header className={'page-header'}>
       <h1>
         IRMA
         <span>
@@ -15,11 +15,11 @@ function Header(props) {
       <p>
         {props.link === "login" ? (
           <Link to="/host">
-            <p>Host login</p>
+            Host login
           </Link>
         ) : (
           <Link to="/">
-            <p>Logout</p>
+            Logout
           </Link>
         )}
         {/* TODO: replace link destination with landing page */}
