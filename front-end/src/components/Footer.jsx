@@ -26,12 +26,13 @@ function Footer(props) {
               GitHub bestanden.
             </a>
           </p>
-	  <p>
-	    De IRMA-welkom dienst is gratis. Een financiële bijdrage, voor
-            onderhoud en verdere ontwikkeling, wordt zeer gewaardeerd.
-            Dat kan via deze 
+          <p>
+            De IRMA-welkom dienst is gratis. Een financiële bijdrage, voor
+            onderhoud en verdere ontwikkeling, wordt zeer gewaardeerd. Dat kan
+            via deze
             <a href="https://privacybydesign.foundation/steun/">steun pagina</a>
             van de stichting Privacy by Design.
+          </p>
         </div>
       </footer>
     </div>

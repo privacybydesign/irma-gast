@@ -24,16 +24,17 @@ function Hosts(props) {
       <p>
         Als host kun je via de website [IRMA-welkom.nl](...) gratis een QR-code
         ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om
-        deze QR-code te scannen en via hun IRMA app een e-mailadres met je
-        te delen.
+        deze QR-code te scannen en via hun IRMA app een e-mailadres met je te
+        delen.
       </p>
       <p>
-         De e-mailadressen die je zo verzamelt worden na 2 weken automatisch
-         weggegooid. Je hebt daar geen omkijken naar. Zijn de adressen nodig
-         na een besmetting? Dan kun je ze als host ophalen via het 
-         <a href="">IRMA-welkom portaal</a>. De organisatie achter IRMA-welkom 
-         kan de verzamelde adressen niet ontsleutelen: alleen jij
-         kan dat. Je heb daarvoor geen wachtwoord nodig, alleen je IRMA app.
+        De e-mailadressen die je zo verzamelt worden na 2 weken automatisch
+        weggegooid. Je hebt daar geen omkijken naar. Zijn de adressen nodig na
+        een besmetting? Dan kun je ze als host ophalen via het
+        <a href="">IRMA-welkom portaal</a>. De organisatie achter IRMA-welkom
+        kan de verzamelde adressen niet ontsleutelen: alleen jij kan dat. Je heb
+        daarvoor geen wachtwoord nodig, alleen je IRMA app.
+      </p>
     </div>
   );
 }
