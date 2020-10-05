@@ -6,6 +6,13 @@ function Footer(props) {
       <footer>
         <div className="footer-info">
           <h4>Vragen of opmerkingen</h4>
+	  <p>
+	    IRMA-welkom is ontwikkeld door de stichting 
+            <a href="https://privacybydesign.foundation/">Privacy by Design</a>
+            samen met de <a href="https://www.ru.nl/ihub/">iHub</a> 
+            onderzoeksgroep van de Radboud Universiteit (vanuit het
+            NWO project <a href="https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/">Encryption for All</a>).
+	  </p>
           <p>
             Ga naar de <a href="https://www.irma.app">irma.app</a> website voor
             informatie over de IRMA app en bezoek de{" "}
