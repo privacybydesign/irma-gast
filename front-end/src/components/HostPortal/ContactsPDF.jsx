@@ -10,7 +10,7 @@ import {
 } from "@react-pdf/renderer";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
-import logo from "../images/irma_logo.png";
+import logo from "../../images/irma_logo.png";
 
 // Create styles
 const styles = StyleSheet.create({

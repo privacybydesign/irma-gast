@@ -1,8 +1,8 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 
-import GuestPage from "./GuestPage";
-import Portal from "./Portal";
+import GuestPage from "./GuestPage/GuestPage";
+import Portal from "./HostPortal/Portal";
 
 const Main = () => {
   return (
