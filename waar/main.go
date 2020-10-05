@@ -140,7 +140,7 @@ func cleanup() {
 		return
 	}
 
-	stmt, err = db.Prepare("DELETE from locations where last_checkin <= DATE_SUB(NOW(), INTERVAL 2 WEEK)")
+	stmt, err = db.Prepare("DELETE from locations WHERE last_checkin <= DATE_SUB(NOW(), INTERVAL 2 WEEK) AND onetime=true")
 	if err != nil {
 		log.Printf("Error in statement: %v", err)
 		return
