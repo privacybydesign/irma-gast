@@ -88,6 +88,7 @@ func readConfig(confPath string) {
 		if err != nil {
 			log.Fatalf("Could not parse config files: %v", err)
 		}
+		log.Printf("Configuration: %v", conf)
 	}
 }
 
@@ -531,14 +532,14 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error saving cookie: %v", err)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func main() {
 	var confPath string
-
 	flag.StringVar(&confPath, "config", "config.yaml", "path to configuration file")
 	flag.Parse()
-
 	readConfig(confPath)
 	initDatabase()
 	initSessionStorage()
@@ -547,13 +548,15 @@ func main() {
 
 	r := mux.NewRouter()
 
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
-
-	// admin endpoints, authenticated by cookie
+	// Admin endpoints, authenticated by cookie
 	adminRouter := r.PathPrefix("/admin/").Subrouter()
 	adminRouter.Use(AuthMiddleware)
 
+	// TODO: remove the next two lines, they are only here to make testing more easy
+	// by providing the simplest front-end
 	adminRouter.HandleFunc("/login", login).Methods("GET")
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
+
 	adminRouter.HandleFunc("/irmasession_start", irmaSessionStart).Methods("GET")
 	adminRouter.HandleFunc("/irmasession_finish", irmaSessionFinish).Methods("GET")
 	adminRouter.HandleFunc("/register", register).Methods("POST")
@@ -561,14 +564,12 @@ func main() {
 	adminRouter.HandleFunc("/results/{id}", results).Methods("GET")
 	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
-	// gastsession endpoints
+	// Gast endpoints
 	r.HandleFunc("/gast/gastsession", postGastSession).Methods("POST")
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
-	log.Printf("conf: %v", conf)
 
 	var err error
-
 	if conf.CertificatePath != "" && conf.PrivKeyPath != "" {
 		log.Println("HTTPS enabled")
 		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, r)
