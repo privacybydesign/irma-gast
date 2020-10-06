@@ -4,13 +4,15 @@ import Header from "../Header";
 import Explanation from "./content/Explanation";
 import Guests from "./content/Guests";
 import Hosts from "./content/Hosts";
+import NavBar from "./content/NavBar";
 import PrivacyPolicy from "./content/PrivacyPolicy";
 import Welcome from "./content/Welcome";
 
 function LandingPage(props) {
   return (
     <div className="container">
-      <Header link="login" />
+      {/* <Header link="login" /> */}
+      <NavBar />
       <p></p>
       <div className="irma-light">
         <Welcome />
