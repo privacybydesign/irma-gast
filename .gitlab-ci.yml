@@ -2,7 +2,7 @@ image: privacybydesign/golang_sql:latest
 
 stages:
   - build
-  - package
+    #  - package
 
 before_script:
   - set -euxo pipefail
@@ -24,12 +24,12 @@ build:
     - cd waar
     - go build -a -ldflags '-extldflags "-static"' -o "../artifacts/irma-gast" .
 
-docker:
-  stage: package
-  tags:
-  - docker
-  image: docker:stable
-  script:
-  - docker login -u irma-access -p $REGISTRY_TOKEN $REGISTRY
-  - docker build -f Dockerfile -t $IMAGE .
-  - docker push $IMAGE
+      # docker:
+      #   stage: package
+      #   tags:
+      #   - docker
+      #   image: docker:stable
+      #   script:
+      #   - docker login -u irma-access -p $REGISTRY_TOKEN $REGISTRY
+      #   - docker build -f Dockerfile -t $IMAGE .
+      #   - docker push $IMAGE
