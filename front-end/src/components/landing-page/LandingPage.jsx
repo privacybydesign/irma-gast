@@ -1,9 +1,8 @@
 import React from "react";
 import Footer from "../footer/Footer";
-import Header from "../Header";
 import Explanation from "./content/Explanation";
-import Guests from "./content/Guests";
-import Hosts from "./content/Hosts";
+import How from "./content/How";
+import Who from "./content/Who";
 import NavBar from "./content/NavBar";
 import PrivacyPolicy from "./content/PrivacyPolicy";
 import Welcome from "./content/Welcome";
@@ -18,10 +17,10 @@ function LandingPage(props) {
         <Welcome />
       </div>
       <div className="irma-grey">
-        <Hosts />
+        <Who />
       </div>
       <div className="irma-white">
-        <Guests />
+        <How />
       </div>
       <div className="irma-light">
         <Explanation />

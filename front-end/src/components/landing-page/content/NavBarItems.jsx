@@ -4,10 +4,13 @@ function NavBarItems(props) {
   return (
     <div>
       <a href="#about" className="w3-bar-item">
-        Features
+        Waarom IRMA-welkom?
+      </a>
+      <a href="#who" className="w3-bar-item">
+        Voor wie?
       </a>
       <a href="#hoe" className="w3-bar-item">
-        Hoe werkt het
+        Hoe werkt het?
       </a>
       <a href="#start" className="w3-bar-item">
         Van start

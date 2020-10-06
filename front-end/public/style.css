@@ -4,15 +4,8 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
-
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Montserrat",
-    Arial,
-    sans-serif;
+h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", Arial, sans-serif;
   font-weight: bold;
 }
 
@@ -41,7 +34,6 @@ h1 span {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
   padding: 16px 32px;
 }
-
 
 .page-header h1 span {
   font-weight: 200;
@@ -75,16 +67,13 @@ h1 span {
 }
 
 .w3-bar-item:hover {
-  text-shadow: -0.02ex 0 #004c92,
-    0.02ex 0 #004c92;
+  text-shadow: -0.02ex 0 #004c92, 0.02ex 0 #004c92;
 }
 
 #mySidebar {
   z-index: 1;
   background-color: #f2f5f8;
 }
-
-
 
 .fa-bars {
   padding-top: 21px;
@@ -110,14 +99,18 @@ h1 span {
   background-color: #f2f5f8 !important;
 }
 
+.illustration {
+  margin: 20px;
+  max-width: 90%;
+  height: auto;
+}
+
 a {
   text-decoration: underline;
   color: #004c92;
 }
 
-
-h3,
-h2 {
+h3, h2 {
   position: relative;
   max-width: 960px;
 }
@@ -136,8 +129,7 @@ h2 {
   font-weight: bold;
 }
 
-form,
-.guest-list {
+form, .guest-list {
   position: relative;
   max-width: 960px;
   width: 80%;
@@ -145,14 +137,10 @@ form,
   background: #fff;
   padding: 36px;
   border-radius: 25px;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-form input,
-form textarea,
-form label,
-form h3 {
+form input, form textarea, form label, form h3 {
   width: 100%;
   border: none;
   outline: none;
@@ -205,6 +193,12 @@ footer {
   margin: auto;
 }
 
+.wide {
+  width: 90%;
+  margin: auto;
+  padding: 30px 10px 30px 10px;
+}
+
 footer {
   position: relative;
   left: 0;
@@ -227,44 +221,71 @@ footer {
 .btn {
   font-size: 16px;
   border-radius: 30px;
-  padding: 15px 30px;
-  min-width: 150px;
-}
-
-.irma-btn:hover {
-  top: -2px;
-  background: #004c92;
-  border-color: #004c92;
-  color: #fff;
+  padding: 8px 35px;
+  margin: 5px 10px 5px 0px;
 }
 
 .irma-btn {
-  top: -2px;
   background: #004c92;
-  border-color: #004c92;
+  border-color: #fff;
   color: #fff;
+  border-width: 2px;
+  border-style: solid;
   text-decoration: none;
-  font-weight: bold;
-  display: block;
-  margin: auto;
-  width: 250px;
+  /* font-weight: bold; */
+  display: inline-block;
   text-align: center;
 }
 
 .irma-btn-secondary {
-  display: inline-block;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 30px;
-  padding: 10px 30px;
-  margin: 10px;
-  min-width: 150px;
-  border-width: 2px;
   background: #fff;
   border-color: #004c92;
   color: #004c92;
-  position: relative;
-  top: 0;
+  border-width: 2px;
+  border-style: solid;
+  text-decoration: none;
+  /* font-weight: bold; */
+  display: inline-block;
+  text-align: center;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-item-left {
+  flex: 50%;
+}
+
+.flex-item-right {
+  flex: 50%;
+}
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+
+@media (max-width: 800px) {
+  .flex-item-right, .flex-item-left {
+    flex: 100%;
+  }
+}
+
+.irma-btn:hover {
+  border-color: #004c92;
+}
+
+.irma-btn-secondary:hover {
+  border-color: #fff;
+}
+
+.irma-no-btn {
+  display: block;
+}
+
+.small {
+  font-size: small;
 }
 
 /* Colors */
@@ -281,8 +302,7 @@ footer {
   background-color: #004c92;
 }
 
-.irma-blue p,
-.irma-blue h4 {
+.irma-blue p, .irma-blue h4 {
   color: #fff;
 }
 
@@ -292,4 +312,10 @@ footer {
 
 .irma-white {
   background-color: #fff;
+}
+
+@media (max-width: 800px) {
+  .left-half, .right-half {
+    width: 100%;
+  }
 }

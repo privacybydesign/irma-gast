@@ -6,6 +6,25 @@ function How(props) {
       <h3>Hoe werkt het?</h3>
       <h4>De host maakt een samenkomst aan en hangt een QR code op </h4>
       <p>
+        Als host kun je via de website [IRMA-welkom.nl](...) gratis een QR-code
+        ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om
+        deze QR-code te scannen en via hun IRMA app een e-mailadres met je te
+        delen.
+      </p>
+      <p>
+        De e-mailadressen die je zo verzamelt worden na 2 weken automatisch
+        weggegooid. Je hebt daar geen omkijken naar. Zijn de adressen nodig na
+        een besmetting? Dan kun je ze als host ophalen via het
+        <a href="">IRMA-welkom portaal</a>. De organisatie achter IRMA-welkom
+        kan de verzamelde adressen niet ontsleutelen: alleen jij kan dat. Je heb
+        daarvoor geen wachtwoord nodig, alleen je IRMA app.
+      </p>
+
+      <h4>
+        De bezoeker scant de QR code bij binnenkomst en laat zijn emailadres
+        achter
+      </h4>
+      <p>
         Met de [IRMA app](https://irma.app/) kunnen gebruikers zich op veel
         verschillende manieren online bekend maken, bijvoorbeeld met hun naam,
         adres, e-mail, 06 of BSN. Bij IRMA-welkom wordt alleen om een
@@ -28,10 +47,6 @@ function How(props) {
         gegevens van gebruikers worden niet voor andere doeleinden gebruikt en
         niet aan anderen doorgegeven of doorverkocht.
       </p>
-      <h4>
-        De bezoeker scant de QR code bij binnenkomst en laat zijn emailadres
-        achter
-      </h4>
     </div>
   );
 }
