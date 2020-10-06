@@ -2,6 +2,7 @@ image: privacybydesign/golang_sql:latest
 
 stages:
   - build
+  - package
 
 before_script:
   - set -euxo pipefail
