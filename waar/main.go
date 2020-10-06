@@ -251,7 +251,11 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var pkg server.SessionPackage
-	json.NewDecoder(resp.Body).Decode(&pkg)
+	err = json.NewDecoder(resp.Body).Decode(&pkg)
+	if err != nil {
+		log.Printf("Error decoding session package from IRMA server: %v", err)
+		return
+	}
 
 	// Start a user session
 	session, err := store.Get(r, "irmagast")
