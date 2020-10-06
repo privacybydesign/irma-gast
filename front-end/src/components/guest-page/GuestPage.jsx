@@ -21,6 +21,12 @@ class GuestPage extends React.Component {
     this._handleIrma();
   }
 
+  componentWillUnmount() {
+    if (this._irmaWeb) {
+      this._irmaWeb.abort();
+    }
+  }
+
   _handleIrma() {
     switch (this.props.state) {
       case 'start':
