@@ -501,6 +501,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 
 	stmt, err := db.Prepare("DELETE FROM checkins WHERE location_id = ?")
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
 		return
 	}
@@ -508,12 +509,14 @@ func remove(w http.ResponseWriter, r *http.Request) {
 
 	_, err = stmt.Exec(location_id)
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Couldn't remove checkins: %v", err)
 		return
 	}
 
 	stmt2, err := db.Prepare("DELETE FROM locations WHERE location_id = ?")
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
 		return
 	}
@@ -521,6 +524,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 
 	_, err = stmt2.Exec(location_id)
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Couldn't remove checkins: %v", err)
 		return
 	}
@@ -540,7 +544,7 @@ type gastData struct {
 }
 
 // Receives encrypted ciphertexts
-func postGastSession(w http.ResponseWriter, r *http.Request) {
+func gastSession(w http.ResponseWriter, r *http.Request) {
 	var received gastData
 	json.NewDecoder(r.Body).Decode(&received)
 
@@ -558,6 +562,7 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 
 	stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
 		return
 	}
@@ -566,6 +571,7 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Inserting gast data at location %v", received.Location_id)
 	_, err = stmt.Exec(received.Location_id, ct_bytes)
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
 		return
 	}
@@ -574,6 +580,7 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	var time string
 	err = db.QueryRow("SELECT time FROM checkins where location_id = ? ORDER by time DESC LIMIT 1", received.Location_id).Scan(&time)
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error finding last checkin timestamp: %v", err)
 		return
 	}
@@ -581,12 +588,14 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	// Update last checking in location table
 	stmt, err = db.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
 		return
 	}
 
 	_, err = stmt.Exec(time, received.Location_id)
 	if err != nil {
+		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)
 		return
 	}
@@ -648,7 +657,7 @@ func main() {
 	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
 	// Gast endpoints
-	r.HandleFunc("/gast/gastsession", postGastSession).Methods("POST")
+	r.HandleFunc("/gast/gastsession", gastSession).Methods("POST")
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
 
