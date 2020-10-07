@@ -6,7 +6,7 @@ import Error from "./Error";
 function ErrorPage(props) {
   return (
     <div className="container">
-      <NavBar /> <p></p>
+      <NavBar link="menu" /> <p></p>
       <div className="filler">
         <Error />
       </div>

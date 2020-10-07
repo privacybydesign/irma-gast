@@ -282,6 +282,13 @@ footer {
   text-align: center;
 }
 
+.center-content {
+  position: relative;
+  text-align: center;
+}
+
+
+
 .flex-container {
   display: flex;
   flex-wrap: wrap;

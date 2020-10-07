@@ -4,6 +4,7 @@ import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";
 import Footer from "../footer/Footer";
+import NavBar from "../nav-bar/NavBar";
 
 function Portal() {
   const [guestLists, setGuestLists] = useState([]);
@@ -54,7 +55,7 @@ function Portal() {
 
   return (
     <div className="App">
-      <Header />
+      <NavBar link="logout" />
       <div className="container">
         <h2>Je bezoekerslijsten</h2>
         <CreateListForm onAdd={addGuestList} />

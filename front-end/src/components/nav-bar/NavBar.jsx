@@ -24,7 +24,7 @@ function NavBar(props) {
     <div>
       <div className="w3-top">
         <div className="w3-bar w3-white w3-card" id="myNavbar">
-          <a href="#home" className="w3-bar-item logo w3-wide">
+          <a href="/" className="w3-bar-item logo w3-wide">
             <h1>
               IRMA
               <span>
@@ -38,7 +38,7 @@ function NavBar(props) {
           </a>
           {/* <!-- Right-sided navbar links --> */}
           <div className="w3-right w3-hide-small">
-            <NavBarItems />
+            <NavBarItems link={props.link} />
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
           <a

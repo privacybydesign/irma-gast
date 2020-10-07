@@ -10,8 +10,7 @@ import Start from "./content/Start";
 function LandingPage(props) {
   return (
     <div className="container">
-      {/* <Header link="login" /> */}
-      <NavBar />
+      <NavBar link="menu" />
       <p></p>
       <div className="irma-light">
         <Welcome />
