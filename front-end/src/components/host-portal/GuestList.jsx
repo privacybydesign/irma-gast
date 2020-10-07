@@ -17,7 +17,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import QRCode from "qrcode.react";
 import GuestCount from "./GuestCount";
 import ContactsPDF from "./ContactsPDF";
-import QRCodePDF from "./QRCodePDF";
+import QRCodePDF from "./qr-code/QRCodePDF";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -125,7 +125,7 @@ export default function GuestList(props) {
             level={"L"}
             includeMargin={false}
             renderAs={"canvas"}
-          />
+          />{" "}
           <CardActions className={classes.noPadding} disableSpacing>
             {qrReady ? (
               <QRCodePDF

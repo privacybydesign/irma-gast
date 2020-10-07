@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../Header";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";

@@ -6,6 +6,9 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 function CreateListForm(props) {
   const [guestlist, setGuestList] = useState({
@@ -25,6 +28,13 @@ function CreateListForm(props) {
     });
   }
 
+  const [checked, setChecked] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleCheckChange = (event) => {
+    setChecked(!checked);
+  };
+
   function clearCreateForm() {
     setGuestList({
       name: "",
@@ -35,9 +45,12 @@ function CreateListForm(props) {
   }
 
   function createList(event) {
-    props.onAdd(guestlist);
-    clearCreateForm();
-    event.preventDefault();
+    setError(checked ? "" : "Je moet eerst akkoord gaan.");
+    if (checked) {
+      props.onAdd(guestlist);
+      clearCreateForm();
+      event.preventDefault();
+    }
   }
 
   function getCurrentDate() {
@@ -107,8 +120,30 @@ function CreateListForm(props) {
                 }}
               />
             </Zoom>
+            <div style={{ height: "20px" }}></div>
           </div>
         )}
+        <FormControl required error={error}>
+          <FormControlLabel
+            className="multiline"
+            control={
+              <Checkbox
+                checked={checked}
+                onChange={handleCheckChange}
+                name="agree"
+              />
+            }
+            label={
+              <p className="baseliner">
+                Ik gebruik deze contactgegevens alleen voor een corona
+                waarschuwing, indien nodig, en nergens anders voor. Ik geef
+                IRMA-welkom de opdracht om deze gegevens voor dat doel te
+                verwerken.
+              </p>
+            }
+          />
+          <FormHelperText className="irma-red">{error}</FormHelperText>
+        </FormControl>
         <div style={{ height: "20px" }}></div>
         <Zoom in={true}>
           <Fab onClick={createList}>

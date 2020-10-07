@@ -31,7 +31,7 @@ function Start(props) {
             </li>
             <li>
               Voeg een kaartje toe met je e-mailadres, via{" "}
-              <a href="https://privacybydesign.foundation/uitgifte/email/">
+              <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
                 deze pagina
               </a>
               . Je kunt ook meer kaartjes toevoegen, maar die zijn niet nodig

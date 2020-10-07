@@ -5,14 +5,9 @@ body {
   padding: 0;
   height: 100%;
   min-height: 100%;
-
 }
 
-h2,
-h3,
-h4,
-h5,
-h6 {
+h2, h3, h4, h5, h6 {
   font-family: "Montserrat", Arial, sans-serif;
   font-weight: bold;
 }
@@ -125,14 +120,12 @@ h1 span {
   max-width: 100%;
 }
 
-
 a {
   text-decoration: underline;
   color: #004c92;
 }
 
-h3,
-h2 {
+h3, h2 {
   position: relative;
   max-width: 960px;
 }
@@ -151,8 +144,7 @@ h2 {
   font-weight: bold;
 }
 
-form,
-.guest-list {
+form, .guest-list {
   position: relative;
   max-width: 960px;
   width: 80%;
@@ -163,10 +155,7 @@ form,
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-form input,
-form textarea,
-form label,
-form h3 {
+form input, form textarea, form label, form h3 {
   width: 100%;
   border: none;
   outline: none;
@@ -191,7 +180,6 @@ form.create-meeting button:hover {
 footer {
   background-color: #004c92;
 }
-
 
 .footer-info {
   width: 80%;
@@ -287,7 +275,15 @@ footer {
   text-align: center;
 }
 
+.multiline {
+  align-items: baseline !important;
+  vertical-align: baseline !important;
+}
 
+.baseliner {
+  position: relative;
+  top: -7px;
+}
 
 .flex-container {
   display: flex;
@@ -343,8 +339,11 @@ footer {
   background-color: #004c92;
 }
 
-.irma-blue p,
-.irma-blue h4 {
+.MuiFormHelperText-root.Mui-error {
+  color: #D44454 !important;
+}
+
+.irma-blue p, .irma-blue h4 {
   color: #fff;
 }
 
@@ -357,9 +356,7 @@ footer {
 }
 
 @media (max-width: 800px) {
-
-  .left-half,
-  .right-half {
+  .left-half, .right-half {
     width: 100%;
   }
 }
