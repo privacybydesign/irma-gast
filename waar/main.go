@@ -39,6 +39,9 @@ type Conf struct {
 	// IRMA server url for email authentication
 	IrmaServerURL string `yaml:"irmaServerURL"`
 
+	// Key to sign sessionRequests
+	RequestorToken string `yaml:"requestorToken"`
+
 	// Database
 	DbDriver string `yaml:"dbDriver"`
 	DbHost   string `yaml:"dbHost"`
@@ -243,9 +246,22 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
 	requestBytes, _ := json.Marshal(request)
-	resp, err := http.Post(conf.IrmaServerURL+"/session/", "application/json", bytes.NewBuffer(requestBytes))
+	requestBuffer := bytes.NewBuffer(requestBytes)
+	httpReq, err := http.NewRequest("POST", conf.IrmaServerURL+"/session/", requestBuffer)
+	if err != nil {
+		log.Printf("couldn't create HTTP request: %v", err)
+		return
+	}
+
+	httpReq.Header.Add("Content-Type", "application/json")
+
+	if conf.RequestorToken != "" {
+		httpReq.Header.Add("Authorization", conf.RequestorToken)
+	}
+
+	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
+	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
 		return

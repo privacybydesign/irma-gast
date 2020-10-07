@@ -1,6 +1,7 @@
 url: http://localhost:8080
 bindAddr: :8080
 irmaServerURL: http://localhost:8088
+requestorToken: 1234 
 
 dbDriver: mysql
 dbHost: localhost
