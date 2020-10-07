@@ -239,6 +239,7 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	request.Disclose = irma.AttributeConDisCon{
 		irma.AttributeDisCon{
 			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.email.email")},
+			irma.AttributeCon{irma.NewAttributeRequest("pbdf.sidn-pbdf.email.email")},
 		},
 	}
 
@@ -251,7 +252,11 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var pkg server.SessionPackage
-	json.NewDecoder(resp.Body).Decode(&pkg)
+	err = json.NewDecoder(resp.Body).Decode(&pkg)
+	if err != nil {
+		log.Printf("Error decoding session package from IRMA server: %v", err)
+		return
+	}
 
 	// Start a user session
 	session, err := store.Get(r, "irmagast")
@@ -376,6 +381,21 @@ func (user *User) getLocations() ([]*Location, error) {
 	return locations, nil
 }
 
+func (user *User) hasLocation(location_id string) (bool, error) {
+	locs, err := user.getLocations()
+	if err != nil {
+		log.Printf("error finding locations for user: %v", err)
+		return false, err
+	}
+
+	for _, loc := range locs {
+		if loc.Id == location_id {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 type overviewData struct {
 	Email     string      `json:"email"`
 	Locations []*Location `json:"locations"`
@@ -418,29 +438,19 @@ func results(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := mux.Vars(r)["id"]
-
-	locs, err := user.getLocations()
-	if err != nil {
-		log.Printf("error finding locations for user: %v", err)
+	location_id, ok := mux.Vars(r)["location_id"]
+	if !ok {
+		log.Print("Couldn't get location_id from url")
 		return
 	}
 
-	found := false
-	for _, loc := range locs {
-		if loc.Id == id {
-			found = true
-			break
-		}
-	}
-
-	if !found {
-		log.Printf("location not registered with user")
+	if has, err := user.hasLocation(location_id); err != nil || !has {
+		log.Print("User not registered for this location")
 		return
 	}
 
 	entries := []*resultEntry{}
-	rows, err := db.Query("SELECT time, ct from checkins WHERE location_id=?", id)
+	rows, err := db.Query("SELECT time, ct from checkins WHERE location_id=?", location_id)
 	if err != nil {
 		log.Printf("Error querying database: %v", err)
 		return
@@ -463,6 +473,67 @@ func results(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resultData{entries})
 }
 
+func remove(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		log.Printf("Couldn't find user")
+		return
+	}
+
+	location_id, ok := mux.Vars(r)["location_id"]
+	if !ok {
+		log.Printf("Couldn't get location_id from url")
+		return
+	}
+
+	if has, err := user.hasLocation(location_id); err != nil || !has {
+		log.Printf("User not registered for this location")
+		return
+	}
+
+	// Remove all checkins from this location, then remove the location itself
+	// Wrap the whole operation in a transaction
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("Couldn't start a transaction: %v", err)
+		return
+	}
+
+	stmt, err := db.Prepare("DELETE FROM checkins WHERE location_id = ?")
+	if err != nil {
+		log.Printf("Error in statement: %v", err)
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(location_id)
+	if err != nil {
+		log.Printf("Couldn't remove checkins: %v", err)
+		return
+	}
+
+	stmt2, err := db.Prepare("DELETE FROM locations WHERE location_id = ?")
+	if err != nil {
+		log.Printf("Error in statement: %v", err)
+		return
+	}
+	defer stmt2.Close()
+
+	_, err = stmt2.Exec(location_id)
+	if err != nil {
+		log.Printf("Couldn't remove checkins: %v", err)
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Printf("Couldn't commit transaction: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 type gastData struct {
 	Location_id string `json:"location_id"`
 	Ciphertext  string `json:"ct"`
@@ -476,6 +547,12 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 	ct_bytes, err := base64.StdEncoding.DecodeString(received.Ciphertext)
 	if err != nil {
 		log.Printf("Error decoding string from gast data: %v", err)
+		return
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Printf("Error beginning transaction: %v", err)
 		return
 	}
 
@@ -507,11 +584,16 @@ func postGastSession(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error in statement: %v", err)
 		return
 	}
-	defer stmt.Close()
 
 	_, err = stmt.Exec(time, received.Location_id)
 	if err != nil {
 		log.Printf("Error updating last checkin: %v", err)
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Printf("Error committing transaction: %v", err)
 		return
 	}
 
@@ -561,7 +643,8 @@ func main() {
 	adminRouter.HandleFunc("/irmasession_finish", irmaSessionFinish).Methods("GET")
 	adminRouter.HandleFunc("/register", register).Methods("POST")
 	adminRouter.HandleFunc("/overview", overview).Methods("GET")
-	adminRouter.HandleFunc("/results/{id}", results).Methods("GET")
+	adminRouter.HandleFunc("/results/{location_id}", results).Methods("GET")
+	adminRouter.HandleFunc("/remove/{location_id}", remove).Methods("POST")
 	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
 	// Gast endpoints
