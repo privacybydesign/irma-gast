@@ -15,19 +15,16 @@ function PrivacyPolicy(props) {
         <img className="small-img" src={policy} alt="Policy illustration" />
       </div>
       <p>
-        De IRMA-welkom dienst wordt aangeboden door de stichting
+        De IRMA-welkom dienst wordt aangeboden door de stichting{" "} 
         <a href="https://privacybydesign.foundation/">Privacy by Design</a>
-        en het bedrijf <a href="https://www.procolix.com/">ProcoliX</a>. De
-        stichting is verwerkingsverantwoordelijke. De stichting en ProcoliX
+        en het bedrijf{" "}  <a href="https://www.procolix.com/">ProcoliX</a>. 
+        De stichting is verwerkingsverantwoordelijke. De stichting en ProcoliX
         verwerken samen ieder een deel van de gegevens, zoals hieronder in meer
-        detail beschreven. De IRMA-welkom dienst wordt door deze twee partijen
-        gratis aangeboden, vanuit de eigen maatschappelijke
+        detail beschreven wordt. De IRMA-welkom dienst wordt door deze twee 
+	partijen gratis aangeboden, vanuit de eigen maatschappelijke
         verantwoordelijkheid, met bestrijding van het Coronavirus als enige
         doel. Alleen daarvoor noodzakelijke gegevens worden verwerkt, zoals
-        hieronder nader omschreven. Deze gegevens worden niet met derden gedeeld
-        of verkocht. De software die gebruikt wordt voor IRMA-welkom, en ook
-        voor de IRMA-app, is open source en is dus voor iedereen toegankelijk
-        (via Github).
+        hieronder nader omschreven. 
       </p>
 
       <div className="subheading">Host, account en samenkomsten</div>
@@ -43,8 +40,8 @@ function PrivacyPolicy(props) {
       <p>
         Indien het gebruikte e-mailadres nog niet bekend is, wordt door ProcoliX
         impliciet een account aangemaakt voor dit adres. Indien op een account
-        meer dan 14 dagen geen activiteit heeft plaatsgevonden worden alle
-        bijbehorende gegevens verwijderd.
+        meer dan 14 dagen geen activiteit heeft plaatsgevonden worden het
+        account en alle bijbehorende gegevens verwijderd.
       </p>
 
       <p>
@@ -78,104 +75,106 @@ function PrivacyPolicy(props) {
         <li>
           De hierbovengenoemde twee organisaties achter IRMA-welkom de
           persoonsgegevens die via deze QR-code verzameld worden in zijn/haar
-          opdracht verwerken. Daarmee is de host verwerkingsverantwoordelijke
-          voor deze specifieke samenkomst.
+          opdracht verwerken. Daarmee is de host 
+	  mede-verwerkingsverantwoordelijke voor deze specifieke samenkomst.
         </li>
       </ul>
 
       <p>
         De e-mailadressen van de bezoekers van de samenkomst worden door
-        ProcoliX versleuteld opgeslagen. Het<emph>tijdstip</emph>van toevoeging
-        van een versleuteld e-mailadres wordt onversleuteld opgeslagen. Dit
-        tijdstip wordt gebruikt om versleutelde e-mailadressen na 14 dagen
-        automatisch te verwijderen. Wanneer alle versleutelde e-mailadressen van
-        een samenkomst verwijderd zijn wordt de samenkomst zelf ook verwijderd
-        uit het account van de host.
+        ProcoliX versleuteld opgeslagen. Het <emph>tijdstip</emph> van 
+	toevoeging van een versleuteld e-mailadres wordt onversleuteld 
+	opgeslagen. Dit tijdstip wordt gebruikt om versleutelde 
+	e-mailadressen na 14 dagen automatisch te verwijderen. Wanneer 
+	alle versleutelde e-mailadressen van een samenkomst verwijderd 
+	zijn wordt de samenkomst zelf ook verwijderd uit het account 
+	van de host.
       </p>
 
       <div className="subheading">Bezoekers, bekendmaking en versleuteling</div>
 
-      <p>
-        De host zal<emph>bezoekers</emph>aan zijn/haar samenkomst verzoeken de
-        bijbehorende QR-code te scannen. Daarbij komt een bezoeker eerst terecht
-        op een website waar informatie beschikbaar is, grotendeels via links,
-        over IRMA-welkom en over de privacy policy. Vervolgens kan de bezoeker
-        via een knop het proces starten om via de IRMA app een eigen e-mailadres
-        te onthullen. De wettelijke basis voor de gegevensverwerking die daarmee
-        van start gaat is: toestemming van de bezoeker zelf.
-      </p>
+      <p> De host zal <emph>bezoekers</emph> aan zijn/haar samenkomst
+        verzoeken de bijbehorende QR-code te scannen (en zonodig
+        daarvoor eerst de IRMA app te installeren). Na het scannen
+        komt een bezoeker eerst terecht op een website waar informatie
+        beschikbaar is, grotendeels via links, over IRMA-welkom en
+        over de privacy policy. Vervolgens kan de bezoeker via een
+        knop het proces starten om via de IRMA app een eigen
+        e-mailadres te onthullen. De wettelijke basis voor de
+        gegevensverwerking die daarmee van start gaat is: toestemming
+        van de bezoeker zelf.  </p>
 
-      <p>
-        De IRMA server waaraan de bezoeker een eigen e-mailadres onthult wordt
-        beheerd door de stichting Privacy by Design. Daarmee is de stichting
-        verwerker van alle onthulde e-mailadressen van bezoekers. Deze
-        verwerking vindt slechts kortstondig plaats: het e-mailadres van de
-        bezoeker wordt, samen met een publieke sleutel (afgeleid van de e-mail
-        van de host) teruggegeven aan de webpagina waarvan de bezoeker afkomstig
-        is (via de genoemde knop). Het e-mailadres van de bezoeker wordt daarna
-        direct verwijderd door de IRMA server bij de stichting. In het bijzonder
-        houdt de stichting geen log bij van e-mailadressen van bezoekers.
-      </p>
+      <p> De IRMA server waaraan de bezoeker een eigen e-mailadres
+        onthult wordt beheerd door de stichting Privacy by
+        Design. Daarmee is de stichting verwerker van alle onthulde
+        e-mailadressen van bezoekers. Deze verwerking vindt slechts
+        kortstondig plaats: het e-mailadres van de bezoeker wordt,
+        samen met een publieke sleutel (<emph>public key</emph>,
+        afgeleid van de e-mail van de host) teruggegeven aan de
+        webpagina waarvan de bezoeker afkomstig is (via de genoemde
+        knop). Het e-mailadres van de bezoeker wordt daarna direct
+        verwijderd door de IRMA server bij de stichting. In het
+        bijzonder houdt de stichting geen log bij van e-mailadressen
+        van bezoekers.  </p>
 
-      <p>
-        Op deze webpagina wordt het ontvangen e-mailadres versleuteld en
-        vervolgens toegevoegd aan de bezoekerslijst van de samenkomst, die door
-        ProcoliX bijgehouden wordt. ProcoliX verwerkt aldus de e-mailadressen
-        van alle hosts, maar niet van bezoekers. Voor de IRMA server van de
-        stichting Privacy by Design is dit andersom: wel van bezoekers maar niet
-        van hosts. De versleuteling is<emph>identity-based</emph>: uit het
-        e-mailadres van de host wordt een public key afgeleid die gebruikt wordt
-        voor de versleuteling van de gegevens voor de samenkomst(en) van de
-        host. De versleuteling vindt plaats in de browser van de bezoeker (en
-        niet bij ProcoliX).
-      </p>
+      <p> Op deze webpagina wordt het ontvangen e-mailadres
+        versleuteld en vervolgens toegevoegd aan de bezoekerslijst van
+        de samenkomst, die door ProcoliX bijgehouden wordt. ProcoliX
+        verwerkt aldus de e-mailadressen van alle hosts, maar niet van
+        bezoekers (want die zijn versleuteld en onleesbaar voor
+        ProcoliX). Voor de IRMA server van de stichting Privacy by
+        Design is dit andersom: wel van bezoekers maar niet van
+        hosts. De versleuteling is <emph>identity-based</emph>: uit
+        het e-mailadres van de host wordt een <emph>public key</emph>
+        afgeleid die gebruikt wordt voor de versleuteling van de
+        gegevens voor de samenkomst(en) van de host. De versleuteling
+        vindt plaats in de browser van de bezoeker (en niet bij
+        ProcoliX).  </p>
 
       <div className="subheading">Hosts en ontsleuteling</div>
 
-      <p>
-        Wanneer een host inlogt op het eigen account op het IRMA-welkom portaal
-        zijn daar alle aangemaakte (en nog niet verwijderde) samenkomsten
-        zichtbaar voor de host. De host kan per samenkomst de verzamelde
-        e-mailadressen ontsleutelen, zoals bedoeld in het geval dat de host weet
-        heeft van de aanwezigheid van een besmette persoon op een bepaalde
-        samenkomst op een bepaald tijdstip. Voor het (onbedoelde) gebruik van de
-        verzamelde e-mailadressen voor andere doeleinden is de host zelf
-        aansprakelijk. In het bijzonder zijn de twee partijen achter IRMA-welkom
-        hiervoor niet verantwoordelijk of aansprakelijk.
-      </p>
+      <p> Wanneer een host inlogt op het eigen account op het
+        IRMA-welkom portaal zijn daar alle aangemaakte (en nog niet
+        verwijderde) samenkomsten zichtbaar voor de host. De host kan
+        per samenkomst de verzamelde e-mailadressen ontsleutelen,
+        zoals bedoeld in het geval dat de host weet heeft van de
+        aanwezigheid van een besmette persoon op een bepaalde
+        samenkomst op een bepaald tijdstip. Voor het (onbedoelde)
+        gebruik van de verzamelde e-mailadressen voor andere
+        doeleinden is de host zelf aansprakelijk. In het bijzonder
+        zijn de twee partijen achter IRMA-welkom hiervoor niet
+        verantwoordelijk of aansprakelijk.  </p>
 
-      <p>
-        Voor die ontsleuteling toont de host via de IRMA app nogmaals het
-        e-mailadres van het eigen account, maar nu aan
-        <emph>key generating server</emph>, die beheerd wordt door de stichting
-        Privacy by Design. De stichting verwerkt daarbij kortstondig het
-        e-mailadres van de host, op basis van diens toestemming. De genoemde
-        server levert de private sleutel horend bij het e-mailadres van de host,
-        waarmee de e-mailadressen in de webbrowser van de host ontsleuteld
-        worden. Vervolgens is het de verantwoordelijkheid van de host om de
-        betrokkenen (per e-mail) zelf te waarschuwen, of om deze e-mailadressen
-        door te geven aan de GGD.
-      </p>
+      <p> Voor die ontsleuteling toont de host via de IRMA app
+        nogmaals het e-mailadres van het eigen account, maar nu aan
+        een <emph>key generating server</emph>, die beheerd wordt door
+        de stichting Privacy by Design. De stichting verwerkt daarbij
+        kortstondig het e-mailadres van de host, op basis van diens
+        toestemming. De genoemde server levert de <emph>private
+        key</emph> horend bij het e-mailadres van de host, waarmee de
+        e-mailadressen in de webbrowser van de host ontsleuteld
+        worden. Vervolgens is het de verantwoordelijkheid van de host
+        om de betrokkenen (per e-mail) zelf te waarschuwen, of om deze
+        e-mailadressen door te geven aan de GGD.  </p>
 
-      <p>
-        In theorie kunnen gegevens ook ontsleuteld worden wanneer de twee
-        partijen achter IRMA-welkom samenspannen en de gegevens die zij voor
-        IRMA-welkom apart bewerken combineren. Deze partijen zullen niet zo
-        samenspannen. Zij hebben de zaken juist technisch en organisatorisch zo
-        uit elkaar getrokken dat niemand van hen een totaalbeeld heeft.
-      </p>
+      <p> In theorie kunnen gegevens ook ontsleuteld worden wanneer de
+        twee partijen achter IRMA-welkom samenspannen en de gegevens
+        combineren die zij voor IRMA-welkom apart bewerken. Deze
+        partijen zullen niet zo samenspannen. Zij hebben de zaken
+        juist technisch en organisatorisch zo uit elkaar getrokken dat
+        niemand van hen een totaalbeeld heeft.  </p>
 
       <div className="subheading">Algemene bepalingen</div>
 
-      <p>
-        Statistische informatie over het gebruik van IRMA-welkom (aantallen
-        hosts, samenkomsten, deelnemers per dag/week/maand/jaar, herkomst enz.)
-        kan geaggregeerd worden door ProcoliX en kan door ProcoliX en door de
-        stichting Privacy by Design gebruikt worden voor documentatie en
-        presentaties. Zonodig kunnen IRMA-welkom gegevens ook gebruikt worden
-        voor technische doeleinden, zoals onderhoud en optimalisatie, maar
-        worden ze verwijderd na maximaal twee dagen.
-      </p>
+      <p> Statistische informatie over het gebruik van IRMA-welkom
+        (aantallen hosts, samenkomsten, deelnemers per
+        dag/week/maand/jaar, herkomst enz.)  kan geaggregeerd worden
+        door ProcoliX en kan door ProcoliX en door de stichting
+        Privacy by Design gebruikt worden voor documentatie en
+        presentaties. Zonodig kunnen IRMA-welkom gegevens ook gebruikt
+        worden voor technische doeleinden, zoals onderhoud en
+        optimalisatie, maar worden ze verwijderd na maximaal twee
+        dagen.  </p>
 
       <p>
         Technische veranderingen in het IRMA-welkom systeem, of eventuele nieuwe

@@ -17,13 +17,26 @@ function How(props) {
           </p>
           <p>
             De e-mailadressen die je zo verzamelt worden versleuteld opgeslagen
-            na 2 weken automatisch weggegooid. Je hebt daar geen omkijken naar.
-            Zijn de adressen nodig na een besmetting? Dan kun je ze als host
-            ophalen door in te loggen. De organisatie achter IRMA-welkom kan de
-            verzamelde adressen niet ontsleutelen: alleen jij kan dat. Je heb
-            daarvoor geen wachtwoord nodig, alleen je{" "}
+            en na 2 weken automatisch weggegooid. Je hebt als host daar geen 
+            omkijken naar. Zijn de adressen nodig na een besmetting? Dan kun 
+            je ze als host ophalen door (opnieuw) in te loggen. De organisatie 
+            achter IRMA-welkom kan de verzamelde e-mailadressen niet 
+            ontsleutelen: alleen jij kan dat. Je hebt daarvoor geen 
+            wachtwoord nodig, alleen je{" "} 
             <a href="https://irma.app/">IRMA-app</a>.
           </p>
+	  <p>
+	    Je kunt als host verschillende samenkomsten aanmaken, met ieder 
+            een eigen QR-code, die je op verschillende plekken op kunt hangen. 
+            Zo kun je bijvoorbeeld voor iedere verdieping of afdeling op het 
+	    werk een aparte registratie van bezoekers bijhouden.
+	  </p>
+	  <p>
+	    Als host zul je zeker in het begin regelmatig aan je bezoekers
+	    moeten vragen om de IRMA app te installeren. Dat hoeft maar
+	    één keer; daarna levert het alleen maar gemak op. Het installeren
+	    is makkelijk en kan ter plekke gebeuren. 
+	  </p>
 
           <h4>De bezoeker scant de QR code en laat zijn e-mailadres achter</h4>
           <p>
@@ -38,11 +51,12 @@ function How(props) {
           <p>
             {" "}
             De e-mailadressen van bezoekers worden beveiligd (versleuteld)
-            opgeslagen en na twee weken automatisch weggegooid. Alleen de host
-            kan de e-mailadressen ontsleutelen, bij een besmetting, om bezoekers
+            opgeslagen en na twee weken automatisch weggegooid. Dat neemt
+            terechte zorgen weg. Verder kan alleen de host
+            de e-mailadressen ontsleutelen, bij een besmetting, om bezoekers
             zelf te waarschuwen of om hun e-mailadressen door te geven aan de
-            GGD. De organisatie achter IRMA-welkom kan en wil zelf niet zien wie
-            bij wie op bezoek komt, zie ook de{" "}
+            GGD. De organisatie achter IRMA-welkom kan en wil zelf niet zien 
+            wie bij wie op bezoek komt, zie ook de{" "}
             <a href="#privacypolicy">privacy policy</a>.
           </p>
         </div>

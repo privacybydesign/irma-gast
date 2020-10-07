@@ -12,7 +12,7 @@ function Start(props) {
           <h2>Van start met IRMA-welkom</h2>
 
           <p>
-            Zowel een host die een samenkomst aanmaakt als ook bezoekers die
+            Zowel een host die een samenkomst aanmaakt als ook een bezoeker die
             zich aanmeldt heeft de <a href="https://irma.app/">IRMA-app</a>{" "}
             nodig. In de IRMA-app verzamel je persoonlijke gegevens van jezelf,
             in de vorm van kaartjes.
