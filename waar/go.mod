@@ -11,6 +11,7 @@ require (
 	github.com/bwesterb/go-atum v1.1.2 // indirect
 	github.com/bwesterb/go-xmssmt v1.4.1 // indirect
 	github.com/certifi/gocertifi v0.0.0-20200211180108-c7c1fbc02894 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fxamacker/cbor v1.5.1 // indirect
 	github.com/getsentry/raven-go v0.2.0 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible // indirect

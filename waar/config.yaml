@@ -1,6 +1,8 @@
 url: http://localhost:8080
 bindAddr: :8080
 irmaServerURL: http://localhost:8088
+#signingKey: sk.pem
+#requestor: irma-welkom
 
 dbDriver: mysql
 dbHost: localhost

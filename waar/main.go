@@ -6,9 +6,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"strings"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	irma "github.com/privacybydesign/irmago"
 	server "github.com/privacybydesign/irmago/server"
 	"gopkg.in/yaml.v2"
@@ -38,6 +40,10 @@ type Conf struct {
 
 	// IRMA server url for email authentication
 	IrmaServerURL string `yaml:"irmaServerURL"`
+
+	// Key to sign sessionRequests
+	Requestor  string `yaml:"requestor"`
+	SigningKey string `yaml:"signingKey"`
 
 	// Database
 	DbDriver string `yaml:"dbDriver"`
@@ -243,9 +249,40 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	var (
+		requestBuffer *bytes.Buffer
+		contentType   string
+	)
+
+	if conf.Requestor != "" && conf.SigningKey != "" {
+		erequest := irma.NewServiceProviderJwt(conf.Requestor, request)
+		bts, err := ioutil.ReadFile(conf.SigningKey)
+		if err != nil {
+			log.Printf("error retrieving signing key: %v", err)
+			return
+		}
+
+		sk, err := jwt.ParseRSAPrivateKeyFromPEM(bts)
+		if err != nil {
+			log.Printf("error parsing PEM signing key: %v", err)
+			return
+		}
+
+		jwt, err := erequest.Sign(jwt.SigningMethodRS256, sk)
+		if err != nil {
+			log.Printf("error signing jwt: %v", err)
+			return
+		}
+		requestBuffer = bytes.NewBufferString(jwt)
+		contentType = "text/plain"
+	} else {
+		requestBytes, _ := json.Marshal(request)
+		requestBuffer = bytes.NewBuffer(requestBytes)
+		contentType = "application/json"
+	}
+
 	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
-	requestBytes, _ := json.Marshal(request)
-	resp, err := http.Post(conf.IrmaServerURL+"/session/", "application/json", bytes.NewBuffer(requestBytes))
+	resp, err := http.Post(conf.IrmaServerURL+"/session/", contentType, requestBuffer)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
 		return
