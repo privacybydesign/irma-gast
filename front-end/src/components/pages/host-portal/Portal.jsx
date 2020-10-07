@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";
-import Footer from "../footer/Footer";
-import NavBar from "../nav-bar/NavBar";
+import NavBar from "../../nav-bar/NavBar";
+import Footer from "../../footer/Footer";
 
 function Portal() {
   const [guestLists, setGuestLists] = useState([]);
@@ -46,7 +46,7 @@ function Portal() {
           date={list["date"]}
           name={list["name"]}
           listType={list["type"]}
-          host="todo" // TODO replace with actual host
+          host="someone@someplace.nl" // TODO replace with actual host
         />
       );
     });

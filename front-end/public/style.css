@@ -242,7 +242,7 @@ footer {
 .btn {
   font-size: 16px;
   border-radius: 30px;
-  padding: 8px 35px;
+  padding: 8px 25px;
   margin: 5px 10px 5px 0px;
 }
 
@@ -308,6 +308,13 @@ footer {
 @media (max-width: 800px) {
   .flex-item-single {
     flex: 100%;
+  }
+  .illustration {
+    padding: 20px;
+    max-width: 400px;
+    max-height: 400px;
+    display: block;
+    margin: auto;
   }
 }
 

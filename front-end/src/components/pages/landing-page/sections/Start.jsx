@@ -1,5 +1,5 @@
 import React from "react";
-import start from "../../../images/start.png";
+import start from "../../../../images/start.png";
 
 function Start(props) {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import guests from "../../../images/guests.png";
+import guests from "../../../../images/guests.png";
 
 function Welcome(props) {
   return (

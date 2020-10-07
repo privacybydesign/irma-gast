@@ -1,5 +1,5 @@
 import React from "react";
-import errorImg from "../../images/error.png";
+import errorImg from "../../../images/error.png";
 
 function Error(props) {
   return (

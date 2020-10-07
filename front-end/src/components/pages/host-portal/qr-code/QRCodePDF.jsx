@@ -7,17 +7,40 @@ import {
   Image,
   Document,
   StyleSheet,
+  Font,
 } from "@react-pdf/renderer";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
-import logo from "../../../images/irma_logo.png";
+import test from "../../../../images/getReady.png";
+import font from "../../../../fonts/Montserrat/Montserrat-Regular.ttf";
+import fontBold from "../../../../fonts/Montserrat/Montserrat-Bold.ttf";
+import fontSemiBold from "../../../../fonts/Montserrat/Montserrat-SemiBold.ttf";
+
+// Register font
+Font.register({
+  family: "Montserrat",
+  src: font,
+});
+
+// Register font
+Font.register({
+  family: "Montserrat Bold",
+  src: fontBold,
+});
+
+// Register font
+Font.register({
+  family: "Montserrat SemiBold",
+  src: fontSemiBold,
+});
 
 // Create styles
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
     backgroundColor: "#fff",
-    marginTop: 32,
+    marginTop: 24,
+    fontFamily: "Montserrat",
   },
   section: {
     margin: 2,
@@ -25,12 +48,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   title: {
-    fontSize: 24,
+    fontSize: 16,
+    marginLeft: 24,
     textAlign: "center",
+    fontFamily: "Montserrat SemiBold",
   },
   subtitle: {
-    fontSize: 16,
-    margin: 12,
+    fontSize: 13,
+    marginLeft: 24,
     textAlign: "center",
   },
   organizer: {
@@ -38,25 +63,44 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   text: {
+    fontSize: 11,
+    marginLeft: 24,
+    marginRight: 24,
+    textAlign: "center",
+  },
+  bolder: {
+    fontSize: 11,
+    marginLeft: 24,
+    marginRight: 24,
+    textAlign: "center",
+    fontFamily: "Montserrat SemiBold",
+  },
+  item: {
     fontSize: 12,
     marginLeft: 32,
     marginRight: 32,
-    textAlign: "center",
+    textAlign: "left",
   },
   spacer: {
-    height: 20,
+    height: 4,
   },
   image: {
-    height: 400,
-    width: 400,
-    marginBottom: 30,
+    height: 180,
+    width: 180,
+    marginVertical: 10,
     marginHorizontal: "auto",
   },
   small: {
-    height: 90,
-    width: 100,
-    marginBottom: 30,
+    height: 45,
+    width: 50,
+    marginBottom: 10,
     marginHorizontal: "auto",
+  },
+  fullwidth: {
+    marginLeft: 0,
+    marginTop: 0,
+    width: 550,
+    height: "auto",
   },
 });
 
@@ -72,13 +116,8 @@ function QRCodePDF(props) {
                 <Text style={styles.subtitle}>
                   {"Startdatum: "}
                   {props.date}
-                  {", "}
+                  {", host: "}
                   {props.host}
-                </Text>
-                <View style={styles.spacer}></View>
-                <Text style={styles.text}>
-                  Scan deze code met de camera van je mobiel om je aan te
-                  melden.
                 </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
@@ -88,18 +127,16 @@ function QRCodePDF(props) {
                     .getElementById("qr-" + props.qr)
                     .toDataURL("image/jpg", 0.3)}
                 />
-                <Text style={styles.text}>
-                  Na scan worden je contactgegevens beheerd door: {props.host}.
+                <View style={styles.spacer}></View>
+                <Text style={styles.bolder}>
+                  Scan de QR code met de IRMA-app om je aan te melden
                 </Text>
                 <View style={styles.spacer}></View>
                 <Text style={styles.text}>
-                  Dit is een service van IRMA-welkom.
+                  Na aanmelding worden je contactgegevens beheerd door de host:{" "}
+                  {props.host}. Neem bij vragen contact op met deze host.
                 </Text>
-                <Text style={styles.text}>
-                  Bezoek www.irma-welkom.nl voor meer informatie.
-                </Text>
-                <View style={styles.spacer}></View>
-                <Image style={styles.small} src={logo} />
+                <Image style={styles.fullwidth} src={test} />
               </View>
             </Page>
           </Document>

@@ -1,11 +1,10 @@
 import React from "react";
-import Footer from "../footer/Footer";
-import How from "./content/How";
-import Who from "./content/Who";
-import NavBar from "../nav-bar/NavBar";
-import PrivacyPolicy from "./content/PrivacyPolicy";
-import Welcome from "./content/Welcome";
-import Start from "./content/Start";
+import Footer from "../../footer/Footer";
+import How from "./sections/How";
+import Who from "./sections/Who";
+import NavBar from "../../nav-bar/NavBar";
+import Welcome from "./sections/Welcome";
+import Start from "./sections/Start";
 
 function LandingPage(props) {
   return (
@@ -24,9 +23,7 @@ function LandingPage(props) {
       <div className="irma-light">
         <Start />
       </div>
-      <div className="irma-grey">
-        <PrivacyPolicy />
-      </div>
+      <div style={{ height: "60px" }} />
       <Footer />
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import who from "../../../images/who.png";
+import who from "../../../../images/who.png";
 
 function Who(props) {
   return (
@@ -14,9 +14,9 @@ function Who(props) {
           {" "}
           <h4>IRMA-welkom is voor iedereen!</h4>
           <p>
-            IRMA-welkom is voor iedereen die samenkomsten organiseert of 
-            bezoekt. Je kunt met IRMA-welkom bijvoorbeeld
-            makkelijk contactgegevens van bezoekers verzamelen als:
+            IRMA-welkom is voor iedereen die samenkomsten organiseert of
+            bezoekt. Je kunt met IRMA-welkom bijvoorbeeld makkelijk
+            contactgegevens van bezoekers verzamelen als:
           </p>
           <ul>
             <li>eigenaar van een café, restaurant, winkel, garage, ...</li>

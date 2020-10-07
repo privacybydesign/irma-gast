@@ -1,10 +1,8 @@
 import React from "react";
-import Footer from "../footer/Footer";
-import Header from "../Header";
-import Instructions from "../host-portal/qr-code/GetIRMA";
+import Footer from "../../footer/Footer";
 import { connect } from "react-redux";
 import irmaFrontend from "@privacybydesign/irma-frontend";
-import NavBar from "../nav-bar/NavBar";
+import NavBar from "../../nav-bar/NavBar";
 
 const mapStateToProps = (state) => {
   return {
