@@ -6,9 +6,9 @@ function NavBarItems(props) {
       <a href="#who" className="w3-bar-item">
         Voor wie?
       </a>
-      <a href="#why" className="w3-bar-item">
+      {/* <a href="#why" className="w3-bar-item">
         Waarom?
-      </a>
+      </a> */}
       <a href="#how" className="w3-bar-item">
         Hoe werkt het?
       </a>

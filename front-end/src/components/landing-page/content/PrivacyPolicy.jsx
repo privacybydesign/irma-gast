@@ -1,4 +1,5 @@
 import React from "react";
+import policy from "../../../images/policy.png";
 
 function PrivacyPolicy(props) {
   return (
@@ -10,6 +11,9 @@ function PrivacyPolicy(props) {
         source software; gegevens van gebruikers worden niet voor andere
         doeleinden gebruikt en niet aan anderen doorgegeven of doorverkocht.
       </p>
+      <div className="small-img-container">
+        <img className="small-img" src={policy} alt="Policy illustration" />
+      </div>
       <p>
         De IRMA-welkom dienst wordt aangeboden door de stichting
         <a href="https://privacybydesign.foundation/">Privacy by Design</a>

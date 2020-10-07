@@ -54,8 +54,8 @@ function Portal() {
 
   return (
     <div className="App">
+      <Header />
       <div className="container">
-        <Header />
         <h2>Je bezoekerslijsten</h2>
         <CreateListForm onAdd={addGuestList} />
         {renderGuestLists()}

@@ -3,12 +3,12 @@ import start from "../../../images/start.png";
 
 function Start(props) {
   return (
-    <div className="wide" id="how">
-      <div class="flex-container">
-        <div class="flex-item-single">
+    <div className="wide" id="start">
+      <div className="flex-container">
+        <div className="flex-item-single">
           <img className="illustration" src={start} alt="Restaurant visitors" />
         </div>
-        <div class="flex-item-double">
+        <div className="flex-item-double">
           <h2>Van start met IRMA-welkom</h2>
 
           <p>

@@ -2,9 +2,17 @@ body {
   margin: 0;
   background-color: #f2f5f8;
   font-family: "Montserrat", sans-serif;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+
 }
 
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Montserrat", Arial, sans-serif;
   font-weight: bold;
 }
@@ -26,6 +34,8 @@ h1 span {
   min-height: 100vh;
   position: relative;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-header {
@@ -105,12 +115,24 @@ h1 span {
   height: auto;
 }
 
+.small-img-container {
+  max-width: 30%;
+  height: auto;
+  margin: auto;
+}
+
+.small-img {
+  max-width: 100%;
+}
+
+
 a {
   text-decoration: underline;
   color: #004c92;
 }
 
-h3, h2 {
+h3,
+h2 {
   position: relative;
   max-width: 960px;
 }
@@ -129,7 +151,8 @@ h2 {
   font-weight: bold;
 }
 
-form, .guest-list {
+form,
+.guest-list {
   position: relative;
   max-width: 960px;
   width: 80%;
@@ -140,7 +163,10 @@ form, .guest-list {
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-form input, form textarea, form label, form h3 {
+form input,
+form textarea,
+form label,
+form h3 {
   width: 100%;
   border: none;
   outline: none;
@@ -166,6 +192,7 @@ footer {
   background-color: #004c92;
 }
 
+
 .footer-info {
   width: 80%;
   max-width: 700px;
@@ -182,6 +209,7 @@ footer {
   margin: auto;
   color: #15222e;
   padding: 40px 0px 40px 0px;
+  height: 100%
 }
 
 .content .subheading {
@@ -197,7 +225,11 @@ footer {
   width: 90%;
   max-width: 960px;
   margin: auto;
-  padding: 30px 10px 30px 10px;
+  padding: 50px 10px 50px 10px;
+}
+
+.filler {
+  flex-grow: 1;
 }
 
 footer {
@@ -304,7 +336,8 @@ footer {
   background-color: #004c92;
 }
 
-.irma-blue p, .irma-blue h4 {
+.irma-blue p,
+.irma-blue h4 {
   color: #fff;
 }
 
@@ -317,7 +350,9 @@ footer {
 }
 
 @media (max-width: 800px) {
-  .left-half, .right-half {
+
+  .left-half,
+  .right-half {
     width: 100%;
   }
 }

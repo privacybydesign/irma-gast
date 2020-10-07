@@ -4,8 +4,8 @@ import how from "../../../images/how.png";
 function How(props) {
   return (
     <div className="wide" id="how">
-      <div class="flex-container">
-        <div class="flex-item-double">
+      <div className="flex-container">
+        <div className="flex-item-double">
           <h3>Hoe werkt het?</h3>
           <h4>De host haalt een QR code op en hangt deze op </h4>
           <p>
@@ -46,7 +46,7 @@ function How(props) {
             <a href="#privacypolicy">privacy policy</a>.
           </p>
         </div>
-        <div class="flex-item-single">
+        <div className="flex-item-single">
           <img className="illustration" src={how} alt="Restaurant visitors" />
         </div>
       </div>

@@ -5,12 +5,12 @@ function Who(props) {
   return (
     <div className="wide" id="who">
       {" "}
-      <div class="flex-container">
-        <div class="flex-item-single">
+      <div className="flex-container">
+        <div className="flex-item-single">
           {" "}
           <img className="illustration" src={who} alt="Restaurant visitors" />
         </div>{" "}
-        <div class="flex-item-single">
+        <div className="flex-item-single">
           {" "}
           <h4>IRMA-welkom is voor iedereen!</h4>
           <p>

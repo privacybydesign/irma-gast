@@ -5,8 +5,8 @@ function Welcome(props) {
   return (
     <div className="wide">
       <div className="irma-light">
-        <div class="flex-container">
-          <div class="flex-item-single">
+        <div className="flex-container">
+          <div className="flex-item-single">
             <h3>Registreer zelf bezoekers, op het werk of thuis!</h3>
             <p>
               Met IRMA-welkom kan iedereen host zijn en gemakkelijk en veilig
@@ -33,7 +33,7 @@ function Welcome(props) {
               <a href="#privacypolicy">privacy policy</a> van IRMA-welkom.
             </p>
           </div>
-          <div class="flex-item-single">
+          <div className="flex-item-single">
             {" "}
             <img
               className="illustration"
