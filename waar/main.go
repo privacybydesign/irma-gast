@@ -6,11 +6,9 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	irma "github.com/privacybydesign/irmago"
 	server "github.com/privacybydesign/irmago/server"
 	"gopkg.in/yaml.v2"
@@ -42,8 +40,7 @@ type Conf struct {
 	IrmaServerURL string `yaml:"irmaServerURL"`
 
 	// Key to sign sessionRequests
-	Requestor  string `yaml:"requestor"`
-	SigningKey string `yaml:"signingKey"`
+	RequestorToken string `yaml:"requestorToken"`
 
 	// Database
 	DbDriver string `yaml:"dbDriver"`
@@ -249,40 +246,22 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	var (
-		requestBuffer *bytes.Buffer
-		contentType   string
-	)
+	requestBytes, _ := json.Marshal(request)
+	requestBuffer := bytes.NewBuffer(requestBytes)
+	httpReq, err := http.NewRequest("POST", conf.IrmaServerURL+"/session/", requestBuffer)
+	if err != nil {
+		log.Printf("couldn't create HTTP request: %v", err)
+		return
+	}
 
-	if conf.Requestor != "" && conf.SigningKey != "" {
-		erequest := irma.NewServiceProviderJwt(conf.Requestor, request)
-		bts, err := ioutil.ReadFile(conf.SigningKey)
-		if err != nil {
-			log.Printf("error retrieving signing key: %v", err)
-			return
-		}
+	httpReq.Header.Add("Content-Type", "application/json")
 
-		sk, err := jwt.ParseRSAPrivateKeyFromPEM(bts)
-		if err != nil {
-			log.Printf("error parsing PEM signing key: %v", err)
-			return
-		}
-
-		jwt, err := erequest.Sign(jwt.SigningMethodRS256, sk)
-		if err != nil {
-			log.Printf("error signing jwt: %v", err)
-			return
-		}
-		requestBuffer = bytes.NewBufferString(jwt)
-		contentType = "text/plain"
-	} else {
-		requestBytes, _ := json.Marshal(request)
-		requestBuffer = bytes.NewBuffer(requestBytes)
-		contentType = "application/json"
+	if conf.RequestorToken != "" {
+		httpReq.Header.Add("Authorization", conf.RequestorToken)
 	}
 
 	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
-	resp, err := http.Post(conf.IrmaServerURL+"/session/", contentType, requestBuffer)
+	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
 		return
