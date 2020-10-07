@@ -6,17 +6,17 @@ function Who(props) {
     <div className="wide" id="who">
       {" "}
       <div class="flex-container">
-        <div class="flex-item-left">
+        <div class="flex-item-single">
           {" "}
           <img className="illustration" src={who} alt="Restaurant visitors" />
         </div>{" "}
-        <div class="flex-item-right">
+        <div class="flex-item-single">
           {" "}
           <h4>IRMA-welkom is voor iedereen!</h4>
           <p>
-            IRMA-welkom is voor iedereen die samenkomsten organiseerd of aan
-            bijeenkomsten deelnemt. Je kunt met IRMA-welkom bijvoorbeeld
-            makkelijk contactgegevens versamelen als:
+            IRMA-welkom is voor iedereen die samenkomsten organiseert of aan
+            bijeenkomsten deelneemt. Je kunt met IRMA-welkom bijvoorbeeld
+            makkelijk contactgegevens verzamelen als:
           </p>
           <ul>
             <li>eigenaar van een café, restaurant, winkel, garage, ...</li>

@@ -1,11 +1,11 @@
 import React from "react";
 import Footer from "../footer/Footer";
-import Explanation from "./content/Explanation";
 import How from "./content/How";
 import Who from "./content/Who";
-import NavBar from "./content/NavBar";
+import NavBar from "../nav-bar/NavBar";
 import PrivacyPolicy from "./content/PrivacyPolicy";
 import Welcome from "./content/Welcome";
+import Start from "./content/Start";
 
 function LandingPage(props) {
   return (
@@ -23,7 +23,7 @@ function LandingPage(props) {
         <How />
       </div>
       <div className="irma-light">
-        <Explanation />
+        <Start />
       </div>
       <div className="irma-grey">
         <PrivacyPolicy />

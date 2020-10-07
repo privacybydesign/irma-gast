@@ -4,7 +4,12 @@ function PrivacyPolicy(props) {
   return (
     <div className="content" id="privacypolicy">
       <h2>Privacy policy</h2>
-
+      <p>
+        {" "}
+        IRMA-welkom en de IRMA app zijn gratis en werken transparant, met open
+        source software; gegevens van gebruikers worden niet voor andere
+        doeleinden gebruikt en niet aan anderen doorgegeven of doorverkocht.
+      </p>
       <p>
         De IRMA-welkom dienst wordt aangeboden door de stichting
         <a href="https://privacybydesign.foundation/">Privacy by Design</a>

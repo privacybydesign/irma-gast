@@ -6,7 +6,7 @@ function Welcome(props) {
     <div className="wide">
       <div className="irma-light">
         <div class="flex-container">
-          <div class="flex-item-left">
+          <div class="flex-item-single">
             <h3>Registreer zelf bezoekers, op het werk of thuis!</h3>
             <p>
               Met IRMA-welkom kan iedereen host zijn en gemakkelijk en veilig
@@ -16,8 +16,8 @@ function Welcome(props) {
             </p>
             <p>
               Alles wat jij en je bezoekers hiervoor nodig hebben is de gratis
-              IRMA-app, met daarin een e-mailadres. Je hoeft je niet eens vooraf
-              te registreren.
+              IRMA-app, met daarin een e-mailadres. Je hoeft je niet vooraf te
+              registreren.
             </p>
             <p>
               <a href="#" className="btn irma-btn">
@@ -33,7 +33,7 @@ function Welcome(props) {
               <a href="#privacypolicy">privacy policy</a> van IRMA-welkom.
             </p>
           </div>
-          <div class="flex-item-right">
+          <div class="flex-item-single">
             {" "}
             <img
               className="illustration"

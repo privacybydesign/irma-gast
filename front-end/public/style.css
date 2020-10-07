@@ -195,6 +195,7 @@ footer {
 
 .wide {
   width: 90%;
+  max-width: 960px;
   margin: auto;
   padding: 30px 10px 30px 10px;
 }
@@ -256,18 +257,19 @@ footer {
   align-items: center;
 }
 
-.flex-item-left {
-  flex: 50%;
+.flex-item-single {
+  flex: 1;
 }
 
-.flex-item-right {
-  flex: 50%;
+.flex-item-double {
+  padding: 10px;
+  flex: 2;
 }
 
 /* Responsive layout - makes a one column layout instead of a two-column layout */
 
 @media (max-width: 800px) {
-  .flex-item-right, .flex-item-left {
+  .flex-item-single {
     flex: 100%;
   }
 }
