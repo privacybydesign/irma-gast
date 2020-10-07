@@ -42,6 +42,7 @@ function CreateListForm(props) {
       date: getCurrentDate(),
       // error: "",
     });
+    setChecked(false);
   }
 
   function createList(event) {
