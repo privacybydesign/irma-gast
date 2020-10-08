@@ -26,7 +26,7 @@ function Instructions(props) {
           Bij IRMA-welkom wordt om een e-mailadres gevraagd. Voeg het kaartje
           met je e-m ail adres toe, via deze <a href="#">pagina</a>.
         </p>
-        <h5>3. Scan de QR code met je IRMA-app</h5>
+        <h5>3. Scan de QR-code met je IRMA-app</h5>
         <p>
           Bij IRMA-welkom wordt om een e-mailadres gevraagd. Voeg het kaartje
           met je e-m ail adres toe, via deze <a href="#">pagina</a>.

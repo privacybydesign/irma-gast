@@ -129,7 +129,7 @@ function QRCodePDF(props) {
                 />
                 <View style={styles.spacer}></View>
                 <Text style={styles.bolder}>
-                  Scan de QR code met de IRMA-app om je aan te melden
+                  Scan de QR-code met de IRMA-app om je aan te melden
                 </Text>
                 <View style={styles.spacer}></View>
                 <Text style={styles.text}>

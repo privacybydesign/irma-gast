@@ -7,7 +7,7 @@ function How(props) {
       <div class="flex-container">
         <div class="flex-item-double">
           <h3>Hoe werkt het?</h3>
-          <h4>De host haalt een QR code op en hangt deze op </h4>
+          <h4>De host haalt een QR-code op en hangt deze op </h4>
           <p>
             Als host kun je op IRMA-welkom gratis en makkelijk QR-codes ophalen
             die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om deze
@@ -37,7 +37,7 @@ function How(props) {
             makkelijk en kan ter plekke gebeuren.
           </p>
 
-          <h4>De bezoeker scant de QR code en laat zijn e-mailadres achter</h4>
+          <h4>De bezoeker scant de QR-code en laat zijn e-mailadres achter</h4>
           <p>
             Bezoekers laten hun e-mailadres achter door de QR-code met de met de{" "}
             <a href="https://irma.app/">IRMA-app</a> te scannen. In de IRMA-app
