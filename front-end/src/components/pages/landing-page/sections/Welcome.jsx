@@ -20,10 +20,10 @@ function Welcome(props) {
               registreren.
             </p>
             <p>
-              <a href="#" className="btn irma-btn">
+              <a href="/host" className="btn irma-btn">
                 Login als host met IRMA*
               </a>
-              <a href="#" className="btn irma-btn-secondary">
+              <a href="https://irma.app" className="btn irma-btn-secondary">
                 Installeer eerst IRMA
               </a>
             </p>

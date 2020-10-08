@@ -63,7 +63,7 @@ function NavBar(props) {
         >
           Close ×
         </a>
-        <NavBarItems />
+        <NavBarItems link={props.link} />
       </nav>
     </div>
   );
