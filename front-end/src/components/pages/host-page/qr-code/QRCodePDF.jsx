@@ -69,6 +69,12 @@ const styles = StyleSheet.create({
     marginRight: 24,
     textAlign: "center",
   },
+  smallText: {
+    fontSize: 9,
+    marginLeft: 38,
+    marginRight: 38,
+    textAlign: "center",
+  },
   bolder: {
     fontSize: 11,
     marginLeft: 24,
@@ -141,7 +147,9 @@ function QRCodePDF(props) {
                   Scan de QR-code met de camera van je mobiel om je aan te
                   melden.
                 </Text>
-                <View style={styles.spacer}></View>
+                <Text style={styles.smallText}>
+                  Let op: deze QR is niet scanbaar met je IRMA-app.
+                </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
 
@@ -154,13 +162,11 @@ function QRCodePDF(props) {
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
-                <View style={styles.spacer}></View>
 
                 <Text style={styles.text}>
                   Dit is een service van IRMA-welkom. Bezoek irma-welkom.nl voor
                   meer informatie.
                 </Text>
-                <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
 
