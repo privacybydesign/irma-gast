@@ -11,8 +11,8 @@ import {
 } from "@react-pdf/renderer";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
-import instructions from "../../../../images/instructions.png";
-import steps from "../../../../images/steps.png";
+import scan from "../../../../images/scan.png";
+import logo from "../../../../images/irma_logo.png";
 import font from "../../../../fonts/Montserrat/Montserrat-Regular.ttf";
 import fontBold from "../../../../fonts/Montserrat/Montserrat-Bold.ttf";
 import fontSemiBold from "../../../../fonts/Montserrat/Montserrat-SemiBold.ttf";
@@ -86,14 +86,20 @@ const styles = StyleSheet.create({
     height: 4,
   },
   image: {
-    height: 200,
-    width: 200,
+    height: 400,
+    width: 400,
     marginVertical: 10,
     marginHorizontal: "auto",
   },
   small: {
     height: 45,
-    width: 50,
+    width: "auto",
+    marginBottom: 10,
+    marginHorizontal: "auto",
+  },
+  scan: {
+    height: 150,
+    width: "auto",
     marginBottom: 10,
     marginHorizontal: "auto",
   },
@@ -113,6 +119,7 @@ function QRCodePDF(props) {
           <Document>
             <Page wrap style={styles.page} size="A4">
               <View style={styles.section}>
+                <View style={styles.spacer}></View>
                 <Text style={styles.title}>{props.title}</Text>
                 <Text style={styles.subtitle}>
                   {"Startdatum: "}
@@ -129,23 +136,43 @@ function QRCodePDF(props) {
                     .toDataURL("image/jpg", 0.3)}
                 />
                 <View style={styles.spacer}></View>
+
                 <Text style={styles.bolder}>
-                  Scan de QR-code met de IRMA-app om je aan te melden
+                  Scan de QR-code met de camera van je mobiel om je aan te
+                  melden.
                 </Text>
                 <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+
+                <Image style={styles.scan} src={scan} />
+
                 <Text style={styles.text}>
                   Na aanmelding worden je contactgegevens beheerd door de host:{" "}
                   {props.host}. Neem bij vragen contact op met deze host.
                 </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+
+                <Text style={styles.text}>
+                  Dit is een service van IRMA-welkom. Bezoek irma-welkom.nl voor
+                  meer informatie.
+                </Text>
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+
+                <Image style={styles.small} src={logo} />
+
+                {/* <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
 
                 <Image style={styles.fullwidth} src={instructions} />
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
-                <View style={styles.spacer}></View>
-
-                <Image style={styles.fullwidth} src={steps} />
+                <View style={styles.spacer}></View> */}
               </View>
             </Page>
           </Document>
