@@ -24,7 +24,7 @@ function GuestCount(props) {
       <div style={{ height: "4px" }}></div>
       <Typography variant="body2" color="textSecondary" component="p">
         {props.count > 0 &&
-          "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Kies daarvoor 'contactgegevens opvragen'. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA app te tonen."}
+          "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Kies daarvoor 'contactgegevens opvragen'. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."}
       </Typography>
     </CardContent>
   );

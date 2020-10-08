@@ -4,7 +4,7 @@ import start from "../../../../images/start.png";
 function Instructions(props) {
   return (
     <div>
-      <h3>Nog geen IRMA app?</h3>
+      <h3>Nog geen IRMA-app?</h3>
       <div>
         <p>
           Met de gratis <a href="https://irma.app/">IRMA-app</a> kunnen
@@ -26,7 +26,7 @@ function Instructions(props) {
           Bij IRMA-welkom wordt om een e-mailadres gevraagd. Voeg het kaartje
           met je e-m ail adres toe, via deze <a href="#">pagina</a>.
         </p>
-        <h5>3. Scan de QR code met je IRMA app</h5>
+        <h5>3. Scan de QR code met je IRMA-app</h5>
         <p>
           Bij IRMA-welkom wordt om een e-mailadres gevraagd. Voeg het kaartje
           met je e-m ail adres toe, via deze <a href="#">pagina</a>.

@@ -7,7 +7,7 @@ function PrivacyPolicy(props) {
       <h2>Privacy policy</h2>
       <p>
         {" "}
-        IRMA-welkom en de IRMA app zijn gratis en werken transparant, met open
+        IRMA-welkom en de IRMA-app zijn gratis en werken transparant, met open
         source software; gegevens van gebruikers worden niet voor andere
         doeleinden gebruikt en niet aan anderen doorgegeven of doorverkocht.
       </p>
@@ -32,7 +32,7 @@ function PrivacyPolicy(props) {
       <p>
         Een <em>host</em> is een persoon die een keer ingelogd is op het
         IRMA-welkom portaal door zich daar bekend te maken met een e-mailadres
-        uit de eigen IRMA app. Hierbij worden alleen door ProcoliX gegevens
+        uit de eigen IRMA-app. Hierbij worden alleen door ProcoliX gegevens
         verwerkt, waaronder het e-mailadres van de host. De wettelijke basis
         voor deze verwerking is: toestemming van de host zelf.
       </p>
@@ -53,7 +53,7 @@ function PrivacyPolicy(props) {
         QR-code bevat in leesbare vorm de naam van de samenkomst en het
         e-mailadres van de host. Impliciet in de QR-code staat een verwijzing
         naar een webpagina waar bezoekers zich kunnen aanmelden door een eigen
-        e-mailadres te onthullen, via hun IRMA app.
+        e-mailadres te onthullen, via hun IRMA-app.
       </p>
 
       <p>
@@ -95,11 +95,11 @@ function PrivacyPolicy(props) {
       <p>
         {" "}
         De host zal <em>bezoekers</em> aan zijn/haar samenkomst verzoeken de
-        bijbehorende QR-code te scannen (en zonodig daarvoor eerst de IRMA app
+        bijbehorende QR-code te scannen (en zonodig daarvoor eerst de IRMA-app
         te installeren). Na het scannen komt een bezoeker eerst terecht op een
         website waar informatie beschikbaar is, grotendeels via links, over
         IRMA-welkom en over de privacy policy. Vervolgens kan de bezoeker via
-        een knop het proces starten om via de IRMA app een eigen e-mailadres te
+        een knop het proces starten om via de IRMA-app een eigen e-mailadres te
         onthullen. De wettelijke basis voor de gegevensverwerking die daarmee
         van start gaat is: toestemming van de bezoeker zelf.{" "}
       </p>
@@ -150,7 +150,7 @@ function PrivacyPolicy(props) {
 
       <p>
         {" "}
-        Voor die ontsleuteling toont de host via de IRMA app nogmaals het
+        Voor die ontsleuteling toont de host via de IRMA-app nogmaals het
         e-mailadres van het eigen account, maar nu aan een{" "}
         <em>key generating server</em>, die beheerd wordt door de stichting
         Privacy by Design. De stichting verwerkt daarbij kortstondig het

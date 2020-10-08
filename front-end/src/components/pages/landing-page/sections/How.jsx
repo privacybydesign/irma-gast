@@ -32,7 +32,7 @@ function How(props) {
           </p>
           <p>
             Als host zul je zeker in het begin regelmatig aan je bezoekers
-            moeten vragen om de IRMA app te installeren. Dat hoeft maar één
+            moeten vragen om de IRMA-app te installeren. Dat hoeft maar één
             keer; daarna levert het alleen maar gemak op. Het installeren is
             makkelijk en kan ter plekke gebeuren.
           </p>

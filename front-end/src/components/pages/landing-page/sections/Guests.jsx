@@ -6,13 +6,13 @@ function How(props) {
       <h3>Hoe werkt het?</h3>
       <h4>De host maakt een samenkomst aan en hangt een QR code op </h4>
       <p>
-        Met de [IRMA app](https://irma.app/) kunnen gebruikers zich op veel
+        Met de [IRMA-app](https://irma.app/) kunnen gebruikers zich op veel
         verschillende manieren online bekend maken, bijvoorbeeld met hun naam,
         adres, e-mail, 06 of BSN. Bij IRMA-welkom wordt alleen om een
         e-mailadres gevraagd. De app installeer je maar één keer en kun je
         daarna overal voor IRMA-welkom gebruiken. Dat is stukken makkelijker dan
         steeds formuliertjes invullen waarvan onduidelijk is waar ze blijven.
-        Steeds meer mensen hebben deze IRMA app op hun telefoon. Heb je de app
+        Steeds meer mensen hebben deze IRMA-app op hun telefoon. Heb je de app
         nog niet, bekijk dan deze [uitleg](...). Voor breed gebruik van
         IRMA-welkom is een netwerk effect nodig.
       </p>
