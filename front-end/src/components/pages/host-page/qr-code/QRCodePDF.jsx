@@ -143,6 +143,7 @@ function QRCodePDF(props) {
                 <Image style={styles.fullwidth} src={instructions} />
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
 
                 <Image style={styles.fullwidth} src={steps} />
               </View>
