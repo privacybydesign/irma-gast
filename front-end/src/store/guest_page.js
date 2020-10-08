@@ -1,39 +1,39 @@
 const initialState = {
-  state: 'unknown',
+  state: "unknown",
   error: null,
 };
 
-export default function(state = initialState, action) {
-  switch(action.type) {
-    case 'startGuestPage':
+export default function (state = initialState, action) {
+  switch (action.type) {
+    case "startDisclosurePage":
       return {
         ...state,
-        state: 'start',
+        state: "start",
         irmaSession: action.irmaSession,
         error: null,
       };
-    case 'sendGuestData':
+    case "sendGuestData":
       return {
         ...state,
-        state: 'encrypting',
+        state: "encrypting",
         error: null,
       };
-    case 'guestDataEncrypted':
+    case "guestDataEncrypted":
       return {
         ...state,
-        state: 'sending',
+        state: "sending",
         error: null,
       };
-    case 'guestDataSent':
+    case "guestDataSent":
       return {
         ...state,
-        state: 'done',
+        state: "done",
         error: null,
       };
-    case 'errorGuestPage': {
+    case "errorDisclosurePage": {
       return {
         ...state,
-        state: 'error',
+        state: "error",
         error: action.error,
       };
     }

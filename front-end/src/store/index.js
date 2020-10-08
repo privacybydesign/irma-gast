@@ -1,11 +1,11 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import login_state from './login_state';
-import guest_lists from './guest_lists';
-import checkins from './checkins';
-import guest_page from './guest_page';
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import login_state from "./login_state";
+import guest_lists from "./guest_lists";
+import checkins from "./checkins";
+import guest_page from "./guest_page";
 
-const serverUrl = ''; // TODO: Find a nice place to get the server url from
-const irmaServerUrl = 'http://localhost:8088'; // TODO: Find a nice place to get the IRMA/Where server url from
+const serverUrl = ""; // TODO: Find a nice place to get the server url from
+const irmaServerUrl = "http://localhost:8088"; // TODO: Find a nice place to get the IRMA/Where server url from
 
 /**
  * Handles all dispatches for changing the login state
@@ -16,44 +16,44 @@ const irmaServerUrl = 'http://localhost:8088'; // TODO: Find a nice place to get
  *  - dispatch({type: 'logOut'}) can be done to force a logout to the redux state. This will also handle
  *    the session deletion at the server.
  */
-function handleLogin({getState, dispatch}) {
-  return next => action => {
-    if (getState().login.state === 'unknown') {
-      fetch(`${serverUrl}/admin/overview`, {credentials: 'include'})
-        .then(resp => {
+function handleLogin({ getState, dispatch }) {
+  return (next) => (action) => {
+    if (getState().login.state === "unknown") {
+      fetch(`${serverUrl}/admin/overview`, { credentials: "include" })
+        .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
         })
-        .then(json => {
-          dispatch({type: 'loadedGuestLists', entries: json});
-          dispatch({type: 'loggedIn'});
+        .then((json) => {
+          dispatch({ type: "loadedGuestLists", entries: json });
+          dispatch({ type: "loggedIn" });
         })
         .catch(() => {
           dispatch({
-            type: 'loggedOut',
+            type: "loggedOut",
             irmaSession: {
               url: serverUrl,
               start: {
-                url: o => `${o.url}/admin/irmasession_start`,
+                url: (o) => `${o.url}/admin/irmasession_start`,
               },
               result: {
-                url: o => `${o.url}/admin/irmasession_finish`,
-              }
+                url: (o) => `${o.url}/admin/irmasession_finish`,
+              },
             },
           });
         });
-    } else if (action.type === 'logOut') {
-      fetch(`${serverUrl}/admin/logout`, {credentials: 'include'}); // Result is ignored
+    } else if (action.type === "logOut") {
+      fetch(`${serverUrl}/admin/logout`, { credentials: "include" }); // Result is ignored
       dispatch({
-        type: 'loggedOut',
+        type: "loggedOut",
         irmaSession: {
           url: serverUrl,
           start: {
-            url: o => `${o.url}/admin/irmasession_start`,
+            url: (o) => `${o.url}/admin/irmasession_start`,
           },
           result: {
-            url: o => `${o.url}/admin/irmasession_finish`,
-          }
+            url: (o) => `${o.url}/admin/irmasession_finish`,
+          },
         },
       });
     }
@@ -70,26 +70,26 @@ function handleLogin({getState, dispatch}) {
  *      onetime: true/false, // Boolean to indicate whether the guest list is for a one-time-event.
  *    })
  */
-function handleAddGuestList({dispatch}) {
-  return next => action => {
-    if (action.type === 'addGuestList') {
-      dispatch({type: 'loadingGuestLists'});
+function handleAddGuestList({ dispatch }) {
+  return (next) => (action) => {
+    if (action.type === "addGuestList") {
+      dispatch({ type: "loadingGuestLists" });
       fetch(`${serverUrl}/admin/register`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: action.name,
           location: action.location,
           onetime: action.onetime,
         }),
       })
-        .then(resp => {
+        .then((resp) => {
           if (resp.status !== 200) throw resp.status;
-          dispatch({type: 'reloadGuestLists'});
+          dispatch({ type: "reloadGuestLists" });
         })
-        .catch(err => {
-          dispatch({type: 'errorGuestLists', error: err});
+        .catch((err) => {
+          dispatch({ type: "errorGuestLists", error: err });
         });
     }
     return next(action);
@@ -103,20 +103,23 @@ function handleAddGuestList({dispatch}) {
  *  - dispatch({type: 'reloadGuestLists'}) can be done to fetch the guest lists of the user that is logged in
  *    from the server and overwrites the previous load (if any).
  */
-function handleUpdateGuestLists({getState, dispatch}) {
-  return next => action => {
-    if (action.type === 'reloadGuestLists' || (action.type === 'loadGuestLists' && !getState().guestLists.loaded)) {
-      dispatch({type: 'loadingGuestLists'});
-      fetch(`${serverUrl}/admin/overview`, {credentials: 'include'})
-        .then(resp => {
+function handleUpdateGuestLists({ getState, dispatch }) {
+  return (next) => (action) => {
+    if (
+      action.type === "reloadGuestLists" ||
+      (action.type === "loadGuestLists" && !getState().guestLists.loaded)
+    ) {
+      dispatch({ type: "loadingGuestLists" });
+      fetch(`${serverUrl}/admin/overview`, { credentials: "include" })
+        .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
         })
-        .then(json => {
-          dispatch({type: 'loadedGuestLists', entries: json});
+        .then((json) => {
+          dispatch({ type: "loadedGuestLists", entries: json });
         })
-        .catch(err => {
-          dispatch({type: 'errorGuestLists', error: err});
+        .catch((err) => {
+          dispatch({ type: "errorGuestLists", error: err });
         });
     }
 
@@ -128,101 +131,103 @@ function handleUpdateGuestLists({getState, dispatch}) {
  * Handles all dispatch calls for updating the checkins of a certain guest list
  *  - dispatch({type: 'loadCheckins', locationId: <Location ID of guest list to load checkins of>})
  */
-function handleUpdateCheckins({dispatch}) {
-  return next => action => {
-    if (action.type === 'loadCheckins') {
-      dispatch({type: 'loadingCheckins'});
+function handleUpdateCheckins({ dispatch }) {
+  return (next) => (action) => {
+    if (action.type === "loadCheckins") {
+      dispatch({ type: "loadingCheckins" });
       fetch(`${serverUrl}/admin/results/${action.locationId}`)
-        .then(resp => {
+        .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
         })
-        .then(json => {
-          dispatch({type: 'decryptingCheckins'});
+        .then((json) => {
+          dispatch({ type: "decryptingCheckins" });
           // TODO: Decrypt checkins
-          dispatch({type: 'loadedCheckins', entries: json})
+          dispatch({ type: "loadedCheckins", entries: json });
         })
-        .catch(err => {
-          dispatch({type: 'errorCheckins', error: err});
+        .catch((err) => {
+          dispatch({ type: "errorCheckins", error: err });
         });
     }
-    return(next(action))
+    return next(action);
   };
 }
 
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
  *  - dispatch({type: 'sendGuestData', data: ...})
- *  - dispatch({type: 'initGuestPage'}) to (re-)start the process of a guest showing his data.
+ *  - dispatch({type: 'initDisclosurePage'}) to (re-)start the process of a guest showing his data.
  */
-function handleGuestPage({dispatch}) {
-  return next => action => {
-    if (action.type === 'initGuestPage') {
+function handleDisclosurePage({ dispatch }) {
+  return (next) => (action) => {
+    if (action.type === "initDisclosurePage") {
       dispatch({
-        type: 'startGuestPage',
+        type: "startDisclosurePage",
         irmaSession: {
           url: irmaServerUrl,
           start: {
-            url: o => `${o.url}/session`,
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            url: (o) => `${o.url}/session`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               "@context": "https://irma.app/ld/request/disclosure/v2",
-              "disclose": [
-                [
-                  ["pbdf.pbdf.email.email"],
-                  ["pbdf.sidn-pbdf.email.email"]
-                ]
-              ]
+              disclose: [
+                [["pbdf.pbdf.email.email"], ["pbdf.sidn-pbdf.email.email"]],
+              ],
             }),
           },
           result: {
-            url: (o, {sessionToken}) => `${o.url}/session/${sessionToken}/result-jwt`,
-            parseResponse: r => r.text(),
+            url: (o, { sessionToken }) =>
+              `${o.url}/session/${sessionToken}/result-jwt`,
+            parseResponse: (r) => r.text(),
           },
         },
       });
-    } else if (action.type === 'sendGuestData') {
+    } else if (action.type === "sendGuestData") {
       // TODO: Encrypt guest data
       let data = null;
-      // TODO: Send errorGuestPage if encrypting fails.
-      dispatch({type: 'guestDataEncrypted', locationId: action.locationId, ciphertext: data});
-    } else if (action.type === 'guestDataEncrypted') {
+      // TODO: Send errorDisclosurePage if encrypting fails.
+      dispatch({
+        type: "guestDataEncrypted",
+        locationId: action.locationId,
+        ciphertext: data,
+      });
+    } else if (action.type === "guestDataEncrypted") {
       fetch(`${serverUrl}/gast/gastsession`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           location_id: action.locationId,
           ciphertext: action.ciphertext,
         }),
       })
-        .then(resp => {
+        .then((resp) => {
           if (resp.status !== 200) throw resp.status;
-          dispatch({type: 'guestDataSent'});
+          dispatch({ type: "guestDataSent" });
         })
-        .catch(err => {
-          dispatch({type: 'errorGuestPage', error: err});
-        })
+        .catch((err) => {
+          dispatch({ type: "errorDisclosurePage", error: err });
+        });
     }
-    return(next(action))
+    return next(action);
   };
 }
 
-export default function() {
+export default function () {
   return createStore(
     combineReducers({
       login: login_state,
       guestLists: guest_lists,
       checkins: checkins,
-      guestPage: guest_page,
+      DisclosurePage: guest_page,
     }),
     applyMiddleware(
       handleLogin,
       handleAddGuestList,
       handleUpdateGuestLists,
       handleUpdateCheckins,
-      handleGuestPage,
-    ),
+      handleDisclosurePage
+    )
   );
 }

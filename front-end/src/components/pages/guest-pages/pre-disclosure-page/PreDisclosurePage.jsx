@@ -1,18 +1,18 @@
 import React from "react";
-import Footer from "../../footer/Footer";
+import Footer from "../../../footer/Footer";
 import { connect } from "react-redux";
 import irmaFrontend from "@privacybydesign/irma-frontend";
-import NavBar from "../../nav-bar/NavBar";
+import NavBar from "../../../nav-bar/NavBar";
 
 const mapStateToProps = (state) => {
   return {
-    ...state.guestPage,
+    ...state.DisclosurePage,
   };
 };
 
-class GuestPage extends React.Component {
+class PreDisclosurePage extends React.Component {
   componentDidMount() {
-    this.props.dispatch({ type: "initGuestPage" });
+    this.props.dispatch({ type: "initDisclosurePage" });
     this._handleIrma();
   }
 
@@ -105,4 +105,4 @@ class GuestPage extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(GuestPage);
+export default connect(mapStateToProps)(PreDisclosurePage);

@@ -1,14 +1,14 @@
 import React from "react";
-import Footer from "../../footer/Footer";
-import NavBar from "../../nav-bar/NavBar";
-import Error from "./Success";
+import Footer from "../../../footer/Footer";
+import NavBar from "../../../nav-bar/NavBar";
+import Success from "./Success";
 
 function SuccessPage(props) {
   return (
     <div className="container">
       <NavBar link="menu" /> <p></p>
       <div className="filler">
-        <Error />
+        <Success />
       </div>
       <Footer />
     </div>
