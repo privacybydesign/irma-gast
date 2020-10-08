@@ -73,6 +73,14 @@ class PreDisclosurePage extends React.Component {
             Installeer IRMA
           </a>
         </div>
+        <p>
+          {" "}
+          Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via de
+          IRMA-app of via{" "}
+          <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
+            deze pagina.
+          </a>
+        </p>
       </>
     );
   }
