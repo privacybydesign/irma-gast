@@ -5,7 +5,7 @@ import AutoDeleteText from "./AutoDeleteText";
 import NavBar from "../../nav-bar/NavBar";
 import Footer from "../../footer/Footer";
 
-function Portal() {
+function HostPage() {
   const [guestLists, setGuestLists] = useState([]);
 
   function addGuestList(newList) {
@@ -67,4 +67,4 @@ function Portal() {
   );
 }
 
-export default Portal;
+export default HostPage;

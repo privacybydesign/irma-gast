@@ -85,7 +85,7 @@ export default function GuestList(props) {
   // TODO: extract subcomponents used in GuestList.jsx into their individual files
 
   return (
-    <Card className={(classes.root, "guest-list")} square={true}>
+    <Card className={(classes.root, "guest-list")} id={props.id} square={true}>
       <CardHeader
         className={classes.noPadding}
         avatar={
