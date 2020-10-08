@@ -119,13 +119,14 @@ export default function GuestList(props) {
           <QRCode
             id={"qr-" + props.id}
             value={"https://irma.app"} //TODO
-            size={300}
+            size={200}
+            className="qr"
             bgColor={"#ffffff"}
             fgColor={"#000000"}
             level={"L"}
             includeMargin={false}
             renderAs={"canvas"}
-          />{" "}
+          />
           <CardActions className={classes.noPadding} disableSpacing>
             {qrReady ? (
               <QRCodePDF
