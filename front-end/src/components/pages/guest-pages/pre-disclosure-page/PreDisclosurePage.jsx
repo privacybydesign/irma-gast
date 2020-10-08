@@ -54,18 +54,25 @@ class PreDisclosurePage extends React.Component {
       <>
         <h2>Meld je aan</h2>
         <p>
-          Wil je je e-mailaddress achterlaten bij <b>{this.props.host}</b> ? Je
-          kan dan in het geval van een coronamelding een waarschuwing ontvangen.
-          Je e-mailadres wordt beveiligd (versleuteld) opgeslagen en na twee
-          weken automatisch weggegooid. Alleen {this.props.host} kan je
-          e-mailadres ontsleutelen.
+          Wil je je aanmelden? Ga dan door met IRMA en geef je e-mailadres door
+          aan IRMA-welkom.
         </p>
-        <h4 className="center-content">Laat je e-mailadres achter</h4>
         <div style={{ height: "30px" }} />
         <section className={"irma-web-center-child"}>
           <section id={"irma-web-form"} />
         </section>
         <div style={{ height: "60px" }} />
+        <h4 className="center-content">Nog geen IRMA-app?</h4>
+        <p>
+          IRMA-welkom werkt met de gratis IRMA-app. In deze app verzamel je
+          persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan
+          maken. Voor IRMA-welkom is alleen je e-mail kaartje nodig.
+        </p>
+        <div className="center-content">
+          <a href="https://irma.app" className="btn irma-btn-secondary">
+            Installeer IRMA
+          </a>
+        </div>
       </>
     );
   }

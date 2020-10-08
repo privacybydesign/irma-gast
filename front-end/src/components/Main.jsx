@@ -7,11 +7,13 @@ import LandingPage from "./pages/landing-page/LandingPage";
 import ErrorPage from "./pages/guest-pages/error-page/ErrorPage";
 import PrivacyPolicyPage from "./pages/privacy-policy-page/PrivacyPolicyPage";
 import SuccessPage from "./pages/success-page/SuccessPage";
+import DisclosurePage from "./pages/guest-pages/disclosure-page/DisclosurePage";
 
 const Main = () => {
   return (
     <Switch>
       <Route exact path="/guest" component={PreDisclosurePage} />
+      <Route exact path="/disclosure" component={DisclosurePage} />
       <Route exact path="/host" component={HostPage} />
       <Route exact path="/" component={LandingPage} />
       <Route exact path="/error" component={ErrorPage} />
