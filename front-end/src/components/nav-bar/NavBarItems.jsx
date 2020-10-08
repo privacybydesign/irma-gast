@@ -1,4 +1,6 @@
 import React from "react";
+import flag from "../../images/flags/nl.png";
+import Tooltip from "@material-ui/core/Tooltip";
 
 function NavBarItems(props) {
   return (
@@ -30,6 +32,15 @@ function NavBarItems(props) {
           <a href="/host" className="w3-bar-item">
             Host login <i className="fa fa-sign-in"></i>
           </a>
+          <Tooltip
+            title="English coming soon"
+            placement="left-end"
+            aria-label="english"
+          >
+            <span class="selected-lang refs">
+              <img src={flag} className="flag" alt="nl" />
+            </span>
+          </Tooltip>
         </div>
       )}
     </div>

@@ -220,6 +220,15 @@ footer {
   flex-grow: 1;
 }
 
+.flag {
+  max-width: 20px;
+  margin: 12px;
+}
+
+.flag:hover {
+  cursor: pointer;
+}
+
 footer {
   position: relative;
   left: 0;
