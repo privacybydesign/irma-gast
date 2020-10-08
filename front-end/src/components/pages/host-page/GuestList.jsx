@@ -178,6 +178,8 @@ export default function GuestList(props) {
                   {props.name}, {props.date}
                 </Typography>{" "}
                 en alle contactgegevens die op deze lijst geregistreerd staan.
+                De bijbehorende QR-code werkt dan niet meer. Vergeet niet die
+                QR-code te verwijderen, van de muur, of van tafel enz.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
