@@ -11,7 +11,8 @@ import {
 } from "@react-pdf/renderer";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
-import test from "../../../../images/getReady.png";
+import instructions from "../../../../images/instructions.png";
+import steps from "../../../../images/steps.png";
 import font from "../../../../fonts/Montserrat/Montserrat-Regular.ttf";
 import fontBold from "../../../../fonts/Montserrat/Montserrat-Bold.ttf";
 import fontSemiBold from "../../../../fonts/Montserrat/Montserrat-SemiBold.ttf";
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
     height: 4,
   },
   image: {
-    height: 180,
-    width: 180,
+    height: 200,
+    width: 200,
     marginVertical: 10,
     marginHorizontal: "auto",
   },
@@ -136,7 +137,14 @@ function QRCodePDF(props) {
                   Na aanmelding worden je contactgegevens beheerd door de host:{" "}
                   {props.host}. Neem bij vragen contact op met deze host.
                 </Text>
-                <Image style={styles.fullwidth} src={test} />
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+
+                <Image style={styles.fullwidth} src={instructions} />
+                <View style={styles.spacer}></View>
+                <View style={styles.spacer}></View>
+
+                <Image style={styles.fullwidth} src={steps} />
               </View>
             </Page>
           </Document>
