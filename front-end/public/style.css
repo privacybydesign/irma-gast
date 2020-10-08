@@ -120,6 +120,12 @@ h1 span {
   max-width: 100%;
 }
 
+.xs-img-container {
+  width: 100px;
+  height: auto;
+  margin: auto;
+}
+
 a {
   text-decoration: underline;
   color: #004c92;
