@@ -52,11 +52,15 @@ class GuestPage extends React.Component {
   _renderStartPage() {
     return (
       <>
-        <h2>Meld je aan met IRMA</h2>
+        <h2>Meld je aan</h2>
         <p>
-          Meld je aan met je e-mailaddress zodat je in het geval van een
-          coronamelding een waarschuwing kunt ontvangen.
+          Wil je je e-mailaddress achterlaten bij <b>{this.props.host}</b> ? Je
+          kan dan in het geval van een coronamelding een waarschuwing ontvangen.
+          Je e-mailadres wordt dan beveiligd (versleuteld) opgeslagen en na twee
+          weken automatisch weggegooid. Alleen {this.props.host} kan je
+          e-mailadres ontsleutelen.
         </p>
+        <h4 className="center-content">Laat je e-mailadres achter</h4>
         <div style={{ height: "30px" }} />
         <section className={"irma-web-center-child"}>
           <section id={"irma-web-form"} />
