@@ -27,6 +27,8 @@ function HostPage() {
     });
   }
 
+  // TODO: make site scroll to the new list after it has been created
+
   function deleteGuestList(id) {
     // TODO: Send to the go server.
     setGuestLists((prevLists) => {

@@ -20,6 +20,8 @@ function NavBar(props) {
     mySidebar.style.display = "none";
   }
 
+  // TODO: replace a-elements with buttons to avoid the href="javascript:void(0)
+
   return (
     <div>
       <div className="w3-top">
