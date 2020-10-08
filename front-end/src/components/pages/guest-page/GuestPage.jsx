@@ -56,7 +56,7 @@ class GuestPage extends React.Component {
         <p>
           Wil je je e-mailaddress achterlaten bij <b>{this.props.host}</b> ? Je
           kan dan in het geval van een coronamelding een waarschuwing ontvangen.
-          Je e-mailadres wordt dan beveiligd (versleuteld) opgeslagen en na twee
+          Je e-mailadres wordt beveiligd (versleuteld) opgeslagen en na twee
           weken automatisch weggegooid. Alleen {this.props.host} kan je
           e-mailadres ontsleutelen.
         </p>
