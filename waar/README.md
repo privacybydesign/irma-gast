@@ -38,7 +38,7 @@ The following endpoints require an authenticated session.
 - `POST /admin/register` expects a JSON body containing fields `name`, `location` and `onetime` and returns a `200` on succces. One-time events are automatically removed 14 days after no check-ins have been made.
 - `GET /admin/overview` returns an overview of all events for this organiser.
 - `GET /admin/results/{location_id}` returns all encrypted ciphertexts (in JWT form) of checked-in guests for a location. The receiver of this data is responsible for verifying these JWTs.
-- `POST /admin/remove/{location_id}` removes a location and corresponding checkins. No going back, so make the admin is sure about the operation. Returns `200` on success.
+- `DELETE /admin/remove/{location_id}` removes a location and corresponding checkins. No going back, so make the admin is sure about the operation. Returns `200` on success.
 
 Finally, 
 - `GET /admin/logout` dismisses the current session.
