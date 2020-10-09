@@ -102,7 +102,7 @@ class PreDisclosurePage extends React.Component {
         return this._renderMessagePage("Gegevens verzonden.");
       case "error":
         return this._renderMessagePage(
-          `De volgende fout is opgetreden:<br>${this.props.error}`
+          `De volgende fout is opgetreden: ${this.props.error}`
         );
       default:
         return this._renderMessagePage("Een moment geduld...");
