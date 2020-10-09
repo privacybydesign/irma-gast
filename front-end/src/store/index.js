@@ -4,8 +4,11 @@ import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
 
-const serverUrl = ""; // TODO: Find a nice place to get the server url from
-const irmaServerUrl = "http://localhost:8088"; // TODO: Find a nice place to get the IRMA/Where server url from
+const serverUrl = "https://data.irma-welkom.nl/api/v1";
+
+// IRMA server for authenticating guests
+const irmaServerUrl = "https://irma-welkom.nl/irma";
+const pkgServerUrl = "https://irma-welkom.nl/pkg";
 
 /**
  * Handles all dispatches for changing the login state
@@ -18,7 +21,7 @@ const irmaServerUrl = "http://localhost:8088"; // TODO: Find a nice place to get
  */
 function handleLogin({ getState, dispatch }) {
   return (next) => (action) => {
-    if (getState().login.state === "unknown") {
+    if (getState().login.state === "unknown" && action.type == "initLogin") {
       fetch(`${serverUrl}/admin/overview`, { credentials: "include" })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;
@@ -55,6 +58,31 @@ function handleLogin({ getState, dispatch }) {
             url: (o) => `${o.url}/admin/irmasession_finish`,
           },
         },
+      });
+    }
+    return next(action);
+  };
+}
+
+/**
+ * Handles all dispatch calls for deleting guestLists
+ * - dispatch ({
+ *    type: 'deleteGuestList',
+ *    location_id: '<Location_id of the guest list to remove'
+ *    })
+ */
+function handleDeleteGuestList({ dispatch }) {
+  return (next) => (action) => {
+    if (action.type === "deleteGuestList") {
+      dispatch({ type: "loadingGuestLists" });
+      fetch(`${serverUrl}/admin/register/${action.locationId}`, {
+        method: "DELETE",
+        credentials: "include",
+      }).then((resp) => {
+        if (resp.status != 200) throw resp.status;
+        dispatch({ type: "reloadGuestLists" });
+      }).catch((err) => {
+        dispatch({ type: "errorGuestLists", error: err });
       });
     }
     return next(action);
@@ -175,6 +203,11 @@ function handleDisclosurePage({ dispatch }) {
                 [["pbdf.pbdf.email.email"], ["pbdf.sidn-pbdf.email.email"]],
               ],
             }),
+            parseResponse: (r) => r.json(),
+          },
+          mapping: {
+            sessionPtr: (r) => r.sessionPtr,
+            sessionToken: (r) => r.token,
           },
           result: {
             url: (o, { sessionToken }) =>
@@ -225,6 +258,7 @@ export default function () {
     applyMiddleware(
       handleLogin,
       handleAddGuestList,
+      handleDeleteGuestList,
       handleUpdateGuestLists,
       handleUpdateCheckins,
       handleDisclosurePage

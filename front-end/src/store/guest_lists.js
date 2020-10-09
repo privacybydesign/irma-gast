@@ -1,6 +1,5 @@
 const initialState = {
-  loading: false,
-  loaded: false,
+  state: 'unknown',
   error: null,
   entries: [],
 };
@@ -10,29 +9,29 @@ export default function(state = initialState, action) {
     case 'errorGuestLists':
       return {
         ...state,
+        state: 'error',
         entries: [],
         error: action.error,
       };
     case 'loggedOut':
       return {
         ...state,
+        state: 'loggedOut',
         entries: [],
-        loaded: false,
         error: null,
       };
     case 'loadedGuestLists':
       return {
         ...state,
+        state: 'loaded',
         entries: action.entries,
-        loading: false,
-        loaded: true,
         error: null,
       };
     case 'loadingGuestLists':
       return {
         ...state,
+        state: 'loading',
         entries: [],
-        loading: true,
         error: null,
       }
     default:
