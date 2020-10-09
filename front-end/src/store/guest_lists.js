@@ -11,6 +11,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         state: "start",
+        irmaSession: action.irmaSession,
         entries: [],
         email: "",
         error: null,
