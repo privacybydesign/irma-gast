@@ -6,7 +6,7 @@ import HostPage from "./pages/host-page/HostPage";
 import LandingPage from "./pages/landing-page/LandingPage";
 import ErrorPage from "./pages/guest-pages/error-page/ErrorPage";
 import PrivacyPolicyPage from "./pages/privacy-policy-page/PrivacyPolicyPage";
-import SuccessPage from "./pages/success-page/SuccessPage";
+import SuccessPage from "./pages/guest-pages/success-page/SuccessPage";
 import DisclosurePage from "./pages/guest-pages/disclosure-page/DisclosurePage";
 
 const Main = () => {

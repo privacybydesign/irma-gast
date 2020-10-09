@@ -1,5 +1,5 @@
 import React from "react";
-import successImg from "../../../images/success.png";
+import successImg from "../../../../images/success.png";
 
 function Success(props) {
   return (
