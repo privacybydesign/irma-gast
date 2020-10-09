@@ -1,39 +1,52 @@
 const initialState = {
-  state: 'unknown',
-  error: null,
+  state: "unknown",
   entries: [],
+  email: "",
+  error: null,
 };
 
-export default function(state = initialState, action) {
-  switch(action.type) {
-    case 'errorGuestLists':
+export default function (state = initialState, action) {
+  switch (action.type) {
+    case "startHostPage":
       return {
         ...state,
-        state: 'error',
+        state: "start",
         entries: [],
+        email: "",
+        error: null,
+      };
+    case "loadingGuestLists":
+      return {
+        ...state,
+        state: "loading",
+        entries: [],
+        email: "",
+        error: null,
+      };
+    case "loadedGuestLists":
+      return {
+        ...state,
+        state: "loaded",
+        entries: action.entries,
+        email: action.email,
+        error: null,
+      };
+    case "errorGuestLists":
+      return {
+        ...state,
+        state: "error",
+        entries: [],
+        email: "",
         error: action.error,
       };
-    case 'loggedOut':
+    case "loggedOut":
       return {
         ...state,
-        state: 'loggedOut',
+        state: "loggedOut",
         entries: [],
+        email: "",
         error: null,
       };
-    case 'loadedGuestLists':
-      return {
-        ...state,
-        state: 'loaded',
-        entries: action.entries,
-        error: null,
-      };
-    case 'loadingGuestLists':
-      return {
-        ...state,
-        state: 'loading',
-        entries: [],
-        error: null,
-      }
     default:
       return state;
   }

@@ -9,13 +9,13 @@ import irmaFrontend from "@privacybydesign/irma-frontend";
 
 const mapStateToProps = (state) => {
   return {
-    ...state.HostPage,
+    ...state.guestLists,
   };
 };
 
 class HostPage extends React.Component {
   componentDidMount() {
-    this.props.dispatch({ type: "initLogin" });
+    this.props.dispatch({type: "initHostPage"});
     this._handleIrma();
   }
 
@@ -33,16 +33,15 @@ class HostPage extends React.Component {
     switch (this.props.state) {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
+          debugging: true,
           element: "#irma-web-form",
           language: "nl",
           session: this.props.irmaSession,
         });
-        this._irmaWeb.start().then((result) => {
-          let email = result.disclosed[0].rawValue;
+        this._irmaWeb.start().then(() => {
           // Delay dispatch to make IRMA success animation visible.
           setTimeout(() => {
-            // Update state with host email
-            this.props.dispatch({ type: "loggedIn", email: email });
+            this.props.dispatch({ type: "loadGuestLists" });
           }, 1000);
         });
         return;
@@ -88,7 +87,7 @@ class HostPage extends React.Component {
           date={list["date"]}
           name={list["name"]}
           listType={list["type"]}
-          host="someone@someplace.nl" // TODO replace with actual host
+          host={this.props.email}
         />
       );
     });
@@ -110,6 +109,44 @@ class HostPage extends React.Component {
     return <p>{message}</p>;
   }
 
+  // Copied from PreDisclosurePage
+  // TODO: can save code duplication
+  _renderStartPage() {
+    return (
+      <>
+        <h2>Meld je aan</h2>
+        <p>
+          Wil je je aanmelden? Ga dan door met IRMA en geef je e-mailadres door
+          aan IRMA-welkom.
+        </p>
+        <div style={{ height: "30px" }} />
+        <section className={"irma-web-center-child"}>
+          <section id={"irma-web-form"} />
+        </section>
+        <div style={{ height: "60px" }} />
+        <h4 className="center-content">Nog geen IRMA-app?</h4>
+        <p>
+          IRMA-welkom werkt met de gratis IRMA-app. In deze app verzamel je
+          persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan
+          maken. Voor IRMA-welkom is alleen je e-mail kaartje nodig.
+        </p>
+        <div className="center-content">
+          <a href="https://irma.app" className="btn irma-btn-secondary">
+            Installeer IRMA
+          </a>
+        </div>
+        <p>
+          {" "}
+          Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via de
+          IRMA-app of via{" "}
+          <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
+            deze pagina.
+          </a>
+        </p>
+      </>
+    );
+  }
+
   _renderState() {
     switch (this.props.state) {
       case "loaded":
@@ -118,10 +155,8 @@ class HostPage extends React.Component {
         return this._renderMessagePage(
           `De volgende fout is opgetreden: ${this.props.error}`
         );
-      case "loggedOut":
-        return this._renderMessagePage("U bent uitgelogd");
       default:
-        return this._renderMessagePage("Een moment geduld...");
+        return this._renderStartPage();
     }
   }
 
@@ -132,7 +167,7 @@ class HostPage extends React.Component {
           link="logout"
           onClick={this.props.dispatch({ type: "logOut" })}
         />
-        <div className="container">{this._renderState()}</div>
+        <div className="content">{this._renderState()}</div>
         <Footer />
       </div>
     );
