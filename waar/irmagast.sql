@@ -10,6 +10,7 @@ CREATE TABLE locations (
   location varchar(35) NOT NULL,
   email varchar(35) NOT NULL,
   onetime boolean NOT NULL,
+  creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp(),
   last_checkin TIMESTAMP
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 

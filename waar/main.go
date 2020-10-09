@@ -61,9 +61,11 @@ type User struct {
 }
 
 type Location struct {
-	Id       string `json:"location_id"`
-	Name     string `json:"name"`
-	Location string `json:"location"`
+	Id           string `json:"location_id"`
+	Name         string `json:"name"`
+	Location     string `json:"location"`
+	Onetime      bool   `'json:"onetime"`
+	CreationDate string `json:"creation_date"`
 }
 
 var (
@@ -230,10 +232,6 @@ func getUser(ctx context.Context) (*User, error) {
 	return nil, errors.New("No user")
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "views/login.html")
-}
-
 func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	log.Println("Starting email authentication")
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
@@ -375,7 +373,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (user *User) getLocations() ([]*Location, error) {
-	rows, err := db.Query("SELECT location_id, name, location FROM locations WHERE email=?", user.Email)
+	rows, err := db.Query("SELECT location_id, name, location, creation_date, onetime FROM locations WHERE email=?", user.Email)
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		return nil, err
@@ -384,14 +382,18 @@ func (user *User) getLocations() ([]*Location, error) {
 
 	locations := []*Location{}
 	for rows.Next() {
-		var id string
-		var name string
-		var location string
-		if err = rows.Scan(&id, &name, &location); err != nil {
+		var (
+			id       string
+			name     string
+			location string
+			creation string
+			onetime  bool
+		)
+		if err = rows.Scan(&id, &name, &location, &creation, &onetime); err != nil {
 			log.Printf("Scan error: %v", err)
 			return nil, err
 		}
-		locations = append(locations, &Location{Id: id, Name: name, Location: location})
+		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation})
 	}
 
 	return locations, nil
@@ -659,17 +661,12 @@ func main() {
 	adminRouter := r.PathPrefix("/admin/").Subrouter()
 	adminRouter.Use(AuthMiddleware)
 
-	// TODO: remove the next two lines, they are only here to make testing more easy
-	// by providing the simplest front-end
-	adminRouter.HandleFunc("/login", login).Methods("GET")
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
-
 	adminRouter.HandleFunc("/irmasession_start", irmaSessionStart).Methods("GET")
 	adminRouter.HandleFunc("/irmasession_finish", irmaSessionFinish).Methods("GET")
 	adminRouter.HandleFunc("/register", register).Methods("POST")
 	adminRouter.HandleFunc("/overview", overview).Methods("GET")
 	adminRouter.HandleFunc("/results/{location_id}", results).Methods("GET")
-	adminRouter.HandleFunc("/remove/{location_id}", remove).Methods("POST")
+	adminRouter.HandleFunc("/remove/{location_id}", remove).Methods("DELETE")
 	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
 	// Gast endpoints
