@@ -30,11 +30,12 @@ function FooterContent(props) {
           {" "}
           IRMA-welkom is open source. De source code en documentatie staan op
           GitHub. Bijdragen zijn welkom; je kunt ook zelf je eigen IRMA-welkom
-          server draaien. <i className="fa fa-github"></i>
-          Bekijk de{" "}
+          server draaien. <i className="fa fa-github"></i> Bekijk de{" "}
           <a href="https://github.com/privacybydesign/irma-meet">
             GitHub bestanden.
-          </a>
+          </a>{" "}
+          Deze pagina gebruikt illustraties van{" "}
+          <a href="https://undraw.co">UnDraw.</a>{" "}
         </p>
         <p>
           De IRMA-welkom dienst is gratis. Een financiële bijdrage, voor
