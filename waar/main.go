@@ -120,8 +120,8 @@ func initSessionStorage() {
 	store.Options = &sessions.Options{
 		MaxAge:   60 * 5,
 		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Domain:   "irma-welkom.nl",
+		SameSite: http.SameSiteNoneMode,
+		//Domain:   "irma-welkom.nl",
 	}
 
 	gob.Register(User{})
