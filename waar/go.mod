@@ -31,6 +31,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/privacybydesign/gabi v0.0.0-20200823153621-467696543652 // indirect
 	github.com/privacybydesign/irmago v0.5.0-rc.5
+	github.com/rs/cors v1.7.0
 	github.com/segmentio/ksuid v1.0.3
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/templexxx/cpu v0.0.7 // indirect
