@@ -85,6 +85,15 @@ function CreateListForm(props) {
           label="Omschrijving"
           error={guestlist.error}
         />
+        <TextField
+          required
+          name="location"
+          onChange={handleChange}
+          fullWidth
+          value={guestlist.location}
+          label="Locatie"
+          error={guestlist.error}
+        />{" "}
         <div style={{ height: "20px" }}></div>
         <p>Deze lijst is voor de registratie van bezoekers aan een...</p>
         <RadioGroup

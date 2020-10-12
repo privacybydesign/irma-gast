@@ -54,7 +54,6 @@ class HostPage extends React.Component {
     }
   }
 
-  // Put this in CreateListForm...
   // TODO: make site scroll to the new list after it has been created
   _addGuestList(newList) {
     // if no name/description has been given, add default name
@@ -64,13 +63,11 @@ class HostPage extends React.Component {
       } samenkomst`;
     }
 
-    // Location is something like "Nijmegen" for e.g., Cafe Jos
-    newList.location = "some location";
     this.props.dispatch({
       type: "addGuestList",
       name: newList.name,
       location: newList.location,
-      onetime: newList.type !== "permanent",
+      onetime: newList.type === "event",
     });
   }
 
@@ -79,15 +76,14 @@ class HostPage extends React.Component {
       let id = list["location_id"];
       return (
         <GuestList
-          key={id}
-          onDelete={() =>
-            this.props.dispatch({ type: "deleteGuestList", location_id: id })
-          }
           id={id}
           date={list["date"]}
           name={list["name"]}
           listType={list["type"]}
           host={this.props.email}
+          onDelete={() =>
+            this.props.dispatch({ type: "deleteGuestList", location_id: id })
+          }
         />
       );
     });
@@ -97,7 +93,7 @@ class HostPage extends React.Component {
     return (
       <div>
         <h2>Je bezoekerslijsten</h2>
-        <CreateListForm onAdd={this._addGuestList} />
+        <CreateListForm onAdd={(guestList) => this._addGuestList(guestList)} />
         {this._renderGuestLists()}
         <AutoDeleteText />
         <div style={{ height: "30px" }}></div>
