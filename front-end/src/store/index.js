@@ -33,6 +33,7 @@ function handleLogin({ getState, dispatch }) {
           result: {
             credentials: "include",
             url: (o) => `${o.url}/admin/irmasession_finish`,
+            parseResponse: (r) => r.status, 
           },
         },
       });

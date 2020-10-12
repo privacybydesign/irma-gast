@@ -1,6 +1,5 @@
 const initialState = {
   state: 'unknown',
-  email: '',
 };
 
 export default function(state = initialState, action) {
@@ -9,14 +8,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         state: 'loggedOut',
-        email: '',
         irmaSession: action.irmaSession,
       };
     case 'loggedIn':
       return {
         ...state,
         state: 'loggedIn',
-        email: action.email,
       };
     default:
       return state;

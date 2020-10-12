@@ -15,7 +15,7 @@ const mapStateToProps = (state) => {
 
 class HostPage extends React.Component {
   componentDidMount() {
-    this.props.dispatch({type: "initHostPage"});
+    this.props.dispatch({ type: "initHostPage" });
     this._handleIrma();
   }
 
@@ -41,6 +41,7 @@ class HostPage extends React.Component {
         this._irmaWeb.start().then(() => {
           // Delay dispatch to make IRMA success animation visible.
           setTimeout(() => {
+            this.props.dispatch({ type: "loggedIn" });
             this.props.dispatch({ type: "loadGuestLists" });
           }, 1000);
         });
@@ -53,6 +54,8 @@ class HostPage extends React.Component {
     }
   }
 
+  // Put this in CreateListForm...
+  // TODO: make site scroll to the new list after it has been created
   _addGuestList(newList) {
     // if no name/description has been given, add default name
     if (newList.name === "") {
@@ -71,19 +74,16 @@ class HostPage extends React.Component {
     });
   }
 
-  // TODO: make site scroll to the new list after it has been created
-
-  _deleteGuestList(id) {
-    this.props.dispatch({ type: "deleteGuestList", location_id: id });
-  }
-
   _renderGuestLists() {
     return this.props.entries.map((list) => {
+      let id = list["location_id"];
       return (
         <GuestList
-          key={list["location_id"]}
-          onDelete={this._deleteGuestList(list["location_id"])}
-          id={list["location_id"]}
+          key={id}
+          onDelete={() =>
+            this.props.dispatch({ type: "deleteGuestList", location_id: id })
+          }
+          id={id}
           date={list["date"]}
           name={list["name"]}
           listType={list["type"]}
@@ -165,7 +165,7 @@ class HostPage extends React.Component {
       <div className="App">
         <NavBar
           link="logout"
-          onClick={this.props.dispatch({ type: "logOut" })}
+          onClick={() => this.props.dispatch({ type: "loggedOut" })}
         />
         <div className="content">{this._renderState()}</div>
         <Footer />
