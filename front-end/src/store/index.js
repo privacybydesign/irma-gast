@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
-import login_state from "./login_state";
 import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
@@ -21,7 +20,7 @@ const pkgServerUrl = "https://irma-welkom.nl/pkg";
  */
 function handleLogin({ getState, dispatch }) {
   return (next) => (action) => {
-    if (action.type == "initHostPage") {
+    if (action.type === "initHostPage") {
       dispatch({ type: "loadingGuestLists" });
       fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
         .then((resp) => {
@@ -29,11 +28,10 @@ function handleLogin({ getState, dispatch }) {
           return resp.json();
         })
         .then((json) => {
-          dispatch({ type: "loggedIn" });
+          dispatch({ type: "loggedIn", email: json["email"] });
           dispatch({
             type: "loadedGuestLists",
             entries: json["locations"],
-            email: json["email"],
           });
         })
         .catch((status) => {
@@ -55,25 +53,29 @@ function handleLogin({ getState, dispatch }) {
             });
           }
         });
-    } else if (
-      getState().login.state === "loggedIn" &&
-      action.type === "logOut"
-    ) {
-      fetch(`${waarServerUrl}/admin/logout`, { credentials: "include" }); // Result is ignored
-      dispatch({
-        type: "loggedOut",
-        irmaSession: {
-          credentials: "include",
-          url: waarServerUrl,
-          start: {
-            url: (o) => `${o.url}/admin/irmasession_start`,
-          },
-          result: {
-            url: (o) => `${o.url}/admin/irmasession_finish`,
-            parseResponse: (r) => r.status,
-          },
-        },
-      });
+    } else if (getState().guestLists.loggedIn && action.type === "logOut") {
+      fetch(`${waarServerUrl}/admin/logout`, { credentials: "include" }).then(
+        (resp) => {
+          if (resp.status === 200) {
+            dispatch({
+              type: "loggedOut",
+              irmaSession: {
+                credentials: "include",
+                url: waarServerUrl,
+                start: {
+                  credentials: "include",
+                  url: (o) => `${o.url}/admin/irmasession_start`,
+                },
+                result: {
+                  credentials: "include",
+                  url: (o) => `${o.url}/admin/irmasession_finish`,
+                  parseResponse: (r) => r.status,
+                },
+              },
+            });
+          }
+        }
+      );
     }
     return next(action);
   };
@@ -88,17 +90,14 @@ function handleLogin({ getState, dispatch }) {
  */
 function handleDeleteGuestList({ getState, dispatch }) {
   return (next) => (action) => {
-    if (
-      getState().login.state === "loggedIn" &&
-      action.type === "deleteGuestList"
-    ) {
+    if (getState().guestLists.loggedIn && action.type === "deleteGuestList") {
       dispatch({ type: "loadingGuestLists" });
-      fetch(`${waarServerUrl}/admin/register/${action.locationId}`, {
+      fetch(`${waarServerUrl}/admin/remove/${action.location_id}`, {
         method: "DELETE",
         credentials: "include",
       })
         .then((resp) => {
-          if (resp.status != 200) throw resp.status;
+          if (resp.status !== 200) throw resp.status;
           dispatch({ type: "reloadGuestLists" });
         })
         .catch((err) => {
@@ -120,10 +119,7 @@ function handleDeleteGuestList({ getState, dispatch }) {
  */
 function handleAddGuestList({ getState, dispatch }) {
   return (next) => (action) => {
-    if (
-      getState().login.state === "loggedIn" &&
-      action.type === "addGuestList"
-    ) {
+    if (getState().guestLists.loggedIn && action.type === "addGuestList") {
       dispatch({ type: "loadingGuestLists" });
       fetch(`${waarServerUrl}/admin/register`, {
         mode: "cors",
@@ -171,7 +167,6 @@ function handleUpdateGuestLists({ getState, dispatch }) {
           dispatch({
             type: "loadedGuestLists",
             entries: json["locations"],
-            email: json["email"],
           });
         })
         .catch((err) => {
@@ -191,7 +186,9 @@ function handleUpdateCheckins({ dispatch }) {
   return (next) => (action) => {
     if (action.type === "loadCheckins") {
       dispatch({ type: "loadingCheckins" });
-      fetch(`${waarServerUrl}/admin/results/${action.locationId}`)
+      fetch(`${waarServerUrl}/admin/results/${action.locationId}`, {
+        credentials: "include",
+      })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
@@ -278,7 +275,6 @@ function handleDisclosurePage({ dispatch }) {
 export default function () {
   return createStore(
     combineReducers({
-      login: login_state,
       guestLists: guest_lists,
       checkins: checkins,
       DisclosurePage: guest_page,

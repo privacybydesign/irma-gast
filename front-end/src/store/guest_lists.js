@@ -3,6 +3,7 @@ const initialState = {
   entries: [],
   email: "",
   error: null,
+  loggedIn: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,12 +17,23 @@ export default function (state = initialState, action) {
         email: "",
         error: null,
       };
+    case "loggingIn":
+      return {
+        ...state,
+        state: "loggingIn",
+      };
+    case "loggedIn":
+      return {
+        ...state,
+        state: "loggedIn",
+        loggedIn: true,
+        email: action.email,
+        error: null,
+      };
     case "loadingGuestLists":
       return {
         ...state,
         state: "loading",
-        entries: [],
-        email: "",
         error: null,
       };
     case "loadedGuestLists":
@@ -29,7 +41,6 @@ export default function (state = initialState, action) {
         ...state,
         state: "loaded",
         entries: action.entries,
-        email: action.email,
         error: null,
       };
     case "errorGuestLists":
@@ -37,16 +48,22 @@ export default function (state = initialState, action) {
         ...state,
         state: "error",
         entries: [],
-        email: "",
         error: action.error,
+      };
+    case "loggingOut":
+      return {
+        ...state,
+        state: "loggingOut",
       };
     case "loggedOut":
       return {
         ...state,
         state: "loggedOut",
         entries: [],
+        loggedIn: false,
         email: "",
         error: null,
+        irmaSession: action.irmaSession,
       };
     default:
       return state;

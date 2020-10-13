@@ -41,7 +41,6 @@ class HostPage extends React.Component {
         this._irmaWeb.start().then(() => {
           // Delay dispatch to make IRMA success animation visible.
           setTimeout(() => {
-            this.props.dispatch({ type: "loggedIn" });
             this.props.dispatch({ type: "loadGuestLists" });
           }, 1000);
         });
@@ -161,7 +160,7 @@ class HostPage extends React.Component {
       <div className="App">
         <NavBar
           link="logout"
-          onClick={() => this.props.dispatch({ type: "loggedOut" })}
+          onClick={() => this.props.dispatch({ type: "logOut" })}
         />
         <div className="content">{this._renderState()}</div>
         <Footer />
