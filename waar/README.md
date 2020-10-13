@@ -34,7 +34,7 @@ and fetching results (i.e., checkins).
 - `GET /admin/irmasession_start` retrieves an irma session package, from which a QR can be displayed to direct the organiser to the irma server. The requestor is given a cookie called `irma-gast`.
 - `GET /admin/irmasession_finish` completes the IRMA authentication via email after the organiser has finished the IRMA session. The irma-gast session is now authenticated.
 
-The following endpoints require an authenticated session.
+The following endpoints require an authenticated session. If the request is not authenticated the server replies with a `403`.
 - `POST /admin/register` expects a JSON body containing fields `name`, `location` and `onetime` and returns a `200` on succces. One-time events are automatically removed 14 days after no check-ins have been made.
 - `GET /admin/overview` returns an overview of all events for this organiser.
 - `GET /admin/results/{location_id}` returns all encrypted ciphertexts (in JWT form) of checked-in guests for a location. The receiver of this data is responsible for verifying these JWTs.

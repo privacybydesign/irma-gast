@@ -25,7 +25,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"github.com/rs/cors"
+	//	"github.com/rs/cors"
 	"github.com/segmentio/ksuid"
 )
 
@@ -123,7 +123,6 @@ func initSessionStorage() {
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
-
 		//Domain:   "irma-welkom.nl",
 	}
 
@@ -215,12 +214,13 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		var ctx context.Context
 		ctx = r.Context()
 
-		userExists := !strings.HasSuffix(r.URL.Path, "login") && !strings.HasSuffix(r.URL.Path, "irmasession_start")
-		userAuthenticated := !strings.HasSuffix(r.URL.Path, "login") && !strings.HasSuffix(r.URL.Path, "irmasession_start") && !strings.HasSuffix(r.URL.Path, "irmasession_finish")
+		userExists := !strings.HasSuffix(r.URL.Path, "irmasession_start")
+		userAuthenticated := !strings.HasSuffix(r.URL.Path, "irmasession_start") && !strings.HasSuffix(r.URL.Path, "irmasession_finish")
 
 		user, err := checkCookie(w, r, userExists, userAuthenticated)
 		if err != nil {
 			log.Printf("Authentication error: %v", err)
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 
@@ -678,24 +678,24 @@ func main() {
 	r.HandleFunc("/gast/gastsession", gastSession).Methods("POST")
 
 	// CORS setttings
-	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5000"},
-		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
-		AllowedHeaders:   []string{"Content-Type"},
-		AllowCredentials: true,
-		Debug:            true,
-	})
+	//cors := cors.New(cors.Options{
+	//	AllowedOrigins:   []string{"http://localhost:5000"},
+	//	AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
+	//	AllowedHeaders:   []string{"Content-Type"},
+	//	AllowCredentials: true,
+	//	Debug:            true,
+	//})
 
-	handler := cors.Handler(r)
+	//handler := cors.Handler(r)
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
 
 	var err error
 	if conf.CertificatePath != "" && conf.PrivKeyPath != "" {
 		log.Println("HTTPS enabled")
-		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, handler)
+		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, r)
 	} else {
-		err = http.ListenAndServe(conf.BindAddr, handler)
+		err = http.ListenAndServe(conf.BindAddr, r)
 	}
 	if err != nil {
 		log.Printf("Error while serving: %v", err)
