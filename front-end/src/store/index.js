@@ -22,21 +22,39 @@ const pkgServerUrl = "https://irma-welkom.nl/pkg";
 function handleLogin({ getState, dispatch }) {
   return (next) => (action) => {
     if (action.type == "initHostPage") {
-      dispatch({
-        type: "startHostPage",
-        irmaSession: {
-          url: waarServerUrl,
-          start: {
-            credentials: "include",
-            url: (o) => `${o.url}/admin/irmasession_start`,
-          },
-          result: {
-            credentials: "include",
-            url: (o) => `${o.url}/admin/irmasession_finish`,
-            parseResponse: (r) => r.status, 
-          },
-        },
-      });
+      dispatch({ type: "loadingGuestLists" });
+      fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
+        .then((resp) => {
+          if (resp.status !== 200) throw resp.status;
+          return resp.json();
+        })
+        .then((json) => {
+          dispatch({ type: "loggedIn" });
+          dispatch({
+            type: "loadedGuestLists",
+            entries: json["locations"],
+            email: json["email"],
+          });
+        })
+        .catch((status) => {
+          if (status === 403) {
+            dispatch({
+              type: "startHostPage",
+              irmaSession: {
+                url: waarServerUrl,
+                start: {
+                  credentials: "include",
+                  url: (o) => `${o.url}/admin/irmasession_start`,
+                },
+                result: {
+                  credentials: "include",
+                  url: (o) => `${o.url}/admin/irmasession_finish`,
+                  parseResponse: (r) => r.status,
+                },
+              },
+            });
+          }
+        });
     } else if (
       getState().login.state === "loggedIn" &&
       action.type === "logOut"
@@ -52,6 +70,7 @@ function handleLogin({ getState, dispatch }) {
           },
           result: {
             url: (o) => `${o.url}/admin/irmasession_finish`,
+            parseResponse: (r) => r.status,
           },
         },
       });
@@ -148,7 +167,11 @@ function handleUpdateGuestLists({ getState, dispatch }) {
           return resp.json();
         })
         .then((json) => {
-          dispatch({ type: "loadedGuestLists", entries: json["locations"], email: json["email"] });
+          dispatch({
+            type: "loadedGuestLists",
+            entries: json["locations"],
+            email: json["email"],
+          });
         })
         .catch((err) => {
           dispatch({ type: "errorGuestLists", error: err });
