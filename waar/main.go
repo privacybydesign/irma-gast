@@ -122,6 +122,8 @@ func initSessionStorage() {
 		MaxAge:   60 * 5,
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
+
 		//Domain:   "irma-welkom.nl",
 	}
 
