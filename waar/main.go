@@ -25,7 +25,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	//	"github.com/rs/cors"
+	"github.com/rs/cors"
 	"github.com/segmentio/ksuid"
 )
 
@@ -678,24 +678,24 @@ func main() {
 	r.HandleFunc("/gast/gastsession", gastSession).Methods("POST")
 
 	// CORS setttings
-	//cors := cors.New(cors.Options{
-	//	AllowedOrigins:   []string{"http://localhost:5000"},
-	//	AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
-	//	AllowedHeaders:   []string{"Content-Type"},
-	//	AllowCredentials: true,
-	//	Debug:            true,
-	//})
+	cors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5000"},
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: true,
+		Debug:            true,
+	})
 
-	//handler := cors.Handler(r)
+	handler := cors.Handler(r)
 
 	log.Printf("Listening on %s\n", conf.BindAddr)
 
 	var err error
 	if conf.CertificatePath != "" && conf.PrivKeyPath != "" {
 		log.Println("HTTPS enabled")
-		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, r)
+		err = http.ListenAndServeTLS(conf.BindAddr, conf.CertificatePath, conf.PrivKeyPath, handler)
 	} else {
-		err = http.ListenAndServe(conf.BindAddr, r)
+		err = http.ListenAndServe(conf.BindAddr, handler)
 	}
 	if err != nil {
 		log.Printf("Error while serving: %v", err)
