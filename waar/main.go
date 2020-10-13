@@ -677,9 +677,9 @@ func main() {
 
 	// CORS setttings
 	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"http://localhost:5000"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
-		AllowedHeaders:   []string{"Content-Type", "Accept"},
+		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,
 	})
 
