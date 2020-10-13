@@ -672,14 +672,15 @@ func main() {
 	adminRouter.HandleFunc("/logout", logout).Methods("GET")
 
 	// Gast endpoints
+	// TODO: add rate-limiting / size-limiting
 	r.HandleFunc("/gast/gastsession", gastSession).Methods("POST")
 
+	// CORS setttings
 	cors := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5000"},
-		AllowedMethods:   []string{"GET", "POST", "DELETE"},
-		AllowedHeaders:   []string{"Content-Type"},
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
+		AllowedHeaders:   []string{"Content-Type", "Accept"},
 		AllowCredentials: true,
-		Debug:            true,
 	})
 
 	handler := cors.Handler(r)
