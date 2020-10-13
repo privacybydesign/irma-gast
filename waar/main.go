@@ -681,6 +681,7 @@ func main() {
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,
+		Debug:            true,
 	})
 
 	handler := cors.Handler(r)
