@@ -126,6 +126,7 @@ function handleAddGuestList({ getState, dispatch }) {
     ) {
       dispatch({ type: "loadingGuestLists" });
       fetch(`${waarServerUrl}/admin/register`, {
+        mode: "cors",
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
