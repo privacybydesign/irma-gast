@@ -65,9 +65,9 @@ type Location struct {
 	Id           string `json:"location_id"`
 	Name         string `json:"name"`
 	Location     string `json:"location"`
-	Onetime      bool   `'json:"onetime"`
+	Onetime      bool   `json:"onetime"`
 	CreationDate string `json:"creation_date"`
-	Count        int    `'json:"guest_count"`
+	Count        int    `json:"guest_count"`
 }
 
 var (
