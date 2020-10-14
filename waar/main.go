@@ -67,6 +67,7 @@ type Location struct {
 	Location     string `json:"location"`
 	Onetime      bool   `'json:"onetime"`
 	CreationDate string `json:"creation_date"`
+	Count        int    `'json:"guest_count"`
 }
 
 var (
@@ -400,6 +401,13 @@ func (user *User) getLocations() ([]*Location, error) {
 		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation})
 	}
 
+	for _, loc := range locations {
+		err = db.QueryRow("COUNT * FROM checkins WHERE location_id=?", loc.Id).Scan(&loc.Count)
+		if err != nil {
+			log.Printf("could not get guest count for location: %v, %v", loc.Id, err)
+		}
+	}
+
 	return locations, nil
 }
 
@@ -683,7 +691,6 @@ func main() {
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,
-		Debug:            true,
 	})
 
 	handler := cors.Handler(r)
