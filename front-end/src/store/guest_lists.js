@@ -17,19 +17,6 @@ export default function (state = initialState, action) {
         email: "",
         error: null,
       };
-    case "loggingIn":
-      return {
-        ...state,
-        state: "loggingIn",
-      };
-    case "loggedIn":
-      return {
-        ...state,
-        state: "loggedIn",
-        loggedIn: true,
-        email: action.email,
-        error: null,
-      };
     case "loadingGuestLists":
       return {
         ...state,
@@ -41,6 +28,8 @@ export default function (state = initialState, action) {
         ...state,
         state: "loaded",
         entries: action.entries,
+        loggedIn: true,
+        email: action.email,
         error: null,
       };
     case "errorGuestLists":
@@ -49,11 +38,6 @@ export default function (state = initialState, action) {
         state: "error",
         entries: [],
         error: action.error,
-      };
-    case "loggingOut":
-      return {
-        ...state,
-        state: "loggingOut",
       };
     case "loggedOut":
       return {

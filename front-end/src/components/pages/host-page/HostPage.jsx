@@ -33,7 +33,6 @@ class HostPage extends React.Component {
     switch (this.props.state) {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
-          debugging: true,
           element: "#irma-web-form",
           language: "nl",
           session: this.props.irmaSession,
@@ -72,11 +71,12 @@ class HostPage extends React.Component {
 
   _renderGuestLists() {
     return this.props.entries.map((list) => {
+      console.log(this.props.email);
       let id = list["location_id"];
       return (
         <GuestList
           id={id}
-          date={list["date"]}
+          date={list["creation_date"]}
           name={list["name"]}
           listType={list["type"]}
           host={this.props.email}
