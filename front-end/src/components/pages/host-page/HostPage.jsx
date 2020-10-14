@@ -80,6 +80,7 @@ class HostPage extends React.Component {
           name={list["name"]}
           listType={list["type"]}
           host={this.props.email}
+          count={list["guest_count"]}
           onDelete={() =>
             this.props.dispatch({ type: "deleteGuestList", location_id: id })
           }

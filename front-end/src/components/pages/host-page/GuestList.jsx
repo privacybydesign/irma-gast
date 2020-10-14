@@ -149,7 +149,7 @@ export default function GuestList(props) {
             )}
           </CardActions>
           <GuestCount
-            count={2} // TODO: replace with actual number
+            count={props.count}
             listType={props.listType}
             className={classes.noPadding}
           />
