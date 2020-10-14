@@ -118,7 +118,7 @@ export default function GuestList(props) {
         <CardContent className={classes.noPadding}>
           <QRCode
             id={"qr-" + props.id}
-            value={"https://irma.app"} //TODO
+            value={"https://irma-welkom.nl/guest/" + props.id + "/" + props.host}
             size={200}
             className="qr"
             bgColor={"#ffffff"}

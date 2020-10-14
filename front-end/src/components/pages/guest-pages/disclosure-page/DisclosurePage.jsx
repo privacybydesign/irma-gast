@@ -17,9 +17,9 @@ function DisclosurePage(props) {
             ontsleutelen.
           </p>
           <div className="center-content">
-            <a href="https://irma.app" className="btn irma-btn">
+            <div className="btn irma-btn" onClick={props.onNext}>
               Laat email achter
-            </a>
+            </div>
           </div>
         </div>
       </div>

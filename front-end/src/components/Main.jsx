@@ -12,7 +12,7 @@ import DisclosurePage from "./pages/guest-pages/disclosure-page/DisclosurePage";
 const Main = () => {
   return (
     <Switch>
-      <Route exact path="/guest" component={PreDisclosurePage} />
+      <Route exact path="/guest/:id/:host" component={PreDisclosurePage} />
       <Route exact path="/disclosure" component={DisclosurePage} />
       <Route exact path="/host" component={HostPage} />
       <Route exact path="/" component={LandingPage} />

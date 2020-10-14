@@ -1,8 +1,11 @@
 import React from "react";
 import Footer from "../../../footer/Footer";
 import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router";
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import NavBar from "../../../nav-bar/NavBar";
+import DisclosurePage from "../disclosure-page/DisclosurePage";
 
 const mapStateToProps = (state) => {
   return {
@@ -12,7 +15,11 @@ const mapStateToProps = (state) => {
 
 class PreDisclosurePage extends React.Component {
   componentDidMount() {
-    this.props.dispatch({ type: "initDisclosurePage" });
+    this.props.dispatch({
+      type: "initDisclosurePage",
+      id: this.props.match.params.id,
+      host: this.props.match.params.host,
+    });
     this._handleIrma();
   }
 
@@ -37,7 +44,7 @@ class PreDisclosurePage extends React.Component {
         this._irmaWeb.start().then((result) => {
           // Delay dispatch to make IRMA success animation visible.
           setTimeout(() => {
-            this.props.dispatch({ type: "sendGuestData", data: result });
+            this.props.dispatch({ type: "showDisclosurePage", result: result });
           }, 1000);
         });
         return;
@@ -94,6 +101,9 @@ class PreDisclosurePage extends React.Component {
     switch (this.props.state) {
       case "start":
         return this._renderStartPage();
+      case "disclosurePage":
+        this.props.onNext = () => { this.props.dispatch({type: "sendGuestData"}) };
+        return DisclosurePage(this.props);
       case "encrypting":
         return this._renderMessagePage("Gegevens aan het versleutelen...");
       case "sending":
@@ -120,4 +130,4 @@ class PreDisclosurePage extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(PreDisclosurePage);
+export default compose(withRouter, connect(mapStateToProps))(PreDisclosurePage);

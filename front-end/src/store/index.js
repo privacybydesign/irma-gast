@@ -2,11 +2,13 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
-
+import { Client } from "irmaseal-js";
 const waarServerUrl = "https://data.irma-welkom.nl/api/v1";
 
 // IRMA server for authenticating guests
 const irmaServerUrl = "https://irma-welkom.nl/irma";
+
+// Private key generator URL 
 const pkgServerUrl = "https://irma-welkom.nl/pkg";
 
 /**
@@ -14,7 +16,7 @@ const pkgServerUrl = "https://irma-welkom.nl/pkg";
  *  - dispatch({type: 'loggedIn'}) can be done to indicate that the login irma session has been succeeded.
  *    The IRMA-frontend session object on how to do the IRMA session can be found in the `irmaSession` field
  *    of the login redux state.
- *  - dispatch({type: 'initLogin'}) inits the login process.
+ *  - dispatch({type: 'initHostPage'}) inits the login process.
  *  - dispatch({type: 'logOut'}) can be done to force a logout to the redux state. This will also handle
  *    the session deletion at the server.
  */
@@ -28,13 +30,15 @@ function handleLogin({ getState, dispatch }) {
           return resp.json();
         })
         .then((json) => {
-          dispatch({ type: "loggedIn", email: json["email"] });
           dispatch({
             type: "loadedGuestLists",
             entries: json["locations"],
+            email: json["email"],
           });
         })
         .catch((status) => {
+          // admin is not logged in yet
+          // prepare an irma session
           if (status === 403) {
             dispatch({
               type: "startHostPage",
@@ -211,8 +215,8 @@ function handleUpdateCheckins({ dispatch }) {
  *  - dispatch({type: 'sendGuestData', data: ...})
  *  - dispatch({type: 'initDisclosurePage'}) to (re-)start the process of a guest showing his data.
  */
-function handleDisclosurePage({ dispatch }) {
-  return (next) => (action) => {
+function handleDisclosurePage({ getState, dispatch }) {
+  return async (next) => async (action) => {
     if (action.type === "initDisclosurePage") {
       dispatch({
         type: "startDisclosurePage",
@@ -241,14 +245,22 @@ function handleDisclosurePage({ dispatch }) {
           },
         },
       });
+    } else if (action.type === "showDisclosurePage") {
+      dispatch({type: "disclosurePage"});
     } else if (action.type === "sendGuestData") {
-      // TODO: Encrypt guest data
-      let data = null;
+      
+      let result = getState().guest_page.result;
+      let host = getState().guest_page.host;
+      let id = getState().guest_page.id;
+
+      let client = Client.build(pkgServerUrl);
+      let ct = client.encrypt(host, result);
+      
       // TODO: Send errorDisclosurePage if encrypting fails.
       dispatch({
         type: "guestDataEncrypted",
-        locationId: action.locationId,
-        ciphertext: data,
+        locationId: id,
+        ciphertext: ct,
       });
     } else if (action.type === "guestDataEncrypted") {
       fetch(`${waarServerUrl}/gast/gastsession`, {
