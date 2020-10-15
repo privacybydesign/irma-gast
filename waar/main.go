@@ -402,7 +402,7 @@ func (user *User) getLocations() ([]*Location, error) {
 	}
 
 	for _, loc := range locations {
-		err = db.QueryRow("COUNT * FROM checkins WHERE location_id=?", loc.Id).Scan(&loc.Count)
+		err = db.QueryRow("SELECT COUNT(*) FROM checkins WHERE location_id=?", loc.Id).Scan(&loc.Count)
 		if err != nil {
 			log.Printf("could not get guest count for location: %v, %v", loc.Id, err)
 		}
