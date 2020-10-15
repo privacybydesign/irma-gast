@@ -161,7 +161,9 @@ class HostPage extends React.Component {
       <div className="App">
         <NavBar
           link="logout"
-          onClick={() => this.props.dispatch({ type: "logOut" })}
+          onLogout={() => {
+            this.props.dispatch({ type: "logOut" });
+          }}
         />
         <div className="content">{this._renderState()}</div>
         <Footer />

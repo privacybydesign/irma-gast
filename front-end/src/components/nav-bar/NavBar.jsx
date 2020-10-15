@@ -40,7 +40,7 @@ function NavBar(props) {
           </a>
           {/* <!-- Right-sided navbar links --> */}
           <div className="w3-right w3-hide-small">
-            <NavBarItems link={props.link} />
+            <NavBarItems link={props.link} onLogout={props.onLogout}/>
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
           <a
@@ -65,7 +65,7 @@ function NavBar(props) {
         >
           Close ×
         </a>
-        <NavBarItems link={props.link} />
+        <NavBarItems link={props.link} onLogout={props.onLogout}/>
       </nav>
     </div>
   );

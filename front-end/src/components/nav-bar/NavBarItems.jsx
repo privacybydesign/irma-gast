@@ -9,7 +9,7 @@ function NavBarItems(props) {
         Waarom?
       </a> */}
       {props.link === "logout" && (
-        <a href="/" className="w3-bar-item">
+        <a href="/" className="w3-bar-item" onClick={props.onLogout}>
           Logout
         </a>
       )}

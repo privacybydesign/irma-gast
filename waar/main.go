@@ -570,13 +570,17 @@ func remove(w http.ResponseWriter, r *http.Request) {
 
 type gastData struct {
 	Location_id string `json:"location_id"`
-	Ciphertext  string `json:"ct"`
+	Ciphertext  string `json:"ciphertext"`
 }
 
 // Receives encrypted ciphertexts
 func gastSession(w http.ResponseWriter, r *http.Request) {
 	var received gastData
-	json.NewDecoder(r.Body).Decode(&received)
+	err := json.NewDecoder(r.Body).Decode(&received)
+	if err != nil {
+		log.Printf("failed to decode json: %v", err)
+		return
+	}
 
 	ct_bytes, err := base64.StdEncoding.DecodeString(received.Ciphertext)
 	if err != nil {
