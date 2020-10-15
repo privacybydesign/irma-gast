@@ -2,13 +2,15 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
-import { Client } from "irmaseal-js";
+import Client from "./irmaseal";
+
+// URL of waar server
 const waarServerUrl = "https://data.irma-welkom.nl/api/v1";
 
 // IRMA server for authenticating guests
 const irmaServerUrl = "https://irma-welkom.nl/irma";
 
-// Private key generator URL 
+// Private key generator URL
 const pkgServerUrl = "https://irma-welkom.nl/pkg";
 
 /**
@@ -216,7 +218,7 @@ function handleUpdateCheckins({ dispatch }) {
  *  - dispatch({type: 'initDisclosurePage'}) to (re-)start the process of a guest showing his data.
  */
 function handleDisclosurePage({ getState, dispatch }) {
-  return async (next) => async (action) => {
+  return (next) => (action) => {
     if (action.type === "initDisclosurePage") {
       dispatch({
         type: "startDisclosurePage",
@@ -246,22 +248,24 @@ function handleDisclosurePage({ getState, dispatch }) {
         },
       });
     } else if (action.type === "showDisclosurePage") {
-      dispatch({type: "disclosurePage"});
+      dispatch({ type: "disclosurePage" });
     } else if (action.type === "sendGuestData") {
-      
-      let result = getState().guest_page.result;
-      let host = getState().guest_page.host;
-      let id = getState().guest_page.id;
+      let result = getState().DisclosurePage.result;
+      let host = getState().DisclosurePage.host;
+      let id = getState().DisclosurePage.id;
 
-      let client = Client.build(pkgServerUrl);
-      let ct = client.encrypt(host, result);
-      
-      // TODO: Send errorDisclosurePage if encrypting fails.
-      dispatch({
-        type: "guestDataEncrypted",
-        locationId: id,
-        ciphertext: ct,
+      console.log(`encrypting jwt: ${result}\nfor ${host} and ${id}`);
+
+      Client.build(pkgServerUrl).then((client) => {
+        let ct = client.encrypt(host, result);
+        dispatch({
+          type: "guestDataEncrypted",
+          locationId: id,
+          ciphertext: ct,
+        });
       });
+
+      // TODO: Send errorDisclosurePage if encrypting fails.
     } else if (action.type === "guestDataEncrypted") {
       fetch(`${waarServerUrl}/gast/gastsession`, {
         method: "POST",
