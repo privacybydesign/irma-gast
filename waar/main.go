@@ -120,7 +120,7 @@ func initSessionStorage() {
 	)
 
 	store.Options = &sessions.Options{
-		MaxAge:   60 * 5,
+		MaxAge:   60 * 20,
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
