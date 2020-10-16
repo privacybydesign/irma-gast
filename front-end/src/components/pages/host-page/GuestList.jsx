@@ -160,7 +160,7 @@ export default function GuestList(props) {
             className={classes.button}
             startIcon={<DeleteIcon />}
           >
-            Liist verwijdereren
+            Lijst verwijdereren
           </Button>
           <Dialog
             open={dialog}
@@ -192,7 +192,7 @@ export default function GuestList(props) {
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF title={props.name} date={props.date} host={props.host} />
+          <ContactsPDF title={props.name} date={props.date} host={props.host} id={props.id} />
         </CardContent>
       </Collapse>
     </Card>

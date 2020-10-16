@@ -173,6 +173,7 @@ function handleUpdateGuestLists({ getState, dispatch }) {
           dispatch({
             type: "loadedGuestLists",
             entries: json["locations"],
+            email: json["email"],
           });
         })
         .catch((err) => {
@@ -188,11 +189,12 @@ function handleUpdateGuestLists({ getState, dispatch }) {
  * Handles all dispatch calls for updating the checkins of a certain guest list
  *  - dispatch({type: 'loadCheckins', locationId: <Location ID of guest list to load checkins of>})
  */
-function handleUpdateCheckins({ dispatch }) {
+function handleUpdateCheckins({ dispatch, getState }) {
   return (next) => (action) => {
     if (action.type === "loadCheckins") {
       dispatch({ type: "loadingCheckins" });
-      fetch(`${waarServerUrl}/admin/results/${action.locationId}`, {
+      let id = getState().checkins.location_id;
+      fetch(`${waarServerUrl}/admin/results/${id}`, {
         credentials: "include",
       })
         .then((resp) => {
@@ -200,13 +202,46 @@ function handleUpdateCheckins({ dispatch }) {
           return resp.json();
         })
         .then((json) => {
-          dispatch({ type: "decryptingCheckins" });
-          // TODO: Decrypt checkins
-          dispatch({ type: "loadedCheckins", entries: json });
+          dispatch({
+            type: "decryptingCheckins",
+            ciphertexts: json["entries"],
+          });
         })
         .catch((err) => {
           dispatch({ type: "errorCheckins", error: err });
         });
+    } else if (action.type === "decryptingCheckins") {
+      // get jwts from ciphertexts
+      let cts = action.ciphertexts;
+      console.log("cts: ", cts);
+      Client.build(pkgServerUrl).then((client) => {
+        let jwts = [];
+        cts.map(function (entry) {
+          let ct = Buffer.from(entry.ct, 'base64');
+          console.log("processing ct: ", ct);
+          let ts = client.extractTimestamp(ct);
+          if (ts !== -1) {
+            client
+              .requestKey(getState().guestLists.email, ts)
+              .then((key) => {
+                jwts.push({time: entry.time, jwt: client.decrypt(key, ct)});
+              })
+              .catch((err) => {
+                console.log(`error: ${err}`);
+              });
+          } else console.log("couldn't get timestamp, ignoring");
+        });
+
+        // TODO: Wait for all cts to be finished using somethinglike Promise.all()
+        // i.e., make a promise that for each ct gets the key and decrypts.
+        // Collect all these and block until all have resolved before dispatching the next action.
+        // dispatch({ type: "verifyingCheckins", jwts: jwts });
+      });
+    } else if (action.type === "verifyingCheckins") {
+      // get entries from jwts
+      console.log("jwts: ", action.jwts);
+      let entries = null;
+      dispatch({ type: "done", entries: entries });
     }
     return next(action);
   };
@@ -258,10 +293,11 @@ function handleDisclosurePage({ getState, dispatch }) {
 
       Client.build(pkgServerUrl).then((client) => {
         let ct = client.encrypt(host, result);
+        const base64ct = new Buffer(ct).toString("base64");
         dispatch({
           type: "guestDataEncrypted",
           locationId: id,
-          ciphertext: ct,
+          ciphertext: base64ct,
         });
       });
 

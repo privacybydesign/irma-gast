@@ -1,50 +1,54 @@
 const initialState = {
-  locationId: undefined,
-  loading: false,
-  decrypting: false,
+  state: undefined,
+  location_id: undefined,
+  ciphertexts: [],
+  jwts: [],
   entries: [],
   error: null,
 };
 
-export default function(state = initialState, action) {
-  switch(action.type) {
-    case 'loggedOut':
+export default function (state = initialState, action) {
+  switch (action.type) {
+    case "initCheckins":
       return {
         ...state,
-        locationId: undefined,
-        entries: [],
-        loading: false,
-        error: null,
+        location_id: action.location_id,
+        state: "initialized",
       };
-    case 'errorCheckins':
+    case "errorCheckins":
       return {
         ...state,
         entries: [],
-        loading: false,
-        decrypting: false,
+        ciphertexts: [],
+        jwts: [],
+        state: "error",
         error: action.error,
       };
-    case 'loadingCheckins':
+    case "loadingCheckins":
       return {
         ...state,
-        locationId: action.locationId,
-        entries: [],
-        loading: true,
+        state: "loading",
         error: null,
-      }
-    case 'decryptingCheckins':
+      };
+    case "decryptingCheckins":
       return {
         ...state,
-        loading: false,
-        decrypting: true,
+        ciphertexts: action.ciphertexts,
+        state: "decrypting",
         error: null,
-      }
-    case 'loadedCheckins':
+      };
+    case "verifyingCheckins":
+      return {
+        ...state,
+        jwts: action.jwts,
+        state: "verifying",
+        error: null,
+      };
+    case "loadedCheckins":
       return {
         ...state,
         entries: action.entries,
-        loading: false,
-        decrypting: false,
+        state: "done",
         error: null,
       };
     default:
