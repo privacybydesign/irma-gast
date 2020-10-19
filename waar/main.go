@@ -40,7 +40,7 @@ type Conf struct {
 	// IRMA server url for email authentication
 	IrmaServerURL string `yaml:"irmaServerURL"`
 
-	// Key to sign sessionRequests
+	// token to authenticate requests
 	RequestorToken string `yaml:"requestorToken"`
 
 	// Database
@@ -244,7 +244,6 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	request := irma.NewDisclosureRequest()
 	request.Disclose = irma.AttributeConDisCon{
 		irma.AttributeDisCon{
-			irma.AttributeCon{irma.NewAttributeRequest("pbdf.pbdf.email.email")},
 			irma.AttributeCon{irma.NewAttributeRequest("pbdf.sidn-pbdf.email.email")},
 		},
 	}

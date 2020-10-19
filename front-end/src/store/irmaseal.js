@@ -56,8 +56,10 @@ class Client {
     return JSON.parse(decoder.decode(buf.slice(2, 2 + len)));
   }
 
-  // Request key for whose.
-  // returns a promise of a key
+  // Request keys for whose, returns a promise of a key
+  // TODO: split in two parts
+  // 1) Start IRMA session, resulting in a token
+  // 2) Acquire a key per timestamp using said token
   requestKey(whose, timestamp) {
     return irmaFrontend.newPopup({
       session: {
@@ -69,7 +71,7 @@ class Client {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             attribute: {
-              type: "pbdf.pbdf.email.email",
+              type: "pbdf.sidn-pbdf.email.email",
               value: whose,
             },
           }),
