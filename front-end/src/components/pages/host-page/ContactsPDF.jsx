@@ -165,7 +165,7 @@ class ContactsPDF extends React.Component {
                   te noemen. Bij een doorlopende (niet-eenmalige) samenkomst is
                   het belangrijk om op de datum van aanmelding te letten en
                   alleen die mensen te (laten) waarschuwen die mogelijk besmet
-                  zijn geraakt.
+                  zijn geraakt. Vermijd onnodige onrust.
                 </Text>
                 <View style={styles.spacer}></View>
                 {this.props.entries.map((mail, index) => {
