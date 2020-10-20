@@ -1,6 +1,5 @@
 // TODO Check hmac
 // TODO Handle parse errors more gracefully
-// TODO Use PBDF server.
 import irmaFrontend from "@privacybydesign/irma-frontend";
 
 class Client {
@@ -14,10 +13,12 @@ class Client {
   // Creates a new client for the irmaseal-pkg with the given url.
   static async build(url) {
     let module = await import("irmaseal-js");
-    console.log(`loaded irmaseal-js: ${module}`);
     let resp = await fetch(url + "/v1/parameters");
     let params = await resp.text();
-    return new Client(url, params, module);
+    let client = new Client(url, params, module);
+    //console.log("initalizing panic hook");
+    //client.module.init_panic_hook();
+    return client;
   }
 
   // Returns the timestamp from a ciphertext.
@@ -42,7 +43,7 @@ class Client {
     buf8[1] = l & 255;
     new Uint8Array(buf, 2).set(new Uint8Array(bWhat));
     return this.module.encrypt(
-      // irmaseal
+      "pbdf.sidn-pbdf.email.email",
       whom,
       new Uint8Array(buf),
       this.params
@@ -56,33 +57,51 @@ class Client {
     return JSON.parse(decoder.decode(buf.slice(2, 2 + len)));
   }
 
-  // Request keys for whose, returns a promise of a key
-  // TODO: split in two parts
   // 1) Start IRMA session, resulting in a token
-  // 2) Acquire a key per timestamp using said token
-  requestKey(whose, timestamp) {
-    return irmaFrontend.newPopup({
-      session: {
+  requestToken(whose) {
+    return irmaFrontend
+      .newPopup({
         debugging: true,
-        url: this.url,
-        start: {
-          url: (o) => `${o.url}/v1/request`,
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            attribute: {
-              type: "pbdf.sidn-pbdf.email.email",
-              value: whose,
-            },
-          }),
+        session: {
+          url: this.url,
+          start: {
+            url: (o) => `${o.url}/v1/request`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              attribute: {
+                type: "pbdf.sidn-pbdf.email.email",
+                value: whose,
+              },
+            }),
+          },
+          mapping: {
+            sessionPtr: (r) => JSON.parse(r.qr),
+            sessionToken: (r) => r.token,
+          },
+          result: false,
         },
-        result: {
-          url: (o, { token }) =>
-            `${o.url}/v1/request/${token}/${timestamp.toString()}`,
-          parse: (r) => r.key,
-        },
-      },
-    }).start();
+      })
+      .start()
+      .then((map) => map.sessionToken);
+  }
+
+  // 2) Acquire a key per timestamp using said token
+  requestKey(token, timestamp) {
+    let url = this.url;
+    return new Promise(function (resolve, reject) {
+      fetch(`${url}/v1/request/${token}/${timestamp.toString()}`)
+        .then((resp) => {
+          return resp.status !== 200
+            ? reject(new Error("not ok"))
+            : resp.json();
+        })
+        .then((json) => {
+          return json.status !== "DONE_VALID"
+            ? reject(new Error("not valid"))
+            : resolve(json.key);
+        });
+    });
   }
 }
 

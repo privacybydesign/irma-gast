@@ -71,7 +71,6 @@ class HostPage extends React.Component {
 
   _renderGuestLists() {
     return this.props.entries.map((list) => {
-      console.log(this.props.email);
       let id = list["location_id"];
       return (
         <GuestList

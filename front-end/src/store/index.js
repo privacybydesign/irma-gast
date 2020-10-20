@@ -3,6 +3,7 @@ import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
 import Client from "./irmaseal";
+import JWT from "jsonwebtoken";
 
 // URL of waar server
 const waarServerUrl = "https://data.irma-welkom.nl/api/v1";
@@ -191,7 +192,14 @@ function handleUpdateGuestLists({ getState, dispatch }) {
  */
 function handleUpdateCheckins({ dispatch, getState }) {
   return (next) => (action) => {
-    if (action.type === "loadCheckins") {
+    if (action.type === "initCheckins") {
+      Client.build(pkgServerUrl).then((client) => {
+        dispatch({ type: "initializedCheckins", client: client });
+      });
+    } else if (
+      action.type === "loadCheckins" &&
+      getState().checkins.state === "initialized"
+    ) {
       dispatch({ type: "loadingCheckins" });
       let id = getState().checkins.location_id;
       fetch(`${waarServerUrl}/admin/results/${id}`, {
@@ -202,6 +210,8 @@ function handleUpdateCheckins({ dispatch, getState }) {
           return resp.json();
         })
         .then((json) => {
+          if (json["entries"].length === 0)
+            throw new Error("no entries to decrypt");
           dispatch({
             type: "decryptingCheckins",
             ciphertexts: json["entries"],
@@ -211,37 +221,67 @@ function handleUpdateCheckins({ dispatch, getState }) {
           dispatch({ type: "errorCheckins", error: err });
         });
     } else if (action.type === "decryptingCheckins") {
-      // get jwts from ciphertexts
       let cts = action.ciphertexts;
-      console.log("cts: ", cts);
-      Client.build(pkgServerUrl).then((client) => {
-        let jwts = [];
-        cts.map(function (entry) {
-          let ct = Buffer.from(entry.ct, 'base64');
-          console.log("processing ct: ", ct);
-          let ts = client.extractTimestamp(ct);
-          if (ts !== -1) {
-            client
-              .requestKey(getState().guestLists.email, ts)
-              .then((key) => {
-                jwts.push({time: entry.time, jwt: client.decrypt(key, ct)});
-              })
-              .catch((err) => {
-                console.log(`error: ${err}`);
-              });
-          } else console.log("couldn't get timestamp, ignoring");
-        });
+      let client = getState().checkins.client;
+      let host_email = getState().guestLists.email;
 
-        // TODO: Wait for all cts to be finished using somethinglike Promise.all()
-        // i.e., make a promise that for each ct gets the key and decrypts.
-        // Collect all these and block until all have resolved before dispatching the next action.
-        // dispatch({ type: "verifyingCheckins", jwts: jwts });
+      console.log("cts: ", cts);
+      client.requestToken(host_email).then((token) => {
+        let jwtPromises = [];
+        cts.map(function (entry) {
+          let ct = Buffer.from(entry.ct, "base64");
+          console.log("processing ct: ", ct);
+          jwtPromises.push(
+            new Promise(function (resolve, reject) {
+              let ts = client.extractTimestamp(ct);
+              if (ts === -1) return reject(new Error("no timestamp"));
+              return client
+                .requestKey(token, ts)
+                .then((key) =>
+                  resolve({
+                    time: entry.time,
+                    jwt: client.decrypt(key, ct).jwt,
+                  })
+                )
+                .catch((err) => reject(err));
+            })
+          );
+        });
+        Promise.allSettled(jwtPromises)
+          .then((promises) =>
+            promises
+              .filter((promise) => promise.status === "fulfilled")
+              .map((promise) => promise.value)
+          )
+          .then((jwts) => dispatch({ type: "verifyingCheckins", jwts: jwts }));
       });
     } else if (action.type === "verifyingCheckins") {
-      // get entries from jwts
       console.log("jwts: ", action.jwts);
-      let entries = null;
-      dispatch({ type: "done", entries: entries });
+      let entries = [];
+      fetch(irmaServerUrl + "/publickey")
+        .then((resp) => resp.text())
+        .then((pk) => {
+          console.log("pk: ", pk);
+          action.jwts.map((entry) => {
+            console.log("jwt: ", entry.jwt);
+            JWT.verify(
+              entry.jwt,
+              pk,
+              { maxAge: "14d", algorithms: ["RS256"] },
+              function (err, decoded) {
+                if (err) {
+                  console.log("err: ", err);
+                } else {
+                  console.log("decoded: ", decoded);
+                  let email = decoded.disclosed[0].rawValue;
+                  if (decoded.proofStatus === "DONE_VALID")
+                    entries.push({ time: entry.time, email: email });
+                }
+              }
+            );
+          });
+          dispatch({ type: "done", entries: entries });
+        });
     }
     return next(action);
   };
@@ -264,10 +304,13 @@ function handleDisclosurePage({ getState, dispatch }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              "@context": "https://irma.app/ld/request/disclosure/v2",
-              disclose: [
-                [["pbdf.pbdf.email.email"], ["pbdf.sidn-pbdf.email.email"]],
-              ],
+              validity: 86400, // jwt is valid for 2 weeks = 86400s
+              request: {
+                "@context": "https://irma.app/ld/request/disclosure/v2",
+                disclose: [
+                  [["pbdf.pbdf.email.email"], ["pbdf.sidn-pbdf.email.email"]],
+                ],
+              },
             }),
             parseResponse: (r) => r.json(),
           },
@@ -289,10 +332,9 @@ function handleDisclosurePage({ getState, dispatch }) {
       let host = getState().DisclosurePage.host;
       let id = getState().DisclosurePage.id;
 
-      console.log(`encrypting jwt: ${result}\nfor ${host} and ${id}`);
-
+      // TODO: initalize client while waiting for e.g. button press
       Client.build(pkgServerUrl).then((client) => {
-        let ct = client.encrypt(host, result);
+        let ct = client.encrypt(host, { jwt: result });
         const base64ct = new Buffer(ct).toString("base64");
         dispatch({
           type: "guestDataEncrypted",

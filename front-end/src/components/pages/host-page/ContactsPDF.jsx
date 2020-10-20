@@ -96,7 +96,6 @@ class ContactsPDF extends React.Component {
   }
 
   componentDidMount() {
-    console.log(`props ${this.props.id}`);
     this.props.dispatch({ type: "initCheckins", location_id: this.props.id });
   }
 
@@ -110,10 +109,10 @@ class ContactsPDF extends React.Component {
         console.log(`error: ${this.props.error}`);
         return null;
       case "initialized":
-        console.log("initializing");
+        console.log("initialized");
         return this._renderLoadCheckins();
       case "done":
-        console.log("done");
+        console.log("done, entries: ", this.props.entries);
         return this._renderDownloadLink();
       default:
         console.log(this.props.state);

@@ -2,6 +2,7 @@ const initialState = {
   state: undefined,
   location_id: undefined,
   ciphertexts: [],
+  client: undefined, // wasm module
   jwts: [],
   entries: [],
   error: null,
@@ -13,9 +14,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         location_id: action.location_id,
+        state: "initializing",
+      };
+    case "initializedCheckins":
+      return {
+        ...state,
+        client: action.client,
         state: "initialized",
       };
-    case "errorCheckins":
+  case "errorCheckins":
       return {
         ...state,
         entries: [],
