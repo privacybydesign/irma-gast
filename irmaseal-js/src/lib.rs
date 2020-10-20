@@ -50,10 +50,10 @@ impl Readable for Buf {
 // Encrypts the buffer what for the e-mail address whom using the given
 // parameters.
 #[wasm_bindgen]
-pub fn encrypt(whom: &str, what: &Uint8Array, pars: &str) -> Uint8Array {
+pub fn encrypt(attribute_type: &str, whom: &str, what: &Uint8Array, pars: &str) -> Uint8Array {
     let now = (Date::now() as u64) / 1000;
     let mut rng = rand::thread_rng();
-    let id = Identity::new(now, "pbdf.pbdf.email.email", Some(whom)).unwrap();
+    let id = Identity::new(now, attribute_type, Some(whom)).unwrap();
     let ppars: Parameters = serde_json::from_str(pars).unwrap();
     let mut buf = Buf::new(Vec::<u8>::new());
 
