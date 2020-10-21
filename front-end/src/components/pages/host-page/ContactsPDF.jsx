@@ -72,8 +72,10 @@ class ContactsPDF extends React.Component {
 
   // TODO: display something incase of error etc
   _renderState() {
+    console.log("state: ", this.props.state);
     switch (this.props.state) {
       case "error":
+        console.log(this.props.error);
         return null;
       case "done":
         return this._renderDownloadLink();
@@ -85,7 +87,7 @@ class ContactsPDF extends React.Component {
   _renderButtonText() {
     switch (this.props.state) {
       case "initializing":
-        return "Contactgegevens opvragen";
+        return "Laden...";
       case "initialized":
         return "Contactgegevens opvragen";
       case "loading":

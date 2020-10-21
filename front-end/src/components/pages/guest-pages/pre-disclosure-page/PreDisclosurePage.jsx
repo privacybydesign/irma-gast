@@ -102,8 +102,8 @@ class PreDisclosurePage extends React.Component {
       case "start":
         return this._renderStartPage();
       case "disclosurePage":
-        this.props.onNext = () => { this.props.dispatch({type: "sendGuestData"}) };
-        return DisclosurePage(this.props);
+        const onNext = () => { this.props.dispatch({type: "sendGuestData"}) };
+        return <DisclosurePage onNext={onNext} host={this.props.host}/>;
       case "encrypting":
         return this._renderMessagePage("Gegevens aan het versleutelen...");
       case "sending":
@@ -130,4 +130,4 @@ class PreDisclosurePage extends React.Component {
   }
 }
 
-export default compose(withRouter, connect(mapStateToProps))(PreDisclosurePage);
+  export default compose(withRouter, connect(mapStateToProps))(PreDisclosurePage);
