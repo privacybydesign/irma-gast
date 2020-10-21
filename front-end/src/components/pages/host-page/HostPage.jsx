@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
@@ -74,6 +74,7 @@ class HostPage extends React.Component {
       let id = list["location_id"];
       return (
         <GuestList
+          key={id}
           id={id}
           date={list["creation_date"]}
           name={list["name"]}

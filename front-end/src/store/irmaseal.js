@@ -33,7 +33,7 @@ class Client {
     let bWhat = encoder.encode(JSON.stringify(what));
     let l = bWhat.byteLength;
     if (l >= 65536 - 2) {
-      throw "Too large to encrypt";
+      throw new Error("Too large to encrypt");
     }
     const paddingBits = 9; // pad to 2^9 - 2 = 510
     let paddedLength = (((l + 1) >> paddingBits) + 1) << paddingBits;

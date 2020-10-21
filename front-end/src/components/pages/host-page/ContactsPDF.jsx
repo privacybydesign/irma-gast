@@ -55,35 +55,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// TODO: replace mockdata with the decrypted data from the actual list
-const mockdata = [
-  {
-    mail: "name@lastname.com",
-    date: "2020-08-03",
-    time: "13:10",
-  },
-  {
-    mail: "mail@email.com",
-    date: "2020-08-04",
-    time: "15:10",
-  },
-  {
-    mail: "me@lastname.com",
-    date: "2020-08-04",
-    time: "17:10",
-  },
-  {
-    mail: "someone@somewhere.org",
-    date: "2020-08-05",
-    time: "13:10",
-  },
-  {
-    mail: "hello@world.com",
-    date: "2020-08-07",
-    time: "18:10",
-  },
-];
-
 const mapStateToProps = (state, ownProps) => {
   return {
     ...state.checkins,
@@ -91,10 +62,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 class ContactsPDF extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.dispatch({ type: "initCheckins", location_id: this.props.id });
   }
@@ -103,20 +70,30 @@ class ContactsPDF extends React.Component {
     return this._renderState();
   }
 
+  // TODO: display something incase of error etc
   _renderState() {
     switch (this.props.state) {
       case "error":
-        console.log(`error: ${this.props.error}`);
         return null;
-      case "initialized":
-        console.log("initialized");
-        return this._renderLoadCheckins();
       case "done":
-        console.log("done, entries: ", this.props.entries);
         return this._renderDownloadLink();
       default:
-        console.log(this.props.state);
-        return null;
+        return this._renderLoadCheckins();
+    }
+  }
+
+  _renderButtonText() {
+    switch (this.props.state) {
+      case "initializing":
+        return "Contactgegevens opvragen";
+      case "initialized":
+        return "Contactgegevens opvragen";
+      case "loading":
+        return "Contactgegevens laden...";
+      case "decrypting":
+        return "Contactgegevens ontsleutelen...";
+      case "verifying":
+        return "Contactgegevens verifieren...";
     }
   }
 
@@ -128,7 +105,7 @@ class ContactsPDF extends React.Component {
         startIcon={<SaveIcon />}
         onClick={() => this.props.dispatch({ type: "loadCheckins" })}
       >
-        Contactgegevens opvragen
+        {this._renderButtonText()}
       </Button>
     );
   }

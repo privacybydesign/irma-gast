@@ -16,10 +16,10 @@ const pkgServerUrl = "https://irma-welkom.nl/pkg";
 
 /**
  * Handles all dispatches for changing the login state
- *  - dispatch({type: 'loggedIn'}) can be done to indicate that the login irma session has been succeeded.
+ *  - dispatch({type: 'initHostPage'}) inits the login process.
+ *  - dispatch({type: 'loadedGuestLists'}) can be done to indicate that the login irma session has been succeeded.
  *    The IRMA-frontend session object on how to do the IRMA session can be found in the `irmaSession` field
  *    of the login redux state.
- *  - dispatch({type: 'initHostPage'}) inits the login process.
  *  - dispatch({type: 'logOut'}) can be done to force a logout to the redux state. This will also handle
  *    the session deletion at the server.
  */
@@ -188,11 +188,16 @@ function handleUpdateGuestLists({ getState, dispatch }) {
 
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
- *  - dispatch({type: 'loadCheckins', locationId: <Location ID of guest list to load checkins of>})
+ *  - dispatch({type: 'initCheckins'}, location_id: <Location id>) to initialize loading the checkins.
+ *  - dispatch({type: 'loadCheckins'}) to start loading the checkins. Assumes we're initialized.
+ *  - dispatch({type: 'decryptingCheckins', ciphertexts: <ciphertexts>}) to start decrypting the ciphertexts.
+ *  - dispatch({type: 'verifyCheckins', jwts: <jwts>}) to start verifying the jwts.
+ *  - dispatch({type: 'loadedCheckins', entries: <entries>}) to indicate that checkins were loaded.
  */
 function handleUpdateCheckins({ dispatch, getState }) {
   return (next) => (action) => {
     if (action.type === "initCheckins") {
+      // TODO: initialize client globally
       Client.build(pkgServerUrl).then((client) => {
         dispatch({ type: "initializedCheckins", client: client });
       });
@@ -225,12 +230,10 @@ function handleUpdateCheckins({ dispatch, getState }) {
       let client = getState().checkins.client;
       let host_email = getState().guestLists.email;
 
-      console.log("cts: ", cts);
       client.requestToken(host_email).then((token) => {
         let jwtPromises = [];
-        cts.map(function (entry) {
+        cts.forEach(function (entry) {
           let ct = Buffer.from(entry.ct, "base64");
-          console.log("processing ct: ", ct);
           jwtPromises.push(
             new Promise(function (resolve, reject) {
               let ts = client.extractTimestamp(ct);
@@ -256,31 +259,29 @@ function handleUpdateCheckins({ dispatch, getState }) {
           .then((jwts) => dispatch({ type: "verifyingCheckins", jwts: jwts }));
       });
     } else if (action.type === "verifyingCheckins") {
-      console.log("jwts: ", action.jwts);
       let entries = [];
       fetch(irmaServerUrl + "/publickey")
         .then((resp) => resp.text())
         .then((pk) => {
-          console.log("pk: ", pk);
-          action.jwts.map((entry) => {
-            console.log("jwt: ", entry.jwt);
+          action.jwts.forEach((entry) => {
             JWT.verify(
               entry.jwt,
               pk,
               { maxAge: "14d", algorithms: ["RS256"] },
               function (err, decoded) {
-                if (err) {
-                  console.log("err: ", err);
-                } else {
-                  console.log("decoded: ", decoded);
-                  let email = decoded.disclosed[0].rawValue;
-                  if (decoded.proofStatus === "DONE_VALID")
-                    entries.push({ time: entry.time, email: email });
+                if (!err && decoded.proofStatus === "VALID") {
+                  let email = decoded.disclosed[0][0].rawvalue;
+                  let split = entry.time.split(" ");
+                  entries.push({
+                    mail: email,
+                    date: split[0],
+                    time: split[1],
+                  });
                 }
               }
             );
           });
-          dispatch({ type: "done", entries: entries });
+          dispatch({ type: "loadedCheckins", entries: entries });
         });
     }
     return next(action);
@@ -289,8 +290,11 @@ function handleUpdateCheckins({ dispatch, getState }) {
 
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
- *  - dispatch({type: 'sendGuestData', data: ...})
- *  - dispatch({type: 'initDisclosurePage'}) to (re-)start the process of a guest showing his data.
+ *  - dispatch({type: 'initDisclosurePage')} to initialize the disclosurePage.
+ *  - dispatch({type: 'showDisclosurePage')} to indicate initialization is finished.
+ *  - dispatch({type: 'sendGuestData', data: ...}) to start encrypting the session results.
+ *  - dispatch({type: 'guestDataEncrypted', location_id:<id>, ciphertext: <ct>})
+ *    to indicate that the session results have been encrypted and can be sent to the data server.
  */
 function handleDisclosurePage({ getState, dispatch }) {
   return (next) => (action) => {
@@ -338,7 +342,7 @@ function handleDisclosurePage({ getState, dispatch }) {
         const base64ct = new Buffer(ct).toString("base64");
         dispatch({
           type: "guestDataEncrypted",
-          locationId: id,
+          location_id: id,
           ciphertext: base64ct,
         });
       });
@@ -350,7 +354,7 @@ function handleDisclosurePage({ getState, dispatch }) {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          location_id: action.locationId,
+          location_id: action.location_id,
           ciphertext: action.ciphertext,
         }),
       })
