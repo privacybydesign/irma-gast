@@ -43,8 +43,8 @@ function Start(props) {
             </li>
             <li>
               Bezoekers kunnen zich met dit e-mail kaartje in de IRMA-app bij
-              samenkomsten aanmelden. Ze scannen met hun IRMA-app de QR-code en
-              geven zo hun e-mailadres door.
+              samenkomsten aanmelden. Ze scannen met de camera van hun mobiel 
+              de QR-code en geven zo hun e-mailadres door.
             </li>
           </ul>
         </div>
