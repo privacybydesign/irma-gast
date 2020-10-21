@@ -690,7 +690,7 @@ func main() {
 
 	// CORS setttings
 	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5000"},
+		AllowedOrigins:   []string{"http://localhost:5000", "https://irma-welkom.nl"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,
