@@ -55,7 +55,7 @@ function How(props) {
             ontsleutelen, bij een besmetting, om bezoekers zelf te waarschuwen
             of om hun e-mailadressen door te geven aan de GGD. De organisatie
             achter IRMA-welkom kan en wil zelf niet zien wie bij wie op bezoek
-            komt, zie ook de <a href="#privacypolicy">privacy policy</a>.
+            komt, zie ook de <a href="/policy">privacy policy</a>.
           </p>
         </div>
         <div className="flex-item-single">

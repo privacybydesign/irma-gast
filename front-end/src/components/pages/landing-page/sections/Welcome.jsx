@@ -30,7 +30,7 @@ function Welcome(props) {
             <p className="small">
               *Door in te loggen ga je akkoord met verwerking van
               persoonsgegevens zoals beschreven in de{" "}
-              <a href="#privacypolicy">privacy policy</a> van IRMA-welkom.
+              <a href="/policy">privacy policy</a> van IRMA-welkom.
             </p>
           </div>
           <div className="flex-item-single">
