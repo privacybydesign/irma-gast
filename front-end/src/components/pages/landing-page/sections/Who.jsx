@@ -19,7 +19,8 @@ function Who(props) {
             contactgegevens van bezoekers verzamelen als:
           </p>
           <ul>
-            <li>eigenaar van een café, restaurant, winkel, garage, ...</li>
+            <li>eigenaar van een café, restaurant, winkel, museum, theater, 
+                garage, ...</li>
             <li>uitoefenaar van een contactberoep</li>
             <li>
               organisator van een (eenmalige) bijeenkomst, vergadering,
