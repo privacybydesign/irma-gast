@@ -6,9 +6,9 @@ USE irmagastdb;
 
 CREATE TABLE locations (
   location_id varchar(27) NOT NULL PRIMARY KEY,
-  name varchar(35) NOT NULL,
-  location varchar(35) NOT NULL,
-  email varchar(35) NOT NULL,
+  name varchar(100) NOT NULL,
+  location varchar(100) NOT NULL,
+  email varchar(255) NOT NULL,
   onetime boolean NOT NULL,
   creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp(),
   last_checkin TIMESTAMP
