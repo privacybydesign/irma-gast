@@ -78,30 +78,31 @@ var (
 
 func readConfig(confPath string) {
 	if _, err := os.Stat(confPath); os.IsNotExist(err) {
-		fmt.Printf("Error: could not find configuration file: %s\n\n", confPath)
-		fmt.Printf("Example configuration file:\n\n")
-		buf, _ := yaml.Marshal(&conf)
-		fmt.Printf("%s\n", buf)
+		log.Printf("Error: could not find configuration file: %s\n", confPath)
+		log.Printf("Example configuration file:\n")
+		buf, err := yaml.Marshal(&conf)
+		if err != nil {
+			log.Printf("error marshalling example configuration:", err)
+		}
+		log.Printf("%s", buf)
 		return
-	} else {
-		log.Printf("Reading configuration file at: %v", confPath)
-		conf = Conf{}
-		file, err := os.Open(confPath)
-		if err != nil {
-			log.Fatalf("Could not read %s: %v", confPath, err)
-		}
-		defer file.Close()
-		err = yaml.NewDecoder(file).Decode(&conf)
-		if err != nil {
-			log.Fatalf("Could not parse config files: %v", err)
-		}
-		log.Printf("Configuration: %v", conf)
 	}
+	log.Printf("Reading configuration file at: %v", confPath)
+	conf = Conf{}
+	file, err := os.Open(confPath)
+	if err != nil {
+		log.Fatalf("Could not read %s: %v", confPath, err)
+	}
+	defer file.Close()
+	err = yaml.NewDecoder(file).Decode(&conf)
+	if err != nil {
+		log.Fatalf("Could not parse config files: %v", err)
+	}
+	log.Printf("Configuration: %v", conf)
 }
 
 func initDatabase() {
-	var err error
-	db, err = sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
+	db, err := sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
 	if err != nil {
 		log.Fatalf("Could not connect to the DB %v", err)
 	}
@@ -147,6 +148,7 @@ func cleanup() {
 
 	rows, err := res.RowsAffected()
 	if err != nil {
+		log.Printf("Could not get number of affected row: %v", err)
 		return
 	}
 
@@ -165,10 +167,11 @@ func cleanup() {
 
 	locationsRows, err := res2.RowsAffected()
 	if err != nil {
+		log.Printf("Could not get number of affected row: %v", err)
 		return
 	}
 
-	log.Printf("Cleanup:\ncheck-in entries deleted: %v\ninactive locations purged: %v", rows, locationsRows)
+	log.Printf("Cleanup: check-in entries deleted: %v, inactive locations purged: %v", rows, locationsRows)
 }
 
 func schedule(f func(), delay time.Duration) chan bool {
@@ -221,7 +224,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		user, err := checkCookie(w, r, userExists, userAuthenticated)
 		if err != nil {
 			log.Printf("Authentication error: %v", err)
-			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 
@@ -248,11 +250,18 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	requestBytes, _ := json.Marshal(request)
+	requestBytes, err := json.Marshal(request)
+	if err != nil {
+		log.Printf("could not marshal request: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	requestBuffer := bytes.NewBuffer(requestBytes)
 	httpReq, err := http.NewRequest("POST", conf.IrmaServerURL+"/session/", requestBuffer)
 	if err != nil {
 		log.Printf("couldn't create HTTP request: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -266,6 +275,7 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -273,6 +283,7 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	err = json.NewDecoder(resp.Body).Decode(&pkg)
 	if err != nil {
 		log.Printf("Error decoding session package from IRMA server: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -297,8 +308,15 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = json.NewEncoder(w).Encode(pkg)
+	if err != nil {
+		log.Printf("error encoding session package: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(pkg)
+	w.WriteHeader(http.StatusOK)
 }
 
 // Finishes authentication for an admin
@@ -308,6 +326,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't get user")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	result := &server.SessionResult{}
@@ -315,24 +334,32 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	err = transport.Get("result", result)
 	if err != nil {
 		log.Printf("Couldn't get session results: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	if result.ProofStatus != irma.ProofStatusValid {
 		w.WriteHeader(http.StatusForbidden)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	email := *result.Disclosed[0][0].RawValue
-	log.Printf("Finished email authentication, updating user with: %v", email)
 	user.Email = email
 	user.Authenticated = true
-	session, _ := store.Get(r, "irmagast")
+	session, err := store.Get(r, "irmagast")
+	if err != nil {
+		log.Printf("couldnt get session: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	session.Values["user"] = user
 
 	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("Error saving cookie: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -350,6 +377,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't get user")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	var received registerData
@@ -357,6 +385,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&received)
 	if err != nil {
 		log.Printf("error decoding json: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -365,11 +394,13 @@ func register(w http.ResponseWriter, r *http.Request) {
 	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime)
 	if err != nil {
 		log.Printf("Storing entry failed: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -403,7 +434,7 @@ func (user *User) getLocations() ([]*Location, error) {
 	for _, loc := range locations {
 		err = db.QueryRow("SELECT COUNT(*) FROM checkins WHERE location_id=?", loc.Id).Scan(&loc.Count)
 		if err != nil {
-			log.Printf("could not get guest count for location: %v, %v", loc.Id, err)
+			log.Printf("could not get guest count for location %v: %v", loc.Id, err)
 		}
 	}
 
@@ -435,19 +466,26 @@ func overview(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't get user")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	locs, err := user.getLocations()
 	if err != nil {
 		log.Printf("error getting locations for user: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	viewData := &overviewData{Email: user.Email, Locations: locs}
-	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(viewData)
+	if err != nil {
+		log.Printf("could not encode viewdata: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(viewData)
+	w.WriteHeader(http.StatusOK)
 }
 
 type resultEntry struct {
@@ -464,17 +502,20 @@ func results(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't get user")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	location_id, ok := mux.Vars(r)["location_id"]
 	if !ok {
 		log.Print("Couldn't get location_id from url")
+		http.Error(w, "Couldn't get location_id from url", http.StatusInternalServerError)
 		return
 	}
 
 	if has, err := user.hasLocation(location_id); err != nil || !has {
 		log.Print("User not registered for this location")
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -482,6 +523,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query("SELECT time, ct from checkins WHERE location_id=?", location_id)
 	if err != nil {
 		log.Printf("Error querying database: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -491,32 +533,42 @@ func results(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		if err = rows.Scan(&time, &ct); err != nil {
 			log.Printf("Scan error: %v", err)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		base64ct := base64.StdEncoding.EncodeToString(ct)
 		entries = append(entries, &resultEntry{Time: time, Ct: base64ct})
 	}
 
-	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(resultData{entries})
+	if err != nil {
+		log.Printf("could not encode result: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resultData{entries})
+	w.WriteHeader(http.StatusOK)
 }
 
 func remove(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't find user")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	location_id, ok := mux.Vars(r)["location_id"]
 	if !ok {
 		log.Printf("Couldn't get location_id from url")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if has, err := user.hasLocation(location_id); err != nil || !has {
 		log.Printf("User not registered for this location")
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -525,6 +577,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("Couldn't start a transaction: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -532,6 +585,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer stmt.Close()
@@ -540,6 +594,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldn't remove checkins: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -547,6 +602,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer stmt2.Close()
@@ -555,12 +611,14 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldn't remove checkins: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
 		log.Printf("Couldn't commit transaction: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -578,18 +636,21 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&received)
 	if err != nil {
 		log.Printf("failed to decode json: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	ct_bytes, err := base64.StdEncoding.DecodeString(received.Ciphertext)
 	if err != nil {
 		log.Printf("Error decoding string from gast data: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("Error beginning transaction: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -597,6 +658,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer stmt.Close()
@@ -606,6 +668,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -615,6 +678,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error finding last checkin timestamp: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -623,6 +687,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -630,12 +695,14 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
 		log.Printf("Error committing transaction: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -647,6 +714,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "irmagast")
 	if err != nil {
 		log.Printf("Error finding cookie: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	session.Values["user"] = User{}
@@ -654,6 +722,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	err = session.Save(r, w)
 	if err != nil {
 		log.Printf("error saving cookie: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
