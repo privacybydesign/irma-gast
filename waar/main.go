@@ -466,7 +466,7 @@ type overviewData struct {
 // Returns an overview for an authenticated admin
 func overview(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
-	log.printf("Overview for user: %v", user)
+	log.Printf("Overview for user: %v", user)
 	if err != nil {
 		log.Printf("Couldn't get user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
