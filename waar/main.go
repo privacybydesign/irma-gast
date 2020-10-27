@@ -654,17 +654,17 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+	stmt1, err := tx.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	defer stmt.Close()
+	defer stmt1.Close()
 
 	log.Printf("Inserting gast data at location %v", received.Location_id)
-	_, err = stmt.Exec(received.Location_id, ct_bytes)
+	_, err = stmt1.Exec(received.Location_id, ct_bytes)
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
@@ -683,15 +683,16 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update last checking in location table
-	stmt, err = tx.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
+	stmt2, err := tx.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	defer stmt2.Close()
 
-	_, err = stmt.Exec(time, received.Location_id)
+	_, err = stmt2.Exec(time, received.Location_id)
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)
