@@ -201,8 +201,9 @@ func checkCookie(w http.ResponseWriter, r *http.Request, userExists, userAuthent
 		http.Error(w, "No session", http.StatusForbidden)
 		return nil, err
 	}
-	user, ok := session.Values["user"].(User)
-	if !ok && userExists {
+	user_val, ok1 := session.Values["user"]
+	user, ok2 := user_val.(User)
+	if (!ok1 || !ok2) && userExists {
 		http.Error(w, "No user", http.StatusForbidden)
 		return nil, errors.New("No user found")
 	}
@@ -363,7 +364,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusOk)
 }
 
 type registerData struct {
