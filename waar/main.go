@@ -125,7 +125,7 @@ func initSessionStorage() {
 		HttpOnly: true,
 		Secure:   true,
 		// TODO: set Lax an domain before release
-		//SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 		//Domain:   "data.irma-welkom.nl",
 	}
 
@@ -234,7 +234,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 func getUser(ctx context.Context) (*User, error) {
-	if user, ok := ctx.Value("user").(*User); ok {
+	if user, ok := ctx.Value("user").(*User); ok && user != nil {
 		return user, nil
 	}
 	return nil, errors.New("No user")
