@@ -515,7 +515,7 @@ func results(w http.ResponseWriter, r *http.Request) {
 
 	if has, err := user.hasLocation(location_id); err != nil || !has {
 		log.Print("User not registered for this location")
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
