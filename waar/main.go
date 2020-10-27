@@ -581,7 +581,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := db.Prepare("DELETE FROM checkins WHERE location_id = ?")
+	stmt, err := tx.Prepare("DELETE FROM checkins WHERE location_id = ?")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
@@ -598,7 +598,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt2, err := db.Prepare("DELETE FROM locations WHERE location_id = ?")
+	stmt2, err := tx.Prepare("DELETE FROM locations WHERE location_id = ?")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
@@ -654,7 +654,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := db.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
@@ -683,7 +683,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update last checking in location table
-	stmt, err = db.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
+	stmt, err = tx.Prepare("UPDATE locations SET last_checkin = ? WHERE location_id = ?")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error in statement: %v", err)
