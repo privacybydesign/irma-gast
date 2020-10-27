@@ -102,7 +102,8 @@ func readConfig(confPath string) {
 }
 
 func initDatabase() {
-	db, err := sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
+	var err error
+	db, err = sql.Open(conf.DbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", conf.DbUser, conf.DbPass, conf.DbHost, conf.DbName))
 	if err != nil {
 		log.Fatalf("Could not connect to the DB %v", err)
 	}
@@ -355,7 +356,6 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("authentication complete, user: %v", user)
 	session.Values["user"] = user
 
 	err = session.Save(r, w)
@@ -466,7 +466,6 @@ type overviewData struct {
 // Returns an overview for an authenticated admin
 func overview(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
-	log.Printf("Overview for user: %v", user)
 	if err != nil {
 		log.Printf("Couldn't get user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
