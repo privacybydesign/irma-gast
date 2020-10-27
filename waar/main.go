@@ -364,7 +364,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOk)
+	w.WriteHeader(http.StatusOK)
 }
 
 type registerData struct {
