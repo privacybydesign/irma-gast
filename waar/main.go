@@ -326,7 +326,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		log.Printf("Couldn't get user")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	result := &server.SessionResult{}
@@ -334,13 +334,12 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	err = transport.Get("result", result)
 	if err != nil {
 		log.Printf("Couldn't get session results: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if result.ProofStatus != irma.ProofStatusValid {
 		w.WriteHeader(http.StatusForbidden)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -363,7 +362,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 type registerData struct {
@@ -385,7 +384,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&received)
 	if err != nil {
 		log.Printf("error decoding json: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -404,7 +403,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (user *User) getLocations() ([]*Location, error) {
@@ -622,7 +621,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 type gastData struct {
@@ -636,14 +635,14 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&received)
 	if err != nil {
 		log.Printf("failed to decode json: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	ct_bytes, err := base64.StdEncoding.DecodeString(received.Ciphertext)
 	if err != nil {
 		log.Printf("Error decoding string from gast data: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -708,7 +707,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Print("Succesfull check-in")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
@@ -727,7 +726,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func main() {
