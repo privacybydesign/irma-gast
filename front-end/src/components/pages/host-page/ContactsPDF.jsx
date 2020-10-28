@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    margin: 12,
+    margin: 6,
     textAlign: "center",
   },
   organizer: {
@@ -70,32 +70,41 @@ class ContactsPDF extends React.Component {
     return this._renderState();
   }
 
-  // TODO: display something incase of error etc
   _renderState() {
-    console.log("state: ", this.props.state);
-    switch (this.props.state) {
-      case "error":
-        console.log(this.props.error);
-        return null;
-      case "done":
-        return this._renderDownloadLink();
-      default:
-        return this._renderLoadCheckins();
+    if (
+      this.props.locations === {} ||
+      this.props.locations[this.props.id] === undefined
+    ) {
+      return this._renderLoadCheckins();
+    } else {
+      switch (this.props.locations[this.props.id].location_state) {
+        case "done":
+          return this._renderDownloadLink();
+        default:
+          return this._renderLoadCheckins();
+      }
     }
   }
 
   _renderButtonText() {
-    switch (this.props.state) {
-      case "initializing":
-        return "Laden...";
-      case "initialized":
-        return "Contactgegevens opvragen";
-      case "loading":
-        return "Contactgegevens laden...";
-      case "decrypting":
-        return "Contactgegevens ontsleutelen...";
-      case "verifying":
-        return "Contactgegevens verifieren...";
+    if (
+      this.props.locations === {} ||
+      this.props.locations[this.props.id] === undefined
+    ) {
+      return "Laden...";
+    } else {
+      switch (this.props.locations[this.props.id].location_state) {
+        case "initialized":
+          return "Contactgegevens opvragen";
+        case "loading":
+          return "Contactgegevens laden...";
+        case "decrypting":
+          return "Contactgegevens ontsleutelen...";
+        case "verifying":
+          return "Contactgegevens verifieren...";
+        default:
+          return "Laden...";
+      }
     }
   }
 
@@ -105,7 +114,12 @@ class ContactsPDF extends React.Component {
         color="primary"
         size="large"
         startIcon={<SaveIcon />}
-        onClick={() => this.props.dispatch({ type: "loadCheckins" })}
+        onClick={() =>
+          this.props.dispatch({
+            type: "loadCheckins",
+            location_id: this.props.id,
+          })
+        }
       >
         {this._renderButtonText()}
       </Button>
@@ -121,9 +135,15 @@ class ContactsPDF extends React.Component {
               <View style={styles.section}>
                 <Text style={styles.title}>{this.props.title}</Text>
                 <Text style={styles.subtitle}>
+                  {"Locatie: "}
+                  {this.props.location}
+                </Text>
+                <Text style={styles.subtitle}>
                   {"Startdatum: "}
                   {this.props.date}
-                  {", "}
+                </Text>
+                <Text style={styles.subtitle}>
+                  {"Host: "}
                   {this.props.host}
                 </Text>
                 <Image style={styles.image} src={logo} />
@@ -147,15 +167,17 @@ class ContactsPDF extends React.Component {
                   zijn geraakt. Vermijd onnodige onrust.
                 </Text>
                 <View style={styles.spacer}></View>
-                {this.props.entries.map((mail, index) => {
-                  return (
-                    <View key={index}>
-                      <Text style={styles.text}>
-                        {mail.date}, {mail.time}: {mail.mail}
-                      </Text>
-                    </View>
-                  );
-                })}
+                {this.props.locations[this.props.id].entries.map(
+                  (mail, index) => {
+                    return (
+                      <View key={index}>
+                        <Text style={styles.text}>
+                          {mail.date}, {mail.time}: {mail.mail}
+                        </Text>
+                      </View>
+                    );
+                  }
+                )}
               </View>
             </Page>
           </Document>

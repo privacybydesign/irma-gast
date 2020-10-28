@@ -76,6 +76,7 @@ class HostPage extends React.Component {
         <GuestList
           key={id}
           id={id}
+          location={list["location"]}
           date={list["creation_date"]}
           name={list["name"]}
           listType={list["type"]}

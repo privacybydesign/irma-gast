@@ -192,7 +192,7 @@ export default function GuestList(props) {
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF title={props.name} date={props.date} host={props.host} id={props.id} />
+          <ContactsPDF title={props.name} date={props.date} host={props.host} id={props.id} location={props.location} />
         </CardContent>
       </Collapse>
     </Card>

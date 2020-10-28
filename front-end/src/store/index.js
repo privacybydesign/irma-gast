@@ -63,7 +63,7 @@ function handleLogin({ getState, dispatch }) {
     } else if (getState().guestLists.loggedIn && action.type === "logOut") {
       fetch(`${waarServerUrl}/admin/logout`, { credentials: "include" }).then(
         (resp) => {
-          if (resp.status === 200) {
+          if (resp.status === 204) {
             dispatch({
               type: "loggedOut",
               irmaSession: {
@@ -73,7 +73,7 @@ function handleLogin({ getState, dispatch }) {
                   credentials: "include",
                   url: (o) => `${o.url}/admin/irmasession_start`,
                 },
-                result: {
+                esult: {
                   credentials: "include",
                   url: (o) => `${o.url}/admin/irmasession_finish`,
                   parseResponse: (r) => r.status,
@@ -104,7 +104,7 @@ function handleDeleteGuestList({ getState, dispatch }) {
         credentials: "include",
       })
         .then((resp) => {
-          if (resp.status !== 200) throw resp.status;
+          if (resp.status !== 204) throw resp.status;
           dispatch({ type: "reloadGuestLists" });
         })
         .catch((err) => {
@@ -140,7 +140,7 @@ function handleAddGuestList({ getState, dispatch }) {
         }),
       })
         .then((resp) => {
-          if (resp.status !== 200) throw resp.status;
+          if (resp.status !== 204) throw resp.status;
           dispatch({ type: "reloadGuestLists" });
         })
         .catch((err) => {
@@ -189,10 +189,10 @@ function handleUpdateGuestLists({ getState, dispatch }) {
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
  *  - dispatch({type: 'initCheckins'}, location_id: <Location id>) to initialize loading the checkins.
- *  - dispatch({type: 'loadCheckins'}) to start loading the checkins. Assumes we're initialized.
- *  - dispatch({type: 'decryptingCheckins', ciphertexts: <ciphertexts>}) to start decrypting the ciphertexts.
- *  - dispatch({type: 'verifyCheckins', jwts: <jwts>}) to start verifying the jwts.
- *  - dispatch({type: 'loadedCheckins', entries: <entries>}) to indicate that checkins were loaded.
+ *  - dispatch({type: 'loadCheckins'}, location_id: <Location id>) to start loading the checkins. Assumes we're initialized.
+ *  - dispatch({type: 'decryptingCheckins', ciphertexts: <ciphertexts>, location_id: <Location id>}) to start decrypting the ciphertexts.
+ *  - dispatch({type: 'verifyCheckins', jwts: <jwts>, location_id: <Location id>}) to start verifying the jwts.
+ *  - dispatch({type: 'loadedCheckins', entries: <entries>, location_id: <Location_id> }) to indicate that checkins were loaded.
  */
 function handleUpdateCheckins({ dispatch, getState }) {
   return (next) => (action) => {
@@ -205,9 +205,9 @@ function handleUpdateCheckins({ dispatch, getState }) {
       action.type === "loadCheckins" &&
       getState().checkins.state === "initialized"
     ) {
-      dispatch({ type: "loadingCheckins" });
-      let id = getState().checkins.location_id;
-      fetch(`${waarServerUrl}/admin/results/${id}`, {
+      dispatch({ type: "loadingCheckins", location_id: action.location_id });
+      //      let id = getState().checkins.location_id;
+      fetch(`${waarServerUrl}/admin/results/${action.location_id}`, {
         credentials: "include",
       })
         .then((resp) => {
@@ -219,11 +219,16 @@ function handleUpdateCheckins({ dispatch, getState }) {
             throw new Error("no entries to decrypt");
           dispatch({
             type: "decryptingCheckins",
+            location_id: action.location_id,
             ciphertexts: json["entries"],
           });
         })
         .catch((err) => {
-          dispatch({ type: "errorCheckins", error: err });
+          dispatch({
+            type: "errorCheckins",
+            location_id: action.location_id,
+            error: err,
+          });
         });
     } else if (action.type === "decryptingCheckins") {
       let cts = action.ciphertexts;
@@ -256,7 +261,13 @@ function handleUpdateCheckins({ dispatch, getState }) {
               .filter((promise) => promise.status === "fulfilled")
               .map((promise) => promise.value)
           )
-          .then((jwts) => dispatch({ type: "verifyingCheckins", jwts: jwts }));
+          .then((jwts) =>
+            dispatch({
+              type: "verifyingCheckins",
+              location_id: action.location_id,
+              jwts: jwts,
+            })
+          );
       });
     } else if (action.type === "verifyingCheckins") {
       let entries = [];
@@ -281,7 +292,11 @@ function handleUpdateCheckins({ dispatch, getState }) {
               }
             );
           });
-          dispatch({ type: "loadedCheckins", entries: entries });
+          dispatch({
+            type: "loadedCheckins",
+            location_id: action.location_id,
+            entries: entries,
+          });
         });
     }
     return next(action);
@@ -338,16 +353,19 @@ function handleDisclosurePage({ getState, dispatch }) {
 
       // TODO: initalize client while waiting for e.g. button press
       Client.build(pkgServerUrl).then((client) => {
-        let ct = client.encrypt(host, { jwt: result });
-        const base64ct = new Buffer(ct).toString("base64");
-        dispatch({
-          type: "guestDataEncrypted",
-          location_id: id,
-          ciphertext: base64ct,
-        });
+        try {
+          let ct = client.encrypt(host, { jwt: result });
+          const base64ct = new Buffer(ct).toString("base64");
+          dispatch({
+            type: "guestDataEncrypted",
+            location_id: id,
+            ciphertext: base64ct,
+          });
+        } catch (err) {
+          dispatch({ type: "errorDisclosurePage", error: err });
+        }
       });
 
-      // TODO: Send errorDisclosurePage if encrypting fails.
     } else if (action.type === "guestDataEncrypted") {
       fetch(`${waarServerUrl}/gast/gastsession`, {
         method: "POST",
@@ -359,7 +377,8 @@ function handleDisclosurePage({ getState, dispatch }) {
         }),
       })
         .then((resp) => {
-          if (resp.status !== 200) throw resp.status;
+          console.log("rsp: ", resp);
+          if (resp.status !== 204) throw resp.status;
           dispatch({ type: "guestDataSent" });
         })
         .catch((err) => {

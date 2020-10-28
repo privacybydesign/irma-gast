@@ -1,11 +1,9 @@
 const initialState = {
+  locations: {},
+
+  // TODO: move to hostpage?
   state: undefined,
-  location_id: undefined,
-  ciphertexts: [],
   client: undefined, // wasm module
-  jwts: [],
-  entries: [],
-  error: null,
 };
 
 export default function (state = initialState, action) {
@@ -13,50 +11,96 @@ export default function (state = initialState, action) {
     case "initCheckins":
       return {
         ...state,
-        location_id: action.location_id,
         state: "initializing",
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "initialized",
+            ciphertexts: [],
+            jwts: [],
+            entries: [],
+            error: action.error,
+          },
+        },
       };
     case "initializedCheckins":
       return {
         ...state,
-        client: action.client,
         state: "initialized",
+        client: action.client,
+        locations: {
+          ...state.locations,
+        },
       };
-  case "errorCheckins":
+    case "errorCheckins":
       return {
         ...state,
-        entries: [],
-        ciphertexts: [],
-        jwts: [],
-        state: "error",
-        error: action.error,
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "error",
+            ciphertexts: [],
+            jwts: [],
+            entries: [],
+            error: action.error,
+          },
+        },
       };
     case "loadingCheckins":
       return {
         ...state,
-        state: "loading",
-        error: null,
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "loading",
+            ciphertexts: [],
+            jwts: [],
+            entries: [],
+            error: null,
+          },
+        },
       };
     case "decryptingCheckins":
       return {
         ...state,
-        ciphertexts: action.ciphertexts,
-        state: "decrypting",
-        error: null,
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "decrypting",
+            ciphertexts: action.ciphertexts,
+            error: null,
+          },
+        },
       };
     case "verifyingCheckins":
       return {
         ...state,
-        jwts: action.jwts,
-        state: "verifying",
-        error: null,
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "verifying",
+            jwts: action.jwts,
+            error: null,
+          },
+        },
       };
     case "loadedCheckins":
       return {
         ...state,
-        entries: action.entries,
-        state: "done",
-        error: null,
+        locations: {
+          ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "done",
+            entries: action.entries,
+            error: null,
+          },
+        },
       };
     default:
       return state;
