@@ -37,7 +37,7 @@ function NavBarItems(props) {
             placement="left-end"
             aria-label="english"
           >
-            <span class="selected-lang refs">
+            <span className="selected-lang refs">
               <img src={flag} className="flag" alt="nl" />
             </span>
           </Tooltip>
