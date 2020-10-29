@@ -118,7 +118,9 @@ export default function GuestList(props) {
         <CardContent className={classes.noPadding}>
           <QRCode
             id={"qr-" + props.id}
-            value={encodeURI("https://irma-welkom.nl/guest/" + props.id + "/" + props.host)}
+            value={encodeURI(
+              "https://irma-welkom.nl/guest/" + props.id + "/" + props.host
+            )}
             size={200}
             className="qr"
             bgColor={"#ffffff"}
@@ -133,6 +135,7 @@ export default function GuestList(props) {
                 title={props.name}
                 date={props.date}
                 host={props.host}
+                location={props.location}
                 qr={props.id}
               />
             ) : (
@@ -192,7 +195,13 @@ export default function GuestList(props) {
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF title={props.name} date={props.date} host={props.host} id={props.id} location={props.location} />
+          <ContactsPDF
+            title={props.name}
+            date={props.date}
+            host={props.host}
+            id={props.id}
+            location={props.location}
+          />
         </CardContent>
       </Collapse>
     </Card>
