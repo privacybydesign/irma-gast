@@ -14,14 +14,6 @@ export default function (state = initialState, action) {
         state: "initializing",
         locations: {
           ...state.locations,
-          [action.location_id]: {
-            ...state.locations[action.location_id],
-            location_state: "initialized",
-            ciphertexts: [],
-            jwts: [],
-            entries: [],
-            error: action.error,
-          },
         },
       };
     case "initializedCheckins":
@@ -31,6 +23,14 @@ export default function (state = initialState, action) {
         client: action.client,
         locations: {
           ...state.locations,
+          [action.location_id]: {
+            ...state.locations[action.location_id],
+            location_state: "initialized",
+            ciphertexts: [],
+            jwts: [],
+            entries: [],
+            error: null,
+          },
         },
       };
     case "errorCheckins":

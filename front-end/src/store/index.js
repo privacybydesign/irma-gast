@@ -189,6 +189,7 @@ function handleUpdateGuestLists({ getState, dispatch }) {
 /**
  * Handles all dispatch calls for updating the checkins of a certain guest list
  *  - dispatch({type: 'initCheckins'}, location_id: <Location id>) to initialize loading the checkins.
+ *  - dispatch({type: 'initializedCheckins'}, location_id: <Location id>) to indicate that a client is ready to start loading the checkins.
  *  - dispatch({type: 'loadCheckins'}, location_id: <Location id>) to start loading the checkins. Assumes we're initialized.
  *  - dispatch({type: 'decryptingCheckins', ciphertexts: <ciphertexts>, location_id: <Location id>}) to start decrypting the ciphertexts.
  *  - dispatch({type: 'verifyCheckins', jwts: <jwts>, location_id: <Location id>}) to start verifying the jwts.
@@ -199,14 +200,17 @@ function handleUpdateCheckins({ dispatch, getState }) {
     if (action.type === "initCheckins") {
       // TODO: initialize client globally
       Client.build(pkgServerUrl).then((client) => {
-        dispatch({ type: "initializedCheckins", client: client });
+        dispatch({
+          type: "initializedCheckins",
+          client: client,
+          location_id: action.location_id,
+        });
       });
     } else if (
       action.type === "loadCheckins" &&
       getState().checkins.state === "initialized"
     ) {
       dispatch({ type: "loadingCheckins", location_id: action.location_id });
-      //      let id = getState().checkins.location_id;
       fetch(`${waarServerUrl}/admin/results/${action.location_id}`, {
         credentials: "include",
       })
@@ -235,40 +239,51 @@ function handleUpdateCheckins({ dispatch, getState }) {
       let client = getState().checkins.client;
       let host_email = getState().guestLists.email;
 
-      client.requestToken(host_email).then((token) => {
-        let jwtPromises = [];
-        cts.forEach(function (entry) {
-          let ct = Buffer.from(entry.ct, "base64");
-          jwtPromises.push(
-            new Promise(function (resolve, reject) {
-              let ts = client.extractTimestamp(ct);
-              if (ts === -1) return reject(new Error("no timestamp"));
-              return client
-                .requestKey(token, ts)
-                .then((key) =>
-                  resolve({
-                    time: entry.time,
-                    jwt: client.decrypt(key, ct).jwt,
-                  })
-                )
-                .catch((err) => reject(err));
-            })
-          );
-        });
-        Promise.allSettled(jwtPromises)
-          .then((promises) =>
-            promises
-              .filter((promise) => promise.status === "fulfilled")
-              .map((promise) => promise.value)
-          )
-          .then((jwts) =>
+      client
+        .requestToken(host_email)
+        .then((token) => {
+          let jwtPromises = [];
+          cts.forEach(function (entry) {
+            let ct = Buffer.from(entry.ct, "base64");
+            jwtPromises.push(
+              new Promise(function (resolve, reject) {
+                let ts = client.extractTimestamp(ct);
+                if (ts === -1) return reject(new Error("no timestamp"));
+                return client
+                  .requestKey(token, ts)
+                  .then((key) =>
+                    resolve({
+                      time: entry.time,
+                      jwt: client.decrypt(key, ct).jwt,
+                    })
+                  )
+                  .catch((err) => reject(err));
+              })
+            );
+          });
+          Promise.allSettled(jwtPromises)
+            .then((promises) =>
+              promises
+                .filter((promise) => promise.status === "fulfilled")
+                .map((promise) => promise.value)
+            )
+            .then((jwts) =>
+              dispatch({
+                type: "verifyingCheckins",
+                location_id: action.location_id,
+                jwts: jwts,
+              })
+            );
+        })
+        .catch((err) => {
+          if (err === "Aborted") {
             dispatch({
-              type: "verifyingCheckins",
+              type: "initializedCheckins",
+              client: client,
               location_id: action.location_id,
-              jwts: jwts,
-            })
-          );
-      });
+            });
+          }
+        });
     } else if (action.type === "verifyingCheckins") {
       let entries = [];
       fetch(irmaServerUrl + "/publickey")
@@ -365,7 +380,6 @@ function handleDisclosurePage({ getState, dispatch }) {
           dispatch({ type: "errorDisclosurePage", error: err });
         }
       });
-
     } else if (action.type === "guestDataEncrypted") {
       fetch(`${waarServerUrl}/gast/gastsession`, {
         method: "POST",
