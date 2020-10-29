@@ -20,6 +20,7 @@ module.exports = function override(config, env) {
       crateDirectory: path.resolve(__dirname, "./../irmaseal-js/"),
       extraArgs: "--no-typescript",
       outDir: path.resolve(__dirname, "./../irmaseal-js/static"),
+      forceMode: "production",
     }),
   ]);
 
