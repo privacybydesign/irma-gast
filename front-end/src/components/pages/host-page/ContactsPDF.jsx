@@ -133,17 +133,15 @@ class ContactsPDF extends React.Component {
           <Document>
             <Page wrap style={styles.page} size="A4">
               <View style={styles.section}>
-                <Text style={styles.title}>{this.props.title}</Text>
-                <Text style={styles.subtitle}>
-                  {"Locatie: "}
+                <Text style={styles.title}>
+                  {this.props.title}
+                  {", locatie: "}
                   {this.props.location}
                 </Text>
                 <Text style={styles.subtitle}>
                   {"Startdatum: "}
                   {this.props.date}
-                </Text>
-                <Text style={styles.subtitle}>
-                  {"Host: "}
+                  {", host: "}
                   {this.props.host}
                 </Text>
                 <Image style={styles.image} src={logo} />

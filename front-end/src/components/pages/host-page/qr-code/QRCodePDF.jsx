@@ -126,7 +126,11 @@ function QRCodePDF(props) {
             <Page wrap style={styles.page} size="A4">
               <View style={styles.section}>
                 <View style={styles.spacer}></View>
-                <Text style={styles.title}>{props.title}</Text>
+                <Text style={styles.title}>
+                  {props.title}
+                  {", locatie: "}
+                  {props.location}
+                </Text>
                 <Text style={styles.subtitle}>
                   {"Startdatum: "}
                   {props.date}
