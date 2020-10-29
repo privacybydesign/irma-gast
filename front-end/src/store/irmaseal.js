@@ -61,7 +61,6 @@ class Client {
   requestToken(whose) {
     return irmaFrontend
       .newPopup({
-        debugging: true,
         session: {
           url: this.url,
           start: {
