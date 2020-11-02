@@ -10,6 +10,7 @@ import {
 } from "@react-pdf/renderer";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
+import MailIcon from "@material-ui/icons/Mail";
 import logo from "../../../images/irma_logo.png";
 import { connect } from "react-redux";
 
@@ -79,7 +80,7 @@ class ContactsPDF extends React.Component {
     } else {
       switch (this.props.locations[this.props.id].location_state) {
         case "done":
-          return this._renderDownloadLink();
+          return [this._renderDownloadLink(), this._renderMailLink()];
         default:
           return this._renderLoadCheckins();
       }
@@ -122,6 +123,24 @@ class ContactsPDF extends React.Component {
         }
       >
         {this._renderButtonText()}
+      </Button>
+    );
+  }
+
+  _renderMailLink() {
+    return (
+      <Button
+        startIcon={<MailIcon />}
+        onClick={() => {
+          console.log("testoe:", this.props.locations[this.props.id]);
+          let addresses = this.props.locations[this.props.id].entries.map(
+            (entry) => entry.mail
+          );
+          console.log("addresses: ", addresses);
+          window.location.href = `mailto:?bcc=${addresses}`;
+        }}
+      >
+        Mail
       </Button>
     );
   }
