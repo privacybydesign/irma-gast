@@ -1,6 +1,7 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NavBarItems from "./NavBarItems";
+import PublicBetaBanner from './PublicBetaBanner';
 
 function NavBar(props) {
   // Toggle between showing and hiding the sidebar when clicking the menu icon
@@ -51,7 +52,10 @@ function NavBar(props) {
             <i className="fa fa-bars"></i>
           </a>
         </div>
+
+        <PublicBetaBanner/>
       </div>
+
       {/* <!-- Sidebar on small screens when clicking the menu icon --> */}
       <nav
         className="w3-sidebar w3-bar-block w3-card w3-animate-left w3-hide-medium w3-hide-large"

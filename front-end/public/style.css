@@ -309,6 +309,11 @@ footer {
   align-items: center;
 }
 
+.flex-item-single-centered {
+  padding: 10px;
+  text-align: center;
+}
+
 .flex-item-single {
   flex: 1;
 }
