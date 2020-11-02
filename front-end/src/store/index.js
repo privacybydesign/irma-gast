@@ -338,7 +338,7 @@ function handleDisclosurePage({ getState, dispatch }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              validity: 86400, // jwt is valid for 2 weeks = 86400s
+              validity: 14 * 24 * 60 * 60, // jwt is valid for 2 weeks
               request: {
                 "@context": "https://irma.app/ld/request/disclosure/v2",
                 disclose: [
