@@ -1,6 +1,7 @@
 import React from "react";
 import flag from "../../images/flags/nl.png";
 import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 
 function NavBarItems(props) {
   return (
@@ -8,10 +9,10 @@ function NavBarItems(props) {
       {/* <a href="#why" className="w3-bar-item">
         Waarom?
       </a> */}
-      {props.link === "logout" && (
-        <a href="/" className="w3-bar-item" onClick={props.onLogout}>
-          Logout
-        </a>
+      {props.link === "logout" && props.loggedIn && (
+        <Button className="w3-bar-item" onClick={props.onLogout}>
+          Log uit
+        </Button>
       )}
       {/* {props.link === "more" && (
         <a href="/" className="w3-bar-item">
@@ -37,7 +38,7 @@ function NavBarItems(props) {
             placement="left-end"
             aria-label="english"
           >
-            <span class="selected-lang refs">
+            <span className="selected-lang refs">
               <img src={flag} className="flag" alt="nl" />
             </span>
           </Tooltip>
