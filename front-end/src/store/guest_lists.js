@@ -20,7 +20,7 @@ export default function (state = initialState, action) {
     case "loadingGuestLists":
       return {
         ...state,
-        state: "loading",
+        state: action.reloading ? "reloading" : "loading",
         error: null,
       };
     case "loadedGuestLists":
