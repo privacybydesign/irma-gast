@@ -13,7 +13,7 @@ i18n
     resources,
     lng: Object.keys(resources)[0], // Since we only support nl now, pin the language for all environments.
 
-    keySeparator: false,
+    keySeparator: '.',
 
     interpolation: {
       escapeValue: false // react already safes from xss
