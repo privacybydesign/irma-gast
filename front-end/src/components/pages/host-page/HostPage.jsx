@@ -147,6 +147,7 @@ class HostPage extends React.Component {
   _renderState() {
     switch (this.props.state) {
       case "loaded":
+      case "reloading":
         return this._renderHostPage();
       case "error":
         return this._renderMessagePage(

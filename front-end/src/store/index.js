@@ -164,7 +164,7 @@ function handleUpdateGuestLists({ getState, dispatch }) {
       action.type === "reloadGuestLists" ||
       (action.type === "loadGuestLists" && !getState().guestLists.loaded)
     ) {
-      dispatch({ type: "loadingGuestLists" });
+      dispatch({ type: "loadingGuestLists", reloading: action.type === "reloadGuestLists" });
       fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;

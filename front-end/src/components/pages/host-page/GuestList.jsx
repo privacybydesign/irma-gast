@@ -24,6 +24,15 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Divider from "@material-ui/core/Divider";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ...ownProps,
+    host: state.guestLists,
+  };
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,9 +59,15 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     backgroundColor: "#004c92",
   },
+  refresh: {
+    transform: "rotate(360deg)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
 }));
 
-export default function GuestList(props) {
+function GuestList(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(true);
   const handleExpandClick = () => {
@@ -93,7 +108,7 @@ export default function GuestList(props) {
             <FormatListBulletedIcon />
           </Avatar>
         }
-        action={
+        action={[
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -103,8 +118,14 @@ export default function GuestList(props) {
             aria-label="show more"
           >
             <ExpandMoreIcon />
-          </IconButton>
-        }
+          </IconButton>,
+          <Button
+            className={classes.refresh}
+            startIcon={<RefreshIcon />}
+            aria-label="refresh"
+            onClick={() => props.dispatch({ type: "reloadGuestLists" })}
+          ></Button>,
+        ]}
         title={props.name}
         subheader={props.date}
       />
@@ -207,3 +228,5 @@ export default function GuestList(props) {
     </Card>
   );
 }
+
+export default connect(mapStateToProps)(GuestList);
