@@ -1,16 +1,13 @@
 import React from "react";
+import { withTranslation } from "react-i18next";
 
-function AutoDeleteText(props) {
+function AutoDeleteText({ t }) {
   return (
     <div className="guest-list">
-      <p className="info-title">Je lijst is weg?</p>
-      <p>
-        Aanmeldingen worden na 14 dagen automatisch verwijderd. Als een
-        bezoekerslijst uiteindelijk helemaal leeg is wordt de lijst zelf
-        verwijderd. Je kunt altijd weer een nieuwe samenkomst / lijst toevoegen.
-      </p>
+      <p className="info-title"> {t("autdelete.header")}</p>
+      <p> {t("autodelete.info")}</p>
     </div>
   );
 }
 
-export default AutoDeleteText;
+export default withTranslation("host")(AutoDeleteText);

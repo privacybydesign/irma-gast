@@ -12,6 +12,8 @@ import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import logo from "../../../images/irma_logo.png";
 import { connect } from "react-redux";
+import { compose } from "redux";
+import { withTranslation } from "react-i18next";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -91,19 +93,17 @@ class ContactsPDF extends React.Component {
       this.props.locations === {} ||
       this.props.locations[this.props.id] === undefined
     ) {
-      return "Laden...";
+      return this.props.t("contacts.default");
     } else {
-      switch (this.props.locations[this.props.id].location_state) {
+      let s = this.props.locations[this.props.id].location_state;
+      switch (s) {
         case "initialized":
-          return "Contactgegevens opvragen";
         case "loading":
-          return "Contactgegevens laden...";
         case "decrypting":
-          return "Contactgegevens ontsleutelen...";
         case "verifying":
-          return "Contactgegevens verifieren...";
+          return this.props.t(`contacts.${s}`);
         default:
-          return "Laden...";
+          return this.props.t("contacts.default");
       }
     }
   }
@@ -135,35 +135,19 @@ class ContactsPDF extends React.Component {
               <View style={styles.section}>
                 <Text style={styles.title}>
                   {this.props.title}
-                  {", locatie: "}
+                  {`, ${this.props.t("loc")}: `}
                   {this.props.location}
                 </Text>
                 <Text style={styles.subtitle}>
-                  {"Startdatum: "}
+                  {`${this.props.t("start")}: `}
                   {this.props.date}
-                  {", host: "}
+                  {`, ${this.props.t("host")}: `}
                   {this.props.host}
                 </Text>
                 <Image style={styles.image} src={logo} />
-                <Text style={styles.text}>
-                  Deze gegevens zijn verzameld met IRMA-welkom
-                  (www.irma-welkom.nl). Het doel voor het verzamelen van deze
-                  contactgegevens is: zonodig waarschuwen bij een besmetting. De
-                  gegevens mogen daarom alleen voor dit doel gebruikt worden, en
-                  niet voor iets anders, zoals klantbinding of reclame.
-                </Text>
+                <Text style={styles.text}>{this.props.t("contacts.text1")}</Text>
                 <View style={styles.spacer}></View>
-                <Text style={styles.text}>
-                  Het is je eigen verantwoordelijkheid als host van deze
-                  samenkomst om de aangemelde personen te waarschuwen voor een
-                  mogelijke besmetting, of om hun contactgegevens aan de GGD
-                  door te geven. Als je zelf een waarschuwingsbericht stuurt is
-                  het netjes om de naam van de besmette persoon (de bron) niet
-                  te noemen. Bij een doorlopende (niet-eenmalige) samenkomst is
-                  het belangrijk om op de datum van aanmelding te letten en
-                  alleen die mensen te (laten) waarschuwen die mogelijk besmet
-                  zijn geraakt. Vermijd onnodige onrust.
-                </Text>
+                <Text style={styles.text}>{this.props.t("contacts.text2")}</Text>
                 <View style={styles.spacer}></View>
                 {this.props.locations[this.props.id].entries.map(
                   (mail, index) => {
@@ -184,10 +168,10 @@ class ContactsPDF extends React.Component {
       >
         {({ blob, url, loading, error }) =>
           loading ? (
-            "Loading document..."
+            this.props.t("contacts.loadingpdf")
           ) : (
             <Button color="primary" size="large" startIcon={<SaveIcon />}>
-              Contactgegevens downloaden
+              {this.props.t("contacts.download")}
             </Button>
           )
         }
@@ -196,4 +180,7 @@ class ContactsPDF extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(ContactsPDF);
+export default compose(
+  connect(mapStateToProps),
+  withTranslation("host")
+)(ContactsPDF);

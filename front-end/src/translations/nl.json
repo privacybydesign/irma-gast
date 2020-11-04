@@ -44,6 +44,49 @@
       "text": "De QR-code is niet meer geldig, mogelijk omdat deze bijeenkomst afgelopen is of de laatste twee weken geen bezoekers meer heeft gehad (en daarmee automatisch opgeheven is). Klopt er iets niet? Neem dan contact op met de host, via het e-mailadres boven de QR-code."
     }
   },
+  "host": {
+    "loc": "locatie",
+    "start": "Startdatum",
+    "host": "host",
+    "qr": {
+      "scan": "Scan de QR-code met de camera van je mobiel om je aan te melden.",
+      "scaninfo1": "Let op: deze QR is niet scanbaar met je IRMA-app.",
+      "scaninfo2": "Na aanmelding worden je contactgegevens beheerd door de host: {{host}}. Neem bij vragen contact op met deze host.",
+      "scaninfo3": "Dit is een service van IRMA-welkom. Bezoek irma-welkom.nl voor  meer informatie.",
+      "loading": "QR code laden...",
+      "download": "Download QR code"
+    },
+    "autodelete": {
+      "header": "Je lijst is weg?",
+      "info": "Aanmeldingen worden na 14 dagen automatisch verwijderd. Als een bezoekerslijst uiteindelijk helemaal leeg is wordt de lijst zelf verwijderd. Je kunt altijd weer een nieuwe samenkomst / lijst toevoegen."
+    },
+    "contacts": {
+      "initialized": "Contactgegevens opvragen",
+      "loading": "Contactgevens laden...",
+      "decrypting": "Contactgegevens ontsleutelen...",
+      "verifying": "Contactgegevens verifieren...",
+      "default": "Een moment geduld alstublieft...",
+      "loadingpdf": "PDF laden...",
+      "download": "Contactgegevens downloaden",
+      "text1": "Deze gegevens zijn verzameld met IRMA-welkom (www.irma-welkom.nl). Het doel voor het verzamelen van deze contactgegevens is: zonodig waarschuwen bij een besmetting. De gegevens mogen daarom alleen voor dit doel gebruikt worden, en niet voor iets anders, zoals klantbinding of reclame.",
+      "text2": "Het is je eigen verantwoordelijkheid als host van deze samenkomst om de aangemelde personen te waarschuwen voor een mogelijke besmetting, of om hun contactgegevens aan de GGD door te geven. Als je zelf een waarschuwingsbericht stuurt is het netjes om de naam van de besmette persoon (de bron) niet te noemen. Bij een doorlopende (niet-eenmalige) samenkomst is het belangrijk om op de datum van aanmelding te letten en alleen die mensen te (laten) waarschuwen die mogelijk besmet zijn geraakt. Vermijd onnodige onrust."
+    },
+    "createlist": {
+      "accept": "Je moet eerst akkoord gaan",
+      "header": "Voeg samenkomst toe",
+      "namelabel": "Omschrijving",
+      "locationlabel": "Locatie",
+      "purpose": "Deze lijst is voor de registratie van bezoekers aan een...",
+      "onetimelabel": "eenmalige samenkomst (vergadering, lezing, bruiloft, ...)",
+      "onetimedatelabel": "Datum*",
+      "onetimedatehelpertext": "Alleen op deze dag kunnen mensen zich aanmelden voor deze eenmalige samenkomst.",
+      "permanentlabel": "doorlopende samenkomst (cafe, restaurant, winkel, kapper, ...)",
+      "checkboxlabel": "Ik gebruik deze contactgegevens alleen voor een corona waarschuwing, indien nodig, en nergens anders voor. Ik geef IRMA-welkom de opdracht om deze gegevens voor dat doel te verwerken."
+     
+    },
+    "guestcount": {},
+    "hostpage": {}
+  },
   "public_beta_banner": {
     "alert_text": "Dit is een testversie. Deze website is momenteel alleen geschikt voor kleinschalige experimenten."
   }

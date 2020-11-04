@@ -9,8 +9,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { withTranslation } from "react-i18next";
 
-function CreateListForm(props) {
+function CreateListForm({ t, onAdd }) {
   const [guestlist, setGuestList] = useState({
     name: "",
     type: "permanent",
@@ -46,9 +47,9 @@ function CreateListForm(props) {
   }
 
   function createList(event) {
-    setError(checked ? "" : "Je moet eerst akkoord gaan.");
+    setError(checked ? "" : t("createlist.accept"));
     if (checked) {
-      props.onAdd(guestlist);
+      onAdd(guestlist);
       clearCreateForm();
       event.preventDefault();
     }
@@ -75,14 +76,14 @@ function CreateListForm(props) {
   return (
     <div className={"center"}>
       <form className="create-meeting">
-        <h3>Voeg samenkomst toe</h3>
+        <h3>{t("createlist.header")}</h3>
         <TextField
           required
           name="name"
           onChange={handleChange}
           fullWidth
           value={guestlist.name}
-          label="Omschrijving"
+          label={t("createlist.namelabel")}
           error={guestlist.error}
         />
         <TextField
@@ -91,11 +92,11 @@ function CreateListForm(props) {
           onChange={handleChange}
           fullWidth
           value={guestlist.location}
-          label="Locatie"
+          label={t("createlist.locationlabel")}
           error={guestlist.error}
         />{" "}
         <div style={{ height: "20px" }}></div>
-        <p>Deze lijst is voor de registratie van bezoekers aan een...</p>
+        <p>{t("createlist.purpose")}</p>
         <RadioGroup
           aria-label="type"
           name="type"
@@ -106,12 +107,12 @@ function CreateListForm(props) {
           <FormControlLabel
             value="event"
             control={<Radio />}
-            label="eenmalige samenkomst (vergadering, lezing, bruiloft...)"
+            label={t("createlist.onetimelabel")}
           />
           <FormControlLabel
             value="permanent"
             control={<Radio />}
-            label="doorlopende samenkomst (cafe, restaurant, winkel, kapper, ...)"
+            label={t("createlist.permanentlabel")}
           />
         </RadioGroup>
         <div style={{ height: "20px" }}></div>
@@ -120,9 +121,9 @@ function CreateListForm(props) {
             <Zoom in={true}>
               <TextField
                 name="date"
-                helperText="Alleen op deze dag kunnen mensen zich aanmelden voor deze eenmalige samenkomst."
+                helperText={t("createlist.onetimedatehelpertext")}
                 onChange={handleChange}
-                label="Date*"
+                label={t("createlist.onetimedatelabel")}
                 type="date"
                 value={guestlist.date}
                 InputLabelProps={{
@@ -143,14 +144,7 @@ function CreateListForm(props) {
                 name="agree"
               />
             }
-            label={
-              <p className="baseliner">
-                Ik gebruik deze contactgegevens alleen voor een corona
-                waarschuwing, indien nodig, en nergens anders voor. Ik geef
-                IRMA-welkom de opdracht om deze gegevens voor dat doel te
-                verwerken.
-              </p>
-            }
+            label={<p className="baseliner">{t("createlist.checkboxlabel")}</p>}
           />
           <FormHelperText className="irma-red">{error}</FormHelperText>
         </FormControl>
@@ -166,4 +160,4 @@ function CreateListForm(props) {
   );
 }
 
-export default CreateListForm;
+export default withTranslation("host")(CreateListForm);
