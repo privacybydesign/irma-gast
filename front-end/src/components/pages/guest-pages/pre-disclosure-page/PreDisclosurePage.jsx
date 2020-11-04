@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import NavBar from "../../../nav-bar/NavBar";
 import DisclosurePage from "../disclosure-page/DisclosurePage";
+import { Trans, withTranslation } from "react-i18next";
 
 const mapStateToProps = (state) => {
   return {
@@ -38,7 +39,7 @@ class PreDisclosurePage extends React.Component {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
           element: "#irma-web-form",
-          language: "nl",
+          language: "nl", // TODO: set language
           session: this.props.irmaSession,
         });
         this._irmaWeb.start().then((result) => {
@@ -59,42 +60,30 @@ class PreDisclosurePage extends React.Component {
   _renderStartPage() {
     return (
       <>
-        <h2>Meld je aan</h2>
-        <p>
-          Wil je je aanmelden? Ga dan door met IRMA en geef je e-mailadres door
-          aan IRMA-welkom.
-        </p>
+        <h2>{this.props.t("predisclosure.header")}</h2>
+        <p>{this.props.t("predisclosure.p1")}</p>
         <div style={{ height: "30px" }} />
         <section className={"irma-web-center-child"}>
           <section id={"irma-web-form"} />
         </section>
         <div style={{ height: "60px" }} />
-        <h4 className="center-content">Nog geen IRMA-app?</h4>
-        <p>
-          IRMA-welkom werkt met de gratis IRMA-app. In deze app verzamel je
-          persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan
-          maken. Voor IRMA-welkom is alleen je e-mail kaartje nodig.
-        </p>
+        <h4 className="center-content">{this.props.t("predisclosure.noapp")}</h4>
+        <p>{this.props.t("predisclosure.p2")}</p>
         <div className="center-content">
           <a href="https://irma.app" className="btn irma-btn-secondary">
-            Installeer IRMA
+            {this.props.t("predisclosure.install")}
           </a>
         </div>
-        <p>
-          {" "}
-          Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via de
-          IRMA-app of via{" "}
-          <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
-            deze pagina.
-          </a>
-        </p>
+        <p dangerouslySetInnerHTML={{ __html: this.props.t("predisclosure.p3") }}></p>
       </>
     );
   }
 
-  _renderMessagePage(message) {
-    // TODO: Make a bit nice.
-    return <p>{message}</p>;
+  _renderErrorPage(error) {
+    return <p>{<Trans i18nKey="predisclosure.error" value={{ error: error }} />}</p>;
+  }
+  _renderMessagePage(translationKey) {
+    return <p>{this.props.t(`predisclosure.${translationKey}`)}</p>;
   }
 
   _renderState() {
@@ -102,20 +91,18 @@ class PreDisclosurePage extends React.Component {
       case "start":
         return this._renderStartPage();
       case "disclosurePage":
-        const onNext = () => { this.props.dispatch({type: "sendGuestData"}) };
-        return <DisclosurePage onNext={onNext} host={this.props.host}/>;
+        const onNext = () => {
+          this.props.dispatch({ type: "sendGuestData" });
+        };
+        return <DisclosurePage onNext={onNext} host={this.props.host} />;
       case "encrypting":
-        return this._renderMessagePage("Gegevens aan het versleutelen...");
       case "sending":
-        return this._renderMessagePage("Gegevens aan het verzenden...");
       case "done":
-        return this._renderMessagePage("Gegevens verzonden.");
+        return this._renderMessagePage(this.props.state);
       case "error":
-        return this._renderMessagePage(
-          `De volgende fout is opgetreden: ${this.props.error}`
-        );
+        return <p>`De volgende fout is opgetreden: ${this.props.error}`</p>;
       default:
-        return this._renderMessagePage("Een moment geduld...");
+        return this._renderMessagePage("loading");
     }
   }
 
@@ -130,4 +117,8 @@ class PreDisclosurePage extends React.Component {
   }
 }
 
-  export default compose(withRouter, connect(mapStateToProps))(PreDisclosurePage);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  withTranslation("guest")
+)(PreDisclosurePage);

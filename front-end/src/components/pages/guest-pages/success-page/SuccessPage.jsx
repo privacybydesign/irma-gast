@@ -3,7 +3,7 @@ import Footer from "../../../footer/Footer";
 import NavBar from "../../../nav-bar/NavBar";
 import Success from "./Success";
 
-function SuccessPage(props) {
+function SuccessPage() {
   return (
     <div className="container">
       <NavBar link="menu" /> <p></p>
