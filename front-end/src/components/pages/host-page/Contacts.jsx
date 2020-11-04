@@ -26,8 +26,7 @@ class Contacts extends React.Component {
 
   render() {
     let locationState = "uninitialized";
-    if (
-      this.props.locations && this.props.locations[this.props.id]) {
+    if (this.props.locations && this.props.locations[this.props.id]) {
       locationState = this.props.locations[this.props.id].location_state;
     }
     switch (locationState) {
@@ -61,7 +60,7 @@ class Contacts extends React.Component {
               <Box bgcolor="#B1CDE5">
                 <CardHeader title="Opgevraagde contactgegevens">Contactgegevens</CardHeader>
                 <CardContent>
-                  {this._renderLoadingText()}
+                  {this._renderLoadingText(locationState)}
                 </CardContent>
               </Box>
             </Card>
@@ -70,25 +69,18 @@ class Contacts extends React.Component {
     }
   }
 
-  _renderLoadingText() {
-    if (
-      this.props.locations === {} ||
-      this.props.locations[this.props.id] === undefined
-    ) {
-      return "Laden...";
-    } else {
-      switch (this.props.locations[this.props.id].location_state) {
-        case "initialized":
-          return "Contactgegevens opvragen";
-        case "loading":
-          return "Contactgegevens laden...";
-        case "decrypting":
-          return "Contactgegevens ontsleutelen...";
-        case "verifying":
-          return "Contactgegevens verifieren...";
-        default:
-          return "Laden...";
-      }
+  _renderLoadingText(locationState) {
+    switch (locationState) {
+      case "initialized":
+        return "Contactgegevens opvragen";
+      case "loading":
+        return "Contactgegevens laden...";
+      case "decrypting":
+        return "Contactgegevens ontsleutelen...";
+      case "verifying":
+        return "Contactgegevens verifieren...";
+      default:
+        return "Laden...";
     }
   }
 
