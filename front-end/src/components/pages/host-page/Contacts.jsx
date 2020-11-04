@@ -37,7 +37,7 @@ class Contacts extends React.Component {
           <Box style={{paddingTop: "20px"}}>
             <Card raised>
               <Box bgcolor="#AADACE">
-                <CardHeader title="Opgevraagde contactgegevens">Contactgegevens</CardHeader>
+                <CardHeader title="Opgevraagde contactgegevens" />
                 <CardContent>
                   <ContactsPDF
                     title={this.props.name}
