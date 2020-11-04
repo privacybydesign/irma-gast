@@ -84,7 +84,19 @@
       "checkboxlabel": "Ik gebruik deze contactgegevens alleen voor een corona waarschuwing, indien nodig, en nergens anders voor. Ik geef IRMA-welkom de opdracht om deze gegevens voor dat doel te verwerken."
      
     },
-    "guestcount": {},
+    "guestcount": {
+      "header": "Aanmeldingen",
+      "begin": "Er hebben zich",
+      "onetimetext": "binnen de afgelopen twee weken",
+      "permanenttext": "tot nu toe",
+      "guest": "bezoeker",
+      "guest_plural": "bezoekers",
+      "guest_0": "geen bezoekers",
+      "guestWithCount": "{{ count }} bezoeker",
+      "guestWithCount_plural": "{{ count }} bezoekers",
+      "end": "op deze lijst geregistreerd.",
+      "info": "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Kies daarvoor 'contactgegevens opvragen'. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."
+    },
     "hostpage": {}
   },
   "public_beta_banner": {
