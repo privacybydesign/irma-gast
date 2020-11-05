@@ -1,7 +1,8 @@
 import React from "react";
 import start from "../../../../images/start.png";
+import { withTranslation } from "react-i18next";
 
-function Start(props) {
+function Start({ t }) {
   return (
     <div className="wide" id="start">
       <div className="flex-container">
@@ -9,43 +10,13 @@ function Start(props) {
           <img className="illustration" src={start} alt="Restaurant visitors" />
         </div>
         <div className="flex-item-double">
-          <h2>Van start met IRMA-welkom</h2>
-
-          <p>
-            Zowel een host die een samenkomst aanmaakt als ook een bezoeker die
-            zich aanmeldt heeft de <a href="https://irma.app/">IRMA-app</a>{" "}
-            nodig. In de IRMA-app verzamel je persoonlijke gegevens van jezelf,
-            in de vorm van kaartjes.
-          </p>
+          <h2>{t("start.h1")}</h2>
+          <p dangerouslySetInnerHTML={{ __html: t("start.p1") }} />
           <ul className="check">
-            <li>
-              Download de IRMA-app uit de appstore (van{" "}
-              <a href="https://play.google.com/store/apps/details?id=org.irmacard.cardemu">
-                Google
-              </a>{" "}
-              of{" "}
-              <a href="https://apps.apple.com/nl/app/irma-authenticatie/id1294092994">
-                Apple
-              </a>
-              ).
-            </li>
-            <li>
-              Voeg een kaartje toe met je e-mailadres, via{" "}
-              <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
-                deze pagina
-              </a>
-              . Je kunt ook meer kaartjes toevoegen, maar die zijn niet nodig
-              voor IRMA-welkom.
-            </li>
-            <li>
-              Met dit e-mail kaartje in de IRMA-app kan een host op IRMA-welkom
-              inloggen en een samenkomst aanmaken en beheren.
-            </li>
-            <li>
-              Bezoekers kunnen zich met dit e-mail kaartje in de IRMA-app bij
-              samenkomsten aanmelden. Ze scannen met de camera van hun mobiel 
-              de QR-code en geven zo hun e-mailadres door.
-            </li>
+            <li dangerouslySetInnerHTML={{ __html: t("start.li1") }} />
+            <li dangerouslySetInnerHTML={{ __html: t("start.li2") }} />
+            <li>{t("start.li3")}</li>
+            <li>{t("start.li4")}</li>
           </ul>
         </div>
       </div>
@@ -53,4 +24,4 @@ function Start(props) {
   );
 }
 
-export default Start;
+export default withTranslation("landing")(Start);

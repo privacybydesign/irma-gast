@@ -113,6 +113,45 @@
       "onetime": "Eenmalige"
     }
   },
+  "landing": {
+    "how": {
+      "h1": "Hoe werkt het?",
+      "h2": "De host haalt een QR-code op en hangt deze op",
+      "p1": "Als host kun je op IRMA-welkom gratis en makkelijk QR-codes ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om deze QR-code te scannen en via hun <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> een e-mailadres met je te delen.",
+      "p2": "De e-mailadressen die je zo verzamelt worden versleuteld opgeslagen en na 2 weken automatisch weggegooid. Je hebt als host daar geen omkijken naar. Zijn de adressen nodig na een besmetting? Dan kun je ze als host ophalen door (opnieuw) in te loggen. De organisatie  achter IRMA-welkom kan de verzamelde e-mailadressen niet ontsleutelen: alleen jij kan dat. Je hebt daarvoor geen wachtwoord nodig, alleen je <a href=\"https://irma.app/?lang=nl\">IRMA-app</a>.",
+      "p3": "Je kunt als host verschillende samenkomsten aanmaken, met ieder een eigen QR-code, die je op verschillende plekken op kunt hangen. Zo kun je bijvoorbeeld voor iedere verdieping of afdeling op het werk een aparte registratie van bezoekers bijhouden.",
+      "p4": "Als host zul je zeker in het begin regelmatig aan je bezoekers moeten vragen om de IRMA-app te installeren. Dat hoeft maar één keer; daarna levert het alleen maar gemak op. Het installeren is makkelijk en kan ter plekke gebeuren.",
+      "h3": "De bezoeker scant de QR-code en laat zijn e-mailadres achter",
+      "p5": "Bezoekers laten hun e-mailadres achter door de QR-code met de met de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> te scannen. In de IRMA-app staan persoonlijke gegevens. Bij IRMA-welkom wordt alleen om een e-mailadres gevraagd. De app installeer je maar één keer. Je zet je email-address daarin en kunt de app daarna overal voor IRMA-welkom gebruiken. Dat is stukken makkelijker dan steeds formuliertjes invullen waarvan onduidelijk is waar ze blijven.",
+      "p6": "De e-mailadressen van bezoekers worden beveiligd (versleuteld) opgeslagen en na twee weken automatisch weggegooid. Dat neemt terechte zorgen weg. Verder kan alleen de host de e-mailadressen ontsleutelen, bij een besmetting, om bezoekers zelf te waarschuwen of om hun e-mailadressen door te geven aan de GGD. De organisatie achter IRMA-welkom kan en wil zelf niet zien wie bij wie op bezoek komt, zie ook de <0>privacy policy</0>."
+    },
+    "start": {
+      "h1": "Van start met IRMA-welkom",
+      "p1": "Zowel een host die een samenkomst aanmaakt als ook een bezoeker die zich aanmeldt heeft de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> nodig. In de IRMA-app verzamel je persoonlijke gegevens van jezelf, in de vorm van kaartjes.",
+      "li1": "Download de IRMA-app uit de appstore van <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> of <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a> ",
+      "li2": "Voeg een kaartje toe met je e-mailadres, via <a href=\"https://sidnemailissuer.irmaconnect.nl/uitgifte/email\">deze pagina</a>. Je kunt ook meer kaartjes toevoegen, maar die zijn niet nodig voor IRMA-welkom.",
+      "li3": "Met dit e-mail kaartje in de IRMA-app kan een host op IRMA-welkom inloggen en een samenkomst aanmaken en beheren.",
+      "li4": "Bezoekers kunnen zich met dit e-mail kaartje in de IRMA-app bij samenkomsten aanmelden. Ze scannen met de camera van hun mobiel de QR-code en geven zo hun e-mailadres door."
+    },
+    "welcome": {
+      "h1": "Registreer zelf bezoekers, op het werk of thuis!",
+      "p1": "Met IRMA-welkom kan iedereen host zijn en gemakkelijk en veilig e-mailadressen verzamelen van bezoekers, om verspreiding van het coronavirus tegen te gaan.",
+      "p2": "Alles wat jij en je bezoekers hiervoor nodig hebben is de gratis IRMA-app, met daarin een e-mailadres. Je hoeft je niet vooraf te registreren.",
+      "p3": "<0>Login als host met IRMA*</0><1>Installeer eerst IRMA</1>",
+      "p4": "*Door in te loggen ga je akkoord met verwerking van persoonsgegevens zoals beschreven in de <0>privacy policy</0> van IRMA-welkom."
+    },
+    "who": {
+      "h1": "IRMA-welkom is voor iedereen!",
+      "p1": "IRMA-welkom is voor iedereen die samenkomsten organiseert of bezoekt. Je kunt met IRMA-welkom bijvoorbeeld makkelijk contactgegevens van bezoekers verzamelen als:",
+      "li1": "eigenaar van een café, restaurant, winkel, museum, theater, garage, ...",
+      "li2": "organisator van een (eenmalige) bijeenkomst, vergadering, voordracht, les, college, ...",
+      "li3": "uitoefenaar van een contactberoep",
+      "li4": "verantwoordelijke voor een werkvloer, afdeling of verdieping",
+      "li5": "privé persoon die wil bijhouden wie thuis op bezoek komt."
+    }
+  },
+  "privacypolicy": {
+  },
   "public_beta_banner": {
     "alert_text": "Dit is een testversie. Deze website is momenteel alleen geschikt voor kleinschalige experimenten."
   }

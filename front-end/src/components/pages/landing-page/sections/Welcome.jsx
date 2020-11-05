@@ -1,36 +1,35 @@
 import React from "react";
 import guests from "../../../../images/guests.png";
+import { Trans, withTranslation } from "react-i18next";
 
-function Welcome(props) {
+function Welcome({ t }) {
   return (
     <div className="wide">
       <div className="irma-light">
         <div className="flex-container">
           <div className="flex-item-single">
-            <h3>Registreer zelf bezoekers, op het werk of thuis!</h3>
+            <h3>{t("welcome.h1")}</h3>
+            <p>{t("welcome.p1")}</p>
+            <p>{t("welcome.p2")}</p>
             <p>
-              Met IRMA-welkom kan iedereen host zijn en gemakkelijk en veilig
-              e-mailadressen verzamelen van bezoekers, om verspreiding van het
-              coronavirus tegen te gaan.
-              <br />
-            </p>
-            <p>
-              Alles wat jij en je bezoekers hiervoor nodig hebben is de gratis
-              IRMA-app, met daarin een e-mailadres. Je hoeft je niet vooraf te
-              registreren.
-            </p>
-            <p>
-              <a href="/host" className="btn irma-btn">
-                Login als host met IRMA*
-              </a>
-              <a href="https://irma.app" className="btn irma-btn-secondary">
-                Installeer eerst IRMA
-              </a>
+              <Trans
+                t={t}
+                i18nKey="welcome.p3"
+                components={[
+                  <a href="/host" className="btn irma-btn" />,
+                  <a
+                    href="https://irma.app/"
+                    className="btn irma-btn-secondary"
+                  />,
+                ]}
+              />
             </p>
             <p className="small">
-              *Door in te loggen ga je akkoord met verwerking van
-              persoonsgegevens zoals beschreven in de{" "}
-              <a href="/policy">privacy policy</a> van IRMA-welkom.
+              <Trans
+                t={t}
+                i18nKey="welcome.p4"
+                components={[<a href="/policy"/>]}
+              />
             </p>
           </div>
           <div className="flex-item-single">
@@ -47,4 +46,4 @@ function Welcome(props) {
   );
 }
 
-export default Welcome;
+export default withTranslation("landing")(Welcome);
