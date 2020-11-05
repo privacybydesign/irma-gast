@@ -5,7 +5,7 @@
     "noapp": "No IRMA-app yet?",
     "p2": "IRMA-welcome uses the free IRMA-app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. IRMA-welcome only requires an email card.",
     "install": "Install the IRMA-app",
-    "p3": "Now you can add a card with your email addres. This can be done within the IRMA-app itself, or via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page.</a>"
+    "p3": "Now you can add a card with your email addres. This can be done via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page.</a>"
   },
   "footer": {
     "header": "Questions or remarks",
@@ -39,7 +39,7 @@
     },
     "success": {
       "header": "Success!",
-      "p1": "Your email address has been passed on. Your email address is stored securely (encrypted) and will be removed automatically after two weeks. You may receive a corona warning. You can now close this page."
+      "p1": "Your email address has been passed on. Your email address is stored securely (encrypted) and will be removed automatically after two weeks. You may receive a corona warning in case an infected person attended. You can now close this page."
     },
     "error": {
       "header": "QR-code is not recognised",
@@ -52,7 +52,7 @@
     "host": "host",
     "qr": {
       "scan": "Scan the QR-code with the camera of your mobile phone to start registration.",
-      "scaninfo1": "Please note: this QR cannot be scanned with your IRMA-app.",
+      "scaninfo1": "Please note: scanning this QR does not work with your IRMA-app, but requires a QR-scan (of foto) app.",
       "scaninfo2": "After registration your contact data will be managed by host: {{host}}. For questions, please contact this host.",
       "scaninfo3": "This service is provided by IRMA-welcome. Visit irma-welkom.nl for more information.",
       "loading": "loading QR code...",
@@ -127,10 +127,10 @@
     },
     "start": {
       "h1": "Getting started with IRMA-welcome",
-      "p1": "Both hosts, creating gatherings, and visitors who register there need the <a href=\"https://irma.app/?lang=en\">IRMA-app</a>. Within the IRMA-app users collect personal data about themselves in the form of cards.",
-      "li1": "Download the IRMA-app from the appstore of <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> or <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a> ",
-      "li2": "Add a card with your email address, via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page</a>. You can add more cards, but that's not needed for IRMA-welcome.",
-      "li3": "With this email card in the IRMA-app hosts can login to IRMA-welcome to create and and manage gatherings.",
+      "p1": "Both hosts, creating gatherings, and visitors who register there need the <a href=\"https://irma.app/?lang=en\">IRMA-app</a>. Within the IRMA-app users collect personal data about themselves in the form of cards;",
+      "li1": "Download the IRMA-app from the appstore of <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> or <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a>;",
+      "li2": "Add a card with your email address, via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page</a>. You can add more cards, but that's not needed for IRMA-welcome;",
+      "li3": "With this email card in the IRMA-app hosts can login to IRMA-welcome to create and and manage gatherings;",
       "li4": "Visitors can register at gatherings, by scanning the QR-code with their mobile phone, and disclosing their email card."
     },
     "welcome": {
@@ -161,13 +161,13 @@
     "p6": "It is the individual responsibility of the host to make this QR-code known (only) to visitors/participants of the gathering. Befor actual production of the QR-code the host is asked to declare explicitly, via a checkmark, that:",
     "li1": "The personal data (esp. email addresses of visitors) that are collected via him/her will be used to inform visitors themselves and/or health authorities exclusively when there is a corona contimination that is related to the gathering.",
     "li2": "The two organisations mentioned above behind IRMA-welcome process personal information in the IRMA-welcome context on his/her behalf. This makes the host also responsible for the data processing for this particular gathering.",
-    "h3": "Bezoekers, bekendmaking en versleuteling",
-    "p7": "The email addresses of the visitors of the gathering are stored by ProcoliX in encrypted form. The <0>point in time<0> of the addition of an encrypted email address is also stored, but in un-encrypted form. This point in time is used to automatically remove encrypted email addresses automatically after 14 days. When all encrypted email addresses have been removed from a gathering, the gathering itself is also removed from the account of the host.",
+    "h3": "Visitors and encryption",
+    "p7": "The email addresses of the visitors of the gathering are stored by ProcoliX in encrypted form. The <0>point in time<0> of the addition of an encrypted email address is also stored, but in un-encrypted form. This point in time is used to automatically remove encrypted email addresses automatically after 14 days. When all encrypted email addresses have been removed from a gathering, the gathering itself is also removed, from the account of the host.",
     "p8": "Hosts will asks <em>visitors</em> of their gatherings to scan the associated QR-code (and install the IRMA-app, if needed). After scanning, visitors go a website with additional information, partly via links, about IRMA-welcome and its privacy policy. Subsequently, visitors can push a button to start the disclosure of their own email address via the IRMA-app. The legal basis for the data processing that starts in this way is: consent of the visitor.",
-    "p9": "The IRMA server to which visitors disclose their email addresses is managed by the Privacy by Design foundation. This makes the foundation processor of all disclosed email addresses of visitors of gatherings. This processing happens only briefly: the email address is returned immediately, together with a <em>public key</em> (derived from the visitors' email address) to the original webpage of the visitor (the one with the button). The email address is subsequently (immediately) removed by the IRMA server of the foundation. In particular, the foundation does not keep a log of email addresses of visitors.",
+    "p9": "The IRMA server to which visitors disclose their email addresses is managed by the Privacy by Design foundation. This makes the foundation processor of all disclosed email addresses of visitors of gatherings. This processing happens only briefly: the email address is returned immediately, together with a <em>public key</em> (derived from the  email address of the host) to the original webpage of the visitor (the one with the button). The email address is subsequently (immediately) removed by the IRMA server of the foundation. In particular, the foundation does not keep a log of email addresses of visitors.",
     "p10": "On this webpage the received email address is encrypted and subsequently added to the visitorslist of the gathering, which is managed by ProcoliX. ProcoliX thus manages email addresses of all hosts, but not of visitors (because they are encrypted and unreadable by ProcoliX). For the IRMA server of the Privacy by Design foundation the situation is the other way around: it processes email addresses of visitors, not of hosts. The encryption is <em>identity-based</em>: from the email address of the host a <em>public key</em> is derived which is used for the encryption of the data of gatherings of the host. This encryption happens in the browser of the visitor (and not at ProcoliX).",
     "h4": "Hosts and decryption",
-    "p11": "When hosts login to their own account on the IRMA-welcome portal they can see all gatherings that they created (that have not been deleted yet). Hosts can decrypt the contact details of visitors, per gathering. Hosts have committed themselves to do so only when they learned about the presence of an infected person at a particular gathering, at a particular point in time. Hosts are individually responsible for other (unintended) usage of the collected email addresses. In particular, the two organisations behind IRMA-welcome are not responsible or liable for such uninteded use.",
+    "p11": "When hosts login to their own account on the IRMA-welcome portal they can see all gatherings that they created (that have not been deleted yet). Hosts can decrypt the contact details of visitors, per gathering. Hosts have committed themselves to do so only when they learned about the presence of an infected person at a particular gathering, at a particular point in time. Hosts are individually responsible for other possible (unintended) usage of the collected email addresses. In particular, the two organisations behind IRMA-welcome are not responsible and not liable for such uninteded use.",
     "p12": "In order to activate decryption hosts disclose once again, via their IRMA-app, the email address of their account, but now to a <em>key generating server</em> which is managed by the Privacy by Design foundation. The foundation then briefly processes the the email address of the host, based on his/her consent to do so. The said key server produces the <em>private key</em> associated with the email address of the host, for decryption, in the webbrowser of the host. It is then the responsibility of the hosts to warn the visitors involved him/herself (via email) or to pass on these email addresses to health authorities.",
     "p13": "In theory, contact details can also be decrypted when the two parties behind IRMA-welcome collude and combine the data that they process for IRMA-welcome. These parties will not engage in such collusion. They have deliberately separated matters, both organisationally and technically, so that none have them has a complete picture of what is going on.",
     "h5": "General provisions",
