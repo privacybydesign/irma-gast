@@ -83,6 +83,9 @@ function handleLogin({ getState, dispatch }) {
           }
         }
       );
+    } else if (action.type === "loggedOut") {
+      localStorage.clear("irmagast");
+      dispatch({type: "initHostPage"});
     }
     return next(action);
   };

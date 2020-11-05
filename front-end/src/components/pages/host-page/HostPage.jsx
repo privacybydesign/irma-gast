@@ -161,6 +161,7 @@ class HostPage extends React.Component {
     return (
       <div className="App">
         <NavBar
+          loggedIn={this.props.loggedIn}
           link="logout"
           onLogout={() => {
             this.props.dispatch({ type: "logOut" });
