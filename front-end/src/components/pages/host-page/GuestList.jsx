@@ -16,7 +16,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SaveIcon from "@material-ui/icons/Save";
 import QRCode from "qrcode.react";
 import GuestCount from "./GuestCount";
-import ContactsPDF from "./ContactsPDF";
+import Contacts from "./Contacts";
 import QRCodePDF from "./qr-code/QRCodePDF";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -24,6 +24,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Divider from "@material-ui/core/Divider";
+import GuestListButton from './GuestListButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,16 +140,15 @@ export default function GuestList(props) {
                 qr={props.id}
               />
             ) : (
-              <Button
+              <GuestListButton
                 onClick={() => {
                   downloadQR();
                 }}
                 color="primary"
                 size="large"
                 startIcon={<SaveIcon />}
-              >
-                Genereer PDF
-              </Button>
+                text="Genereer PDF"
+              />
             )}
           </CardActions>
           <GuestCount
@@ -156,15 +156,14 @@ export default function GuestList(props) {
             listType={props.listType}
             className={classes.noPadding}
           />
-          <Button
+          <GuestListButton
             onClick={handleClickOpen}
             color="secondary"
             size="large"
             className={classes.button}
             startIcon={<DeleteIcon />}
-          >
-            Lijst verwijdereren
-          </Button>
+            text="Lijst verwijdereren"
+          />
           <Dialog
             open={dialog}
             onClose={handleClose}
@@ -195,12 +194,13 @@ export default function GuestList(props) {
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF
+          <Contacts
             title={props.name}
             date={props.date}
             host={props.host}
             id={props.id}
             location={props.location}
+            count={props.count}
           />
         </CardContent>
       </Collapse>
