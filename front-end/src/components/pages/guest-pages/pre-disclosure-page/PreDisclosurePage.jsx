@@ -7,6 +7,7 @@ import irmaFrontend from "@privacybydesign/irma-frontend";
 import NavBar from "../../../nav-bar/NavBar";
 import DisclosurePage from "../disclosure-page/DisclosurePage";
 import { Trans, withTranslation } from "react-i18next";
+import LoginPage from "../../login-page/LoginPage";
 
 const mapStateToProps = (state) => {
   return {
@@ -57,30 +58,18 @@ class PreDisclosurePage extends React.Component {
     }
   }
 
-  _renderStartPage() {
-    return (
-      <>
-        <h2>{this.props.t("predisclosure.header")}</h2>
-        <p>{this.props.t("predisclosure.p1")}</p>
-        <div style={{ height: "30px" }} />
-        <section className={"irma-web-center-child"}>
-          <section id={"irma-web-form"} />
-        </section>
-        <div style={{ height: "60px" }} />
-        <h4 className="center-content">{this.props.t("predisclosure.noapp")}</h4>
-        <p>{this.props.t("predisclosure.p2")}</p>
-        <div className="center-content">
-          <a href="https://irma.app" className="btn irma-btn-secondary">
-            {this.props.t("predisclosure.install")}
-          </a>
-        </div>
-        <p dangerouslySetInnerHTML={{ __html: this.props.t("predisclosure.p3") }}></p>
-      </>
-    );
-  }
-
   _renderErrorPage(error) {
-    return <p>{<Trans i18nKey="predisclosure.error" value={{ error: error }} />}</p>;
+    return (
+      <p>
+        {
+          <Trans
+            t={this.props.t}
+            i18nKey="predisclosure.error"
+            value={{ error: error }}
+          />
+        }
+      </p>
+    );
   }
   _renderMessagePage(translationKey) {
     return <p>{this.props.t(`predisclosure.${translationKey}`)}</p>;
@@ -89,7 +78,7 @@ class PreDisclosurePage extends React.Component {
   _renderState() {
     switch (this.props.state) {
       case "start":
-        return this._renderStartPage();
+        return <LoginPage/>;
       case "disclosurePage":
         const onNext = () => {
           this.props.dispatch({ type: "sendGuestData" });

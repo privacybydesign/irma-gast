@@ -1,11 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";
 import NavBar from "../../nav-bar/NavBar";
 import Footer from "../../footer/Footer";
 import irmaFrontend from "@privacybydesign/irma-frontend";
+import { Trans, withTranslation } from "react-i18next";
+import LoginPage from "../login-page/LoginPage";
 
 const mapStateToProps = (state) => {
   return {
@@ -57,7 +60,9 @@ class HostPage extends React.Component {
     // if no name/description has been given, add default name
     if (newList.name === "") {
       newList.name = `${
-        newList.type === "permanent" ? "Doorlopende" : "Eenmalige"
+        newList.type === "permanent"
+          ? this.props.t("permanent")
+          : this.props.t("onetime")
       } samenkomst`;
     }
 
@@ -93,7 +98,7 @@ class HostPage extends React.Component {
   _renderHostPage() {
     return (
       <div>
-        <h2>Je bezoekerslijsten</h2>
+        <h2>{this.props.t("header")}</h2>
         <CreateListForm onAdd={(guestList) => this._addGuestList(guestList)} />
         {this._renderGuestLists()}
         <AutoDeleteText />
@@ -102,58 +107,21 @@ class HostPage extends React.Component {
     );
   }
 
-  _renderMessagePage(message) {
-    return <p>{message}</p>;
-  }
-
-  // Copied from PreDisclosurePage
-  // TODO: can save code duplication
-  _renderStartPage() {
-    return (
-      <>
-        <h2>Meld je aan</h2>
-        <p>
-          Wil je je aanmelden? Ga dan door met IRMA en geef je e-mailadres door
-          aan IRMA-welkom.
-        </p>
-        <div style={{ height: "30px" }} />
-        <section className={"irma-web-center-child"}>
-          <section id={"irma-web-form"} />
-        </section>
-        <div style={{ height: "60px" }} />
-        <h4 className="center-content">Nog geen IRMA-app?</h4>
-        <p>
-          IRMA-welkom werkt met de gratis IRMA-app. In deze app verzamel je
-          persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan
-          maken. Voor IRMA-welkom is alleen je e-mail kaartje nodig.
-        </p>
-        <div className="center-content">
-          <a href="https://irma.app" className="btn irma-btn-secondary">
-            Installeer IRMA
-          </a>
-        </div>
-        <p>
-          {" "}
-          Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via de
-          IRMA-app of via{" "}
-          <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
-            deze pagina.
-          </a>
-        </p>
-      </>
-    );
-  }
-
   _renderState() {
     switch (this.props.state) {
       case "loaded":
         return this._renderHostPage();
       case "error":
-        return this._renderMessagePage(
-          `De volgende fout is opgetreden: ${this.props.error}`
+        return (
+          <Trans
+            t={this.props.t}
+            i18nKey="error"
+            values={{ error: this.props.error }}
+            components={[<p></p>]}
+          />
         );
       default:
-        return this._renderStartPage();
+        return <LoginPage />;
     }
   }
 
@@ -173,4 +141,4 @@ class HostPage extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(HostPage);
+export default compose(connect(mapStateToProps), withTranslation())(HostPage);
