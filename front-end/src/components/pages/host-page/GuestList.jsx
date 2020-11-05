@@ -24,6 +24,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Divider from "@material-ui/core/Divider";
+import { Trans, withTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +53,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GuestList(props) {
+function GuestList({
+  t,
+  onDelete,
+  id,
+  host,
+  name,
+  location,
+  listType,
+  date,
+  count,
+}) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(true);
   const handleExpandClick = () => {
@@ -62,7 +73,7 @@ export default function GuestList(props) {
   const [qrReady, setQrReady] = useState(false);
 
   const downloadQR = () => {
-    const canvas = document.getElementById("qr-" + props.id);
+    const canvas = document.getElementById("qr-" + id);
     const qrUrl = canvas.toDataURL("image/jpg", 0.3);
     let downloadLink = document.createElement("a");
     downloadLink.href = qrUrl;
@@ -72,7 +83,7 @@ export default function GuestList(props) {
   // state of the delete confirmation dialogue
   const [dialog, setDialog] = React.useState(false);
   const handleDelete = () => {
-    props.onDelete();
+    onDelete();
     setDialog(false);
   };
   const handleClose = () => {
@@ -85,7 +96,7 @@ export default function GuestList(props) {
   // TODO: extract subcomponents used in GuestList.jsx into their individual files
 
   return (
-    <Card className={(classes.root, "guest-list")} id={props.id} square={true}>
+    <Card className={(classes.root, "guest-list")} id={id} square={true}>
       <CardHeader
         className={classes.noPadding}
         avatar={
@@ -100,27 +111,24 @@ export default function GuestList(props) {
             })}
             onClick={handleExpandClick}
             aria-expanded={expanded}
-            aria-label="show more"
+            aria-label={t("guestlist.expandlabel")}
           >
             <ExpandMoreIcon />
           </IconButton>
         }
-        title={props.name}
-        subheader={props.date}
+        title={name}
+        subheader={date}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent className={classes.noPadding}>
           <Typography variant="body1" component="p">
-            Druk deze QR-code af en vraag bezoekers zich via deze code aan te
-            melden.
+            {t("guestlist.qrinfo")}
           </Typography>
         </CardContent>
         <CardContent className={classes.noPadding}>
           <QRCode
-            id={"qr-" + props.id}
-            value={encodeURI(
-              "https://irma-welkom.nl/guest/" + props.id + "/" + props.host
-            )}
+            id={"qr-" + id}
+            value={encodeURI("https://irma-welkom.nl/guest/" + id + "/" + host)}
             size={200}
             className="qr"
             bgColor={"#ffffff"}
@@ -132,11 +140,11 @@ export default function GuestList(props) {
           <CardActions className={classes.noPadding} disableSpacing>
             {qrReady ? (
               <QRCodePDF
-                title={props.name}
-                date={props.date}
-                host={props.host}
-                location={props.location}
-                qr={props.id}
+                title={name}
+                date={date}
+                host={host}
+                location={location}
+                qr={id}
               />
             ) : (
               <Button
@@ -147,13 +155,13 @@ export default function GuestList(props) {
                 size="large"
                 startIcon={<SaveIcon />}
               >
-                Genereer PDF
+                {t("guestlist.genqr")}
               </Button>
             )}
           </CardActions>
           <GuestCount
-            count={props.count}
-            listType={props.listType}
+            count={count}
+            listType={listType}
             className={classes.noPadding}
           />
           <Button
@@ -163,7 +171,8 @@ export default function GuestList(props) {
             className={classes.button}
             startIcon={<DeleteIcon />}
           >
-            Lijst verwijdereren
+            {" "}
+            {t("guestlist.rmlist")}
           </Button>
           <Dialog
             open={dialog}
@@ -172,38 +181,39 @@ export default function GuestList(props) {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-slide-title">
-              {"Lijst verwijderen?"}
+              {`${t("guestlist.rmlist")}?`}
             </DialogTitle>
             <Divider />
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Als je doorgaat verwijder je de lijst{" "}
-                <Typography variant="h6" component="span">
-                  {props.name}, {props.date}
-                </Typography>{" "}
-                en alle contactgegevens die op deze lijst geregistreerd staan.
-                De bijbehorende QR-code werkt dan niet meer. Vergeet niet die
-                QR-code te verwijderen, van de muur, of van tafel enz.
+                <Trans
+                  t={t}
+                  i18nKey="guestlist.rmdialog"
+                  values={{ name: name, date: date }}
+                  components={[<Typography variant="h6" component="span" />]}
+                />
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">
-                Lijst bewaren
+                {t("guestlist.keeplist")}
               </Button>
               <Button onClick={handleDelete} color="secondary" autoFocus>
-                Lijst verwijderen
+                {t("guestlist.rmlist")}
               </Button>
             </DialogActions>
           </Dialog>
           <ContactsPDF
-            title={props.name}
-            date={props.date}
-            host={props.host}
-            id={props.id}
-            location={props.location}
+            title={name}
+            date={date}
+            host={host}
+            id={id}
+            location={location}
           />
         </CardContent>
       </Collapse>
     </Card>
   );
 }
+
+export default withTranslation("host")(GuestList);

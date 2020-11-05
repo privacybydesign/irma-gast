@@ -97,6 +97,14 @@
       "end": "op deze lijst geregistreerd.",
       "info": "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Kies daarvoor 'contactgegevens opvragen'. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."
     },
+    "guestlist": {
+      "expandlabel": "Laat meer zien",
+      "qrinfo": "Druk deze QR-code af en vraag bezoekers zich via deze code aan te melden.",
+      "genqr": "Genereer PDF",
+      "rmlist": "Lijst verwijderen",
+      "keeplist": "Lijst bewaren",
+      "rmdialog": "Als je doorgaat verwijder je de lijst <0>{{name}}, {{date}}</0> en alle contactgegevens die op deze lijst geregistreerd staan. De bijbehorende QR-code werkt dan niet meer. Vergeet niet die QR-code te verwijderen, van de muur, of van tafel enz."
+    },
     "hostpage": {}
   },
   "public_beta_banner": {
