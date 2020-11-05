@@ -7,6 +7,7 @@ function DisclosurePage({ t, host, onNext }) {
       <h2>{t("disclosure.header")}</h2>
       <p>
         <Trans
+          t={t}
           i18nKey="disclosure.p1"
           values={{ host: host }}
           components={{ bold: <b></b> }}

@@ -156,7 +156,7 @@ function QRCodePDF({ t, title, location, date, host, qr }) {
                 <Image style={styles.scan} src={scan} />
 
                 <Text style={styles.text}>
-                  <Trans i18nKey="host.qr.scaninfo2" values={{ host: host }} />
+                  <Trans t={t} i18nKey="qr.scaninfo2" values={{ host: host }} />
                 </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
