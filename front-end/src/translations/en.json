@@ -1,4 +1,12 @@
 {
+  "login": {
+    "header": "Register yourself",
+    "p1": "Do you wish to register for this gathering? Proceed with the IRMA-app and disclose your email address to IRMA-welcome.",
+    "noapp": "No IRMA-app yet?",
+    "p2": "IRMA-welcome uses the free IRMA-app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. IRMA-welcome only requires an email card.",
+    "install": "Install the IRMA-app",
+    "p3": "Now you can add a card with your email addres. This can be done within the IRMA-app itself, or via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page.</a>"
+  },
   "footer": {
     "header": "Questions or remarks",
     "p1": "IRMA-welcome has been developed by the Privacy by the <a href=\"https://privacybydesign.foundation/en\">Privacy by Design</a> foundation, together with the <a href=\"https://www.ru.nl/ihub/\">iHub</a> research group of Radboud University Nijmegen (from the NWO project <a href=\"https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/\">Encryption for All</a>).",
@@ -16,7 +24,160 @@
       "login": "Host login"
     }
   },
+  "guest": {
+    "disclosure": {
+      "header": "Pass on your email address",
+      "p1": "Do you wish to pass on your email address to <bold>{{host}}</bold>? Possibly, you can receive a corona warning. Your email address is stored securely (encrypted) and deleted automatically after two weeks. Only <bold>{{host}}</bold> can decrypt your email address.",
+      "button": "Disclose email"
+    },
+    "predisclosure": {
+      "encrypting": "Encrypting data...",
+      "sending": "Sending data...",
+      "done": "Data sent.",
+      "loading": "One moment please...",
+      "error": "The following error occurred: {{error}}"
+    },
+    "success": {
+      "header": "Success!",
+      "p1": "Your email address has been passed on. Your email address is stored securely (encrypted) and will be removed automatically after two weeks. You may receive a corona warning. You can now close this page."
+    },
+    "error": {
+      "header": "QR-code is not recognised",
+      "text": "The QR-code is no longer valid, possibly because this gathering has finished or because it has not had any visitor in the last two weeks (and is thus automatically deleted). Something is wrong? Please contact the host via the email address printed above the QR-code."
+    }
+  },
+  "host": {
+    "loc": "location",
+    "start": "Start date",
+    "host": "host",
+    "qr": {
+      "scan": "Scan the QR-code with the camera of your mobile phone to start registration.",
+      "scaninfo1": "Please note: this QR cannot be scanned with your IRMA-app.",
+      "scaninfo2": "After registration your contact data will be managed by host: {{host}}. For questions, please contact this host.",
+      "scaninfo3": "This service is provided by IRMA-welcome. Visit irma-welkom.nl for more information.",
+      "loading": "loading QR code...",
+      "download": "Download QR code"
+    },
+    "autodelete": {
+      "header": "Your list is missing?",
+      "info": "Registrations are removed automatically after 14 days. If, in the end, the visitor list is completely empty, the list (and gathering) is deleted. You can always create a new gathering / list."
+    },
+    "contacts": {
+      "initialized": "Access contact data",
+      "loading": "Loading contact data...",
+      "decrypting": "Decrypting contact data...",
+      "verifying": "Verifying contact data...",
+      "default": "One moment please...",
+      "loadingpdf": "Loading PDF document...",
+      "download": "Download contact data",
+      "text1": "These data have been collected via IRMA-welcome (www.irma-welkom.nl). The (sole) purpose of collecting these contact data is: if needed, sending a corona warning. The data can be used only for this purpose, and not for any other purpose such as customer relations or advertising.",
+      "text2": "It is your own responsibility as host of this gathering to warn visitors against a possible corona infection, or to transfer their contact data to the health authorities. When you send the warning yourself, please avoid naming the infected person (the source). For a continuous (not onetime) gathering it is important to take the data/time of the infection into account and to warn (or pass on) only those visitors that could be infected as a result. Please avoid unnecessary unrest."
+    },
+    "createlist": {
+      "accept": "Please consent",
+      "header": "Add gathering",
+      "namelabel": "Description",
+      "locationlabel": "Location",
+      "purpose": "This registration list is for visitors of...",
+      "onetimelabel": "Onetime gathering (meeting, presentation, marriage, ...)",
+      "onetimedatelabel": "Date*",
+      "onetimedatehelpertext": "Only on this day visitors can register for this onetime gathering.",
+      "permanentlabel": "Continuous gathering (cafe, restaurant, shop, hair dresser, ...)",
+      "checkboxlabel": "I use these contact data exclusively for corona warnings, if needed, and not for anything else. I ask IRMA-welcome to process data for that purpose."
+    },
+    "guestcount": {
+      "header": "Registrations",
+      "begin": "There are",
+      "onetimetext": "during the past two weeks",
+      "permanenttext": "so far",
+      "guest": "visitor",
+      "guest_plural": "visitors",
+      "guest_0": "no visitors",
+      "guestWithCount": "{{ count }} visitor",
+      "guestWithCount_plural": "{{ count }} visitors",
+      "end": "registered on this list.",
+      "info": "Contact data of registered visitors are encrypted. When an infected person was present, you can decrypt and download the contact data of the registered visitors. You then have to disclose your email address via your IRMA-app."
+    },
+    "guestlist": {
+      "expandlabel": "Show more",
+      "qrinfo": "Print this QR-code and ask visitors to scan it for registration.",
+      "genqr": "Generate PDF",
+      "rmlist": "Remove list",
+      "keeplist": "Keep list",
+      "rmdialog": "Upon proceeding the list <0>{{name}}, {{date}}</0> and all contact data on that list are deleted. The associated QR-code then no longer works; please don't forget to remove it, from the wall, or from tables etc."
+    },
+    "hostpage": {
+      "header": "Your visitor lists",
+      "error": "The following error occurred: <0>{{error}}</0>",
+      "permanent": "Continuous",
+      "onetime": "Onetime"
+    }
+  },
+  "landing": {
+    "how": {
+      "h1": "How does it work?",
+      "h2": "The hosts gets a QR-code and displays it in a clearly visible way.",
+      "p1": "As host you can easily and freely obtain a QR-code that you can mount on a wall yourself. You then ask your visitors to scan this QR-code and share their email adress with you via their <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
+      "p2": "The email address that you collect in this way are stored in encrypted form and are automatically deleted after 2 weeks. You don't have to worry about this as host. Do you need addresses after a contamination? You can retrieve them as host by logging in (again). The organisation behind IRMA-welcome cannot decrypt the collected email addresses: only you can do that. You do not need a password to do so, just your <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
+      "p3": "As host you can create multiple gatherings, each with their own QR-code, which you can hang up at different locations. For instance, in this way you can keep separate registrations for separate floors or departments at work.",
+      "p4": "Certainly in the beginning you, as host, will regularly have to ask your visitors to install the IRMA-app. That needs to be done only once; from then onwards, registration is really quick and easy. Installing the IRMA-app is not hard and can be done on the spot.",
+      "h3": "Visitors scan the QR-code and disclose their email address",
+      "p5": "Visitors leave their email addresses behind via their <a href=\"https://irma.app/?lang=en\">IRMA-app</a> by scanning the host's QR-code. The IRMA-app contains personal data. IRMA-welcome only asks for email addresses. You install the app only once; you load your email address(es) into the app; then you can use it everywhere for IRMA-welcome. That's much easier than filling out forms that may be lost, copied, or mis-used. te scannen.",
+      "p6": "The email addresses of visitors are stored securely (encrypted) and are automatically removed after two weeks. So no need to worry there. Only the host can decrypt theses addresses, upon a contamination, in order to warn registered visitors him/herself or to pass them on to health authorities. The organisation behind IRMA-welcome can not and does not want to see who goes where, see also the <0>privacy policy</0>."
+    },
+    "start": {
+      "h1": "Getting started with IRMA-welcome",
+      "p1": "Both hosts, creating gatherings, and visitors who register there need the <a href=\"https://irma.app/?lang=en\">IRMA-app</a>. Within the IRMA-app users collect personal data about themselves in the form of cards.",
+      "li1": "Download the IRMA-app from the appstore of <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> or <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a> ",
+      "li2": "Add a card with your email address, via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page</a>. You can add more cards, but that's not needed for IRMA-welcome.",
+      "li3": "With this email card in the IRMA-app hosts can login to IRMA-welcome to create and and manage gatherings.",
+      "li4": "Visitors can register at gatherings, by scanning the QR-code with their mobile phone, and disclosing their email card."
+    },
+    "welcome": {
+      "h1": "Register visitors yourself, at work or at home!",
+      "p1": "With IRMA-welcome everyone can be host and easily and securely collect email adresses of visitors, in order to control the spread of the COVID-19 corona virus.",
+      "p2": "All you and your visitors need is the free IRMA-app, containing an email adress. No prior registration is needed.",
+      "p3": "<0>Login as host with IRMA*</0><1>Install IRMA first</1>",
+      "p4": "*By logging in you agree with the processing of personal data, as described in the IRMA-welcome's <0>privacy policy</0>."
+    },
+    "who": {
+      "h1": "IRMA-welcome is for everyone!",
+      "p1": "IRMA-welcome is for everyone who organises or visits gatherings. With IRMA-welcome you can easily collect contact details of visitors as:",
+      "li1": "as owner of a pub, restaurant or shop, as museum, theatre, garage , ...",
+      "li2": "organisator van een (eenmalige) bijeenkomst, vergadering, voordracht, les, college, ...",
+      "li3": "as dentist, hair dresser, fysio therapist, ...",
+      "li4": "as organiser of (onetime) meeting, seminar, presentation, lecture, ...",
+      "li5": "private person who wishes to keep track of home visitors."
+    }
+  },
+  "privacypolicy": {
+    "h1": "Privacy policy",
+    "p1": "IRMA-welcome and the IRMA-app are free and work in a transparent manner, with open source software; user data are not used for other purposes and are not passed on or sold to others.",
+    "p2": "The IRMA-welcome service is offered jointly by the <a href=\"https://privacybydesign.foundation/en/\">Privacy by Design</a> foundation and the company <a href=\"https://www.procolix.com/\">ProcoliX</a>. The foundation is responsible for data processing. The foundation and ProcoliX each process part of the data, as described in greater detail below. They jointly offer the IRMA-welcome service for free, based on their societal responsibility, with controling the corona virus as sole purpose. Only data that are necessary for that purpose are processed, as described below.",
+    "h2": "Host, account and gatherings",
+    "p3": "A <em>host</em> is an individual who has once logged in at the IRMA-welcome portal by disclosing his/her email address from his/her IRMA-app. Upon doing so ProcoliX processes information, including the disclosed email address of the host. The legal basis for this processing is: consent of the host.",
+    "p4": "If the disclosed email address is not known yet, ProcoliX implicitly opens an account for this address. When there is no activity on this account for more than 14 days, the account and all associated data are automatically removed.",
+    "p5": "Within this account a host kan create one or more \"gatherings\" (onetime or continuous meetings where people come together) by choosing a new (appropriate) name for such a gathering. Subsequently, a QR-code is produced for this gathering, which the host can download (en print or integrate in a presentation). The QR-code contains in readable form the name of the gathering and the email address of the host. Implicitly the QR-code contains a pointer to a webpage where visitors can choose to disclose their email address, via their IRMA app.",
+    "p6": "It is the individual responsibility of the host to make this QR-code known (only) to visitors/participants of the gathering. Befor actual production of the QR-code the host is asked to declare explicitly, via a checkmark, that:",
+    "li1": "The personal data (esp. email addresses of visitors) that are collected via him/her will be used to inform visitors themselves and/or health authorities exclusively when there is a corona contimination that is related to the gathering.",
+    "li2": "The two organisations mentioned above behind IRMA-welcome process personal information in the IRMA-welcome context on his/her behalf. This makes the host also responsible for the data processing for this particular gathering.",
+    "h3": "Bezoekers, bekendmaking en versleuteling",
+    "p7": "The email addresses of the visitors of the gathering are stored by ProcoliX in encrypted form. The <0>point in time<0> of the addition of an encrypted email address is also stored, but in un-encrypted form. This point in time is used to automatically remove encrypted email addresses automatically after 14 days. When all encrypted email addresses have been removed from a gathering, the gathering itself is also removed from the account of the host.",
+    "p8": "Hosts will asks <em>visitors</em> of their gatherings to scan the associated QR-code (and install the IRMA-app, if needed). After scanning, visitors go a website with additional information, partly via links, about IRMA-welcome and its privacy policy. Subsequently, visitors can push a button to start the disclosure of their own email address via the IRMA-app. The legal basis for the data processing that starts in this way is: consent of the visitor.",
+    "p9": "The IRMA server to which visitors disclose their email addresses is managed by the Privacy by Design foundation. This makes the foundation processor of all disclosed email addresses of visitors of gatherings. This processing happens only briefly: the email address is returned immediately, together with a <em>public key</em> (derived from the visitors' email address) to the original webpage of the visitor (the one with the button). The email address is subsequently (immediately) removed by the IRMA server of the foundation. In particular, the foundation does not keep a log of email addresses of visitors.",
+    "p10": "On this webpage the received email address is encrypted and subsequently added to the visitorslist of the gathering, which is managed by ProcoliX. ProcoliX thus manages email addresses of all hosts, but not of visitors (because they are encrypted and unreadable by ProcoliX). For the IRMA server of the Privacy by Design foundation the situation is the other way around: it processes email addresses of visitors, not of hosts. The encryption is <em>identity-based</em>: from the email address of the host a <em>public key</em> is derived which is used for the encryption of the data of gatherings of the host. This encryption happens in the browser of the visitor (and not at ProcoliX).",
+    "h4": "Hosts and decryption",
+    "p11": "When hosts login to their own account on the IRMA-welcome portal they can see all gatherings that they created (that have not been deleted yet). Hosts can decrypt the contact details of visitors, per gathering. Hosts have committed themselves to do so only when they learned about the presence of a contaminated person at a particular gathering, at a particular point in time. Hosts are individually responsible for other (unintended) usage of the collected email addresses. In particular, the two organisations behind IRMA-welcome are not responsible or liable for such uninteded use.",
+    "p12": "In order to activate decryption hosts disclose once again, via their IRMA-app, the email address of their account, but now to a <em>key generating server</em> which is managed by the Privacy by Design foundation. The foundation then briefly processes the the email address of the host, based on his/her consent to do so. The said key server produces the <em>private key</em> associated with the email address of the host, for decryption, in the webbrowser of the host. It is then the responsibility of the hosts to warn the visitors involved him/herself (via email) or to pass on these email addresses to health authorities.",
+    "p13": "In theory, contact details can also be decrypted when the two parties behind IRMA-welcome collude and combine the data that they process for IRMA-welcome. These parties will not engage in such collusion. They have deliberately separated matters, both organisationally and technically, so that none have them has a complete picture of what is going on.",
+    "h5": "General provisions",
+    "p14": "Statistical information about usage of IRMA-welcome may be aggregated (numbers of hosts, gatherings, visitors per day/week/month/year, origin etc.) and may be used by ProcoliX and by the Privacy by Design Foundation for documentation and publications. If needed, IRMA-welcome data can be used in a minimal way for technical purposes, such as maintenance and performance tuning, but they will be destroyed after a maximum of 2 days.",
+    "p15": "Technical changes in the IRMA-welcome system, or possible new services, may lead to adaptation of this privacy policy. ProcoliX and the Privacy by Design Foundation reserve the right to make such changes and will publish the adapted privacy policy via this website as soon as possible.",
+    "p16": "For questions, remarks, or complaints about this data processing by the Privacy by Design foundation and ProcoliX for IRMA-welcome functionality, please use the contact email address info@irma-welkom.nl. For complaints about the IRMA-welcome data processing one can also contact the Data Protection Authority of the Netherlands."
+  },
   "public_beta_banner": {
     "alert_text": "This is a test version. Currently, this website is suited only for small scale experiments."
   }
 }
+
+
