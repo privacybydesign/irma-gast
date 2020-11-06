@@ -657,7 +657,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		date    string
 	)
 
-	rows := db.QueryRow("SELECT event_date FROM locations WHERE location_id=? AND one_time=true", received.Location_id)
+	rows := db.QueryRow("SELECT event_date FROM locations WHERE location_id=? AND onetime=true", received.Location_id)
 	err = rows.Scan(&date)
 	if err != nil {
 		if err == sql.ErrNoRows {
