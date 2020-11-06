@@ -195,7 +195,7 @@ export default function GuestList(props) {
             </DialogActions>
           </Dialog>
           <Contacts
-            title={props.name}
+            name={props.name}
             date={props.date}
             host={props.host}
             id={props.id}
