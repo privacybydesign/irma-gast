@@ -67,6 +67,7 @@ type Location struct {
 	Location     string `json:"location"`
 	Onetime      bool   `json:"onetime"`
 	CreationDate string `json:"creation_date"`
+	EventDate    string `json:"eventdate",omitempty`
 	Count        int    `json:"guest_count"`
 }
 
@@ -411,7 +412,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (user *User) getLocations() ([]*Location, error) {
-	rows, err := db.Query("SELECT location_id, name, location, creation_date, onetime FROM locations WHERE email=?", user.Email)
+	rows, err := db.Query("SELECT location_id, name, location, creation_date, onetime, event_date FROM locations WHERE email=?", user.Email)
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		return nil, err
@@ -421,17 +422,18 @@ func (user *User) getLocations() ([]*Location, error) {
 	locations := []*Location{}
 	for rows.Next() {
 		var (
-			id       string
-			name     string
-			location string
-			creation string
-			onetime  bool
+			id         string
+			name       string
+			location   string
+			creation   string
+			onetime    bool
+			event_date string
 		)
-		if err = rows.Scan(&id, &name, &location, &creation, &onetime); err != nil {
+		if err = rows.Scan(&id, &name, &location, &creation, &onetime, &event_date); err != nil {
 			log.Printf("Scan error: %v", err)
 			return nil, err
 		}
-		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation})
+		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation, EventDate: event_date})
 	}
 
 	for _, loc := range locations {
