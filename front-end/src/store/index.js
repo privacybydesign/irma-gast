@@ -140,6 +140,7 @@ function handleAddGuestList({ getState, dispatch }) {
           name: action.name,
           location: action.location,
           onetime: action.onetime,
+          ...(action.onetime && {event_date: action.event_date})
         }),
       })
         .then((resp) => {

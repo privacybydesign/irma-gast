@@ -66,6 +66,7 @@ class HostPage extends React.Component {
       name: newList.name,
       location: newList.location,
       onetime: newList.type === "event",
+      event_date: newList.date
     });
   }
 
