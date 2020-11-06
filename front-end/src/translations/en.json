@@ -21,7 +21,8 @@
       "who": "For whom?",
       "how": "How does it work?",
       "start": "Get started",
-      "login": "Host login"
+      "login": "Host login",
+      "switchlang": "Switch naar Nederlands"
     }
   },
   "guest": {
