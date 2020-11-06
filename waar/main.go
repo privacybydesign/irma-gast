@@ -652,6 +652,31 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var (
+		onetime bool
+		date    string
+	)
+
+	rows := db.QueryRow("SELECT event_date FROM locations WHERE location_id=? AND one_time=true", received.Location_id)
+	err = rows.Scan(&date)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			onetime = false
+		} else {
+			log.Printf("Error in query: %v", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		onetime = true
+	}
+
+	if onetime && (time.Now().Format("2007-11-23") != date) {
+		log.Print("Gastsession for one-time event is not during event_date")
+		http.Error(w, "Guest session for one-time event not submitted day of the event", http.StatusBadRequest)
+		return
+	}
+
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("Error beginning transaction: %v", err)
@@ -680,6 +705,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	// Retrieve the last inserted timestamp
 	var time string
 	err = db.QueryRow("SELECT time FROM checkins where location_id = ? ORDER by time DESC LIMIT 1", received.Location_id).Scan(&time)
+
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error finding last checkin timestamp: %v", err)
