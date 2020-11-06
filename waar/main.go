@@ -671,9 +671,10 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		onetime = true
 	}
 
+	currDate := time.Now()
+
 	if onetime {
-		currDate := time.Now().Format("2006-01-02")
-		if date != currDate {
+		if date != currDate.Format("2006-01-02") {
 			log.Printf("Gastsession for one-time event is not during event_date. %v vs %v", date, currDate)
 			http.Error(w, "Guest session for one-time event not submitted day of the event", http.StatusBadRequest)
 			return
@@ -687,7 +688,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt1, err := tx.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+	stmt1, err := tx.Prepare("INSERT INTO checkins (location_id, ct, time) VALUES (?, ?, ?)")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
@@ -697,21 +698,10 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	defer stmt1.Close()
 
 	log.Printf("Inserting gast data at location %v", received.Location_id)
-	_, err = stmt1.Exec(received.Location_id, ct_bytes)
+	_, err = stmt1.Exec(received.Location_id, ct_bytes, currDate.Format(time.RFC3339))
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// Retrieve the last inserted timestamp
-	var time string
-	err = db.QueryRow("SELECT time FROM checkins where location_id = ? ORDER by time DESC LIMIT 1", received.Location_id).Scan(&time)
-
-	if err != nil {
-		tx.Rollback()
-		log.Printf("Error finding last checkin timestamp: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -726,7 +716,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt2.Close()
 
-	_, err = stmt2.Exec(time, received.Location_id)
+	_, err = stmt2.Exec(currDate.Format(time.RFC3339), received.Location_id)
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)
