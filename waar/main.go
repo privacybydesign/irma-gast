@@ -314,6 +314,8 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(pkg)
 	if err != nil {
 		log.Printf("error encoding session package: %v", err)
@@ -321,8 +323,6 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 // Finishes authentication for an admin
@@ -485,14 +485,14 @@ func overview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	viewData := &overviewData{Email: user.Email, Locations: locs}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(viewData)
 	if err != nil {
 		log.Printf("could not encode viewdata: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 type resultEntry struct {
@@ -547,15 +547,14 @@ func results(w http.ResponseWriter, r *http.Request) {
 		entries = append(entries, &resultEntry{Time: time, Ct: base64ct})
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(resultData{entries})
 	if err != nil {
 		log.Printf("could not encode result: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 func remove(w http.ResponseWriter, r *http.Request) {
