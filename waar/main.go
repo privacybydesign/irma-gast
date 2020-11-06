@@ -677,8 +677,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 
 	if onetime {
 		if date != currDate.Format("2006-01-02") {
-			log.Printf("Gastsession for one-time event is not during event_date. %v vs %v", date, currDate)
-			http.Error(w, "Guest session for one-time event not submitted day of the event", http.StatusBadRequest)
+			http.Error(w, "wrong date", http.StatusBadRequest)
 			return
 		}
 	}
