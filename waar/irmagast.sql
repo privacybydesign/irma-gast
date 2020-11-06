@@ -11,6 +11,7 @@ CREATE TABLE locations (
   email varchar(255) NOT NULL,
   onetime boolean NOT NULL,
   creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+  event_date DATE DEFAULT NULL,
   last_checkin TIMESTAMP NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 

@@ -82,7 +82,7 @@ func readConfig(confPath string) {
 		log.Printf("Example configuration file:\n")
 		buf, err := yaml.Marshal(&conf)
 		if err != nil {
-			log.Printf("error marshalling example configuration:", err)
+			log.Printf("error marshalling example configuration: %v", err)
 		}
 		log.Printf("%s", buf)
 		return
@@ -125,7 +125,7 @@ func initSessionStorage() {
 		MaxAge:   60 * 20,
 		HttpOnly: true,
 		Secure:   true,
-		// TODO: set Lax an domain before release
+		// TODO: set Lax and domain before release
 		SameSite: http.SameSiteNoneMode,
 		//Domain:   "data.irma-welkom.nl",
 	}
@@ -198,7 +198,7 @@ func schedule(f func(), delay time.Duration) chan bool {
 // if arg "authenticated" is true then it checks if the email is already authenticated
 func checkCookie(w http.ResponseWriter, r *http.Request, userExists, userAuthenticated bool) (*User, error) {
 	session, err := store.Get(r, "irmagast")
-	if err != nil {
+	if err != nil && userExists {
 		http.Error(w, "No session", http.StatusForbidden)
 		return nil, err
 	}
@@ -369,9 +369,10 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 }
 
 type registerData struct {
-	Name     string `json:"name"`
-	Location string `json:"location"`
-	Onetime  bool   `json:"onetime"`
+	Name      string `json:"name"`
+	Location  string `json:"location"`
+	Onetime   bool   `json:"onetime"`
+	EventDate string `json:"event_date"`
 }
 
 // Registers a new location/meeting for an authenticated admin
@@ -392,14 +393,14 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := ksuid.New().String()
-	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email, onetime) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email, onetime, event_date) VALUES (?, ?, ?, ?, ?, ?)")
 	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime)
+	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime, received.EventDate)
 	if err != nil {
 		log.Printf("Storing entry failed: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
