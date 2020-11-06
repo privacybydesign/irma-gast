@@ -176,7 +176,9 @@ func cleanup() {
 		return
 	}
 
-	log.Printf("Cleanup: check-in entries deleted: %v, inactive locations purged: %v", rows, locationsRows)
+	if rows > 0 || locationsRows > 0 {
+		log.Printf("Cleanup: check-in entries deleted: %v, inactive locations purged: %v", rows, locationsRows)
+	}
 }
 
 func schedule(f func(), delay time.Duration) chan bool {
@@ -246,7 +248,6 @@ func getUser(ctx context.Context) (*User, error) {
 }
 
 func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
-	log.Println("Starting email authentication")
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 
 	request := irma.NewDisclosureRequest()
@@ -277,7 +278,6 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		httpReq.Header.Add("Authorization", conf.RequestorToken)
 	}
 
-	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
