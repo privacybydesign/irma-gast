@@ -29,6 +29,8 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
+const MySQLTimeFormat = "2006-01-02 15:04:05"
+
 // Configuration
 type Conf struct {
 	// URL of the server
@@ -698,7 +700,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	defer stmt1.Close()
 
 	log.Printf("Inserting gast data at location %v", received.Location_id)
-	_, err = stmt1.Exec(received.Location_id, ct_bytes, currDate.Format(time.RFC3339))
+	_, err = stmt1.Exec(received.Location_id, ct_bytes, currDate.Format(MySQLTimeFormat))
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
@@ -716,7 +718,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt2.Close()
 
-	_, err = stmt2.Exec(currDate.Format(time.RFC3339), received.Location_id)
+	_, err = stmt2.Exec(currDate.Format(MySQLTimeFormat), received.Location_id)
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)
