@@ -6,13 +6,13 @@ import Client from "./irmaseal";
 import JWT from "jsonwebtoken";
 
 // URL of waar server
-const waarServerUrl = "https://data.irma-welkom.nl/api/v1";
+const waarServerUrl = "https://data.qrona.info/api/v1";
 
 // IRMA server for authenticating guests
-const irmaServerUrl = "https://irma-welkom.nl/irma";
+const irmaServerUrl = "https://qrona.info/irma";
 
 // Private key generator URL
-const pkgServerUrl = "https://irma-welkom.nl/pkg";
+const pkgServerUrl = "https://qrona.info/pkg";
 
 /**
  * Handles all dispatches for changing the login state
@@ -394,7 +394,6 @@ function handleDisclosurePage({ getState, dispatch }) {
         }),
       })
         .then((resp) => {
-          console.log("rsp: ", resp);
           if (resp.status !== 204) throw resp.status;
           dispatch({ type: "guestDataSent" });
         })
