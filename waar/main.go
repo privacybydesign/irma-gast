@@ -69,7 +69,7 @@ type Location struct {
 	Location     string  `json:"location"`
 	Onetime      bool    `json:"onetime"`
 	CreationDate string  `json:"creation_date"`
-	EventDate    *string `json:"eventdate,omitempty"`
+	EventDate    *string `json:"event_date,omitempty"`
 	Count        int     `json:"guest_count"`
 }
 
