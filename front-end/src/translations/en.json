@@ -118,7 +118,7 @@
     "how": {
       "h1": "How does it work?",
       "h2": "The hosts gets a QR-code and displays it in a clearly visible way.",
-      "p1": "As host you can easily and freely obtain a QR-code that you can mount on a wall yourself. You then ask your visitors to scan this QR-code and share their email adress with you via their <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
+      "p1": "As host you can easily and freely obtain a QR-code that you can mount on a wall yourself. You then ask your visitors to scan this QR-code and share their email address with you via their <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
       "p2": "The email address that you collect in this way are stored in encrypted form and are automatically deleted after 2 weeks. You don't have to worry about this as host. Do you need addresses after an infection? You can retrieve them as host by logging in (again). The organisation behind QRona cannot decrypt the collected email addresses: only you can do that. You do not need a password to do so, just your <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
       "p3": "As host you can create multiple gatherings, each with their own QR-code, which you can hang up at different locations. For instance, in this way you can keep separate registrations for separate floors or departments at work.",
       "p4": "Certainly in the beginning you, as host, will regularly have to ask your visitors to install the IRMA-app. That needs to be done only once; from then onwards, registration is really quick and easy. Installing the IRMA-app is not hard and can be done on the spot.",
@@ -136,8 +136,8 @@
     },
     "welcome": {
       "h1": "Register visitors yourself, at work or at home!",
-      "p1": "With QRona everyone can be host and easily and securely collect email adresses of visitors, in order to control the spread of the COVID-19 corona virus.",
-      "p2": "All you and your visitors need is the free IRMA-app, containing an email adress. No prior registration is needed.",
+      "p1": "With QRona everyone can be host and easily and securely collect email addresses of visitors, in order to control the spread of the COVID-19 corona virus.",
+      "p2": "All you and your visitors need is the free IRMA-app, containing an email address. No prior registration is needed.",
       "p3": "<0>Login as host with IRMA*</0><1>Install IRMA first</1>",
       "p4": "*By logging in you agree with the processing of personal data, as described in the QRona's <0>privacy policy</0>."
     },
