@@ -8,6 +8,7 @@ import NavBar from "../../../nav-bar/NavBar";
 import DisclosurePage from "../disclosure-page/DisclosurePage";
 import { Trans, withTranslation } from "react-i18next";
 import Login from "../../../login/Login";
+import i18n from "i18next";
 
 const mapStateToProps = (state) => {
   return {
@@ -16,6 +17,8 @@ const mapStateToProps = (state) => {
 };
 
 class PreDisclosurePage extends React.Component {
+  getLanguage = () => i18n.language || window.localStorage.i18nextLng;
+
   componentDidMount() {
     this.props.dispatch({
       type: "initDisclosurePage",
@@ -40,7 +43,7 @@ class PreDisclosurePage extends React.Component {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
           element: "#irma-web-form",
-          language: "nl", // TODO: set language
+          language: this.getLanguage(),
           session: this.props.irmaSession,
         });
         this._irmaWeb.start().then((result) => {

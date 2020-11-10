@@ -9,6 +9,7 @@ import Footer from "../../footer/Footer";
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import { Trans, withTranslation } from "react-i18next";
 import Login from "../../login/Login";
+import i18n from "i18next";
 
 const mapStateToProps = (state) => {
   return {
@@ -17,6 +18,8 @@ const mapStateToProps = (state) => {
 };
 
 class HostPage extends React.Component {
+  getLanguage = () => i18n.language || window.localStorage.i18nextLng;
+
   componentDidMount() {
     this.props.dispatch({ type: "initHostPage" });
     this._handleIrma();
@@ -37,7 +40,7 @@ class HostPage extends React.Component {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
           element: "#irma-web-form",
-          language: "nl",
+          language: this.getLanguage(),
           session: this.props.irmaSession,
         });
         this._irmaWeb.start().then(() => {
@@ -71,7 +74,7 @@ class HostPage extends React.Component {
       name: newList.name,
       location: newList.location,
       onetime: newList.type === "event",
-      event_date: newList.date
+      event_date: newList.date,
     });
   }
 
