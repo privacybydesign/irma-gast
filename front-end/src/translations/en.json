@@ -53,7 +53,7 @@
     "host": "host",
     "qr": {
       "scan": "Scan the QR-code with the camera of your mobile phone to start registration.",
-      "scaninfo1": "Please note: scanning this QR does not work with your IRMA-app, but requires a QR-scan (of foto) app.",
+      "scaninfo1": "Please note: scanning this QR does not work with your IRMA-app, but requires a QR-scan (or camera) app.",
       "scaninfo2": "After registration your contact data will be managed by host: {{host}}. For questions, please contact this host.",
       "scaninfo3": "This service is provided by QRona. Visit qrona.info for more information.",
       "loading": "loading QR-code...",
@@ -83,7 +83,7 @@
       "onetimelabel": "Onetime gathering (meeting, presentation, marriage, ...)",
       "onetimedatelabel": "Date*",
       "onetimedatehelpertext": "Only on this day visitors can register for this onetime gathering.",
-      "permanentlabel": "Continuous gathering (cafe, restaurant, shop, hair dresser, ...)",
+      "permanentlabel": "Continuous gathering (cafe, restaurant, shop, hairdresser, ...)",
       "checkboxlabel": "I use these contact data exclusively for corona warnings, if needed, and not for anything else. I ask QRona to process data for that purpose."
     },
     "guestcount": {
