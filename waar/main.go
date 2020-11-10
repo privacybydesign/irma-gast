@@ -375,7 +375,7 @@ type registerData struct {
 	Name      string  `json:"name"`
 	Location  string  `json:"location"`
 	Onetime   bool    `json:"onetime"`
-	EventDate *string `json:"event_date,omitempty`
+	EventDate *string `json:"event_date,omitempty"`
 }
 
 // Registers a new location/meeting for an authenticated admin
