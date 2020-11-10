@@ -129,13 +129,13 @@ function QRCodePDF({ t, title, location, date, host, qr }) {
                 <View style={styles.spacer}></View>
                 <Text style={styles.title}>
                   {title}
-                  {`, ${t("qr.loc")}: `}
+                  {`, ${t("loc")}: `}
                   {location}
                 </Text>
                 <Text style={styles.subtitle}>
-                  {`${t("qr.start")}: `}
+                  {`${t("start")}: `}
                   {date}
-                  {`, ${t("qr.host")}: `}
+                  {`, ${t("host")}: `}
                   {host}
                 </Text>
                 <View style={styles.spacer}></View>
