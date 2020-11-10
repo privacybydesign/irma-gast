@@ -16,7 +16,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SaveIcon from "@material-ui/icons/Save";
 import QRCode from "qrcode.react";
 import GuestCount from "./GuestCount";
-import ContactsPDF from "./ContactsPDF";
+import Contacts from "./Contacts";
 import QRCodePDF from "./qr-code/QRCodePDF";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -25,6 +25,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Divider from "@material-ui/core/Divider";
 import { Trans, withTranslation } from "react-i18next";
+import GuestListButton from "./GuestListButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -147,16 +148,15 @@ function GuestList({
                 qr={id}
               />
             ) : (
-              <Button
+              <GuestListButton
                 onClick={() => {
                   downloadQR();
                 }}
                 color="primary"
                 size="large"
                 startIcon={<SaveIcon />}
-              >
-                {t("guestlist.genqr")}
-              </Button>
+                text={t("guestlist.genqr")}
+              />
             )}
           </CardActions>
           <GuestCount
@@ -164,16 +164,14 @@ function GuestList({
             listType={listType}
             className={classes.noPadding}
           />
-          <Button
+          <GuestListButton
             onClick={handleClickOpen}
             color="secondary"
             size="large"
             className={classes.button}
             startIcon={<DeleteIcon />}
-          >
-            {" "}
-            {t("guestlist.rmlist")}
-          </Button>
+            text={t("guestlist.rmlist")}
+          />
           <Dialog
             open={dialog}
             onClose={handleClose}
@@ -203,12 +201,13 @@ function GuestList({
               </Button>
             </DialogActions>
           </Dialog>
-          <ContactsPDF
-            title={name}
+          <Contacts
+            name={name}
             date={date}
             host={host}
             id={id}
             location={location}
+            count={count}
           />
         </CardContent>
       </Collapse>

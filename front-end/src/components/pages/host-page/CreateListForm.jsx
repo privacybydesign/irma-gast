@@ -134,7 +134,7 @@ function CreateListForm({ t, onAdd }) {
             <div style={{ height: "20px" }}></div>
           </div>
         )}
-        <FormControl required error={error}>
+        <FormControl required error={guestlist.error}>
           <FormControlLabel
             className="multiline"
             control={

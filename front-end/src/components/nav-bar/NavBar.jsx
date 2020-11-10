@@ -46,7 +46,7 @@ function NavBar({ t, link, loggedIn, onLogout }) {
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
           <a
-            href="javascript:void(0)"
+            href=""
             className="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
             onClick={w3_open}
           >
@@ -64,13 +64,13 @@ function NavBar({ t, link, loggedIn, onLogout }) {
         id="mySidebar"
       >
         <a
-          href="javascript:void(0)"
+          href=""
           onClick={w3_close}
           className="w3-bar-item w3-button w3-large w3-padding-16"
         >
           Close ×
         </a>
-        <NavBarItems link={link} onLogout={onLogout} />
+        <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
       </nav>
     </div>
   );

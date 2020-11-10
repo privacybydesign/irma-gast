@@ -29,6 +29,8 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
+const MySQLTimeFormat = "2006-01-02 15:04:05"
+
 // Configuration
 type Conf struct {
 	// URL of the server
@@ -67,6 +69,7 @@ type Location struct {
 	Location     string `json:"location"`
 	Onetime      bool   `json:"onetime"`
 	CreationDate string `json:"creation_date"`
+	EventDate    string `json:"eventdate",omitempty`
 	Count        int    `json:"guest_count"`
 }
 
@@ -82,7 +85,7 @@ func readConfig(confPath string) {
 		log.Printf("Example configuration file:\n")
 		buf, err := yaml.Marshal(&conf)
 		if err != nil {
-			log.Printf("error marshalling example configuration:", err)
+			log.Printf("error marshalling example configuration: %v", err)
 		}
 		log.Printf("%s", buf)
 		return
@@ -125,7 +128,7 @@ func initSessionStorage() {
 		MaxAge:   60 * 20,
 		HttpOnly: true,
 		Secure:   true,
-		// TODO: set Lax an domain before release
+		// TODO: set Lax and domain before release
 		SameSite: http.SameSiteNoneMode,
 		//Domain:   "data.irma-welkom.nl",
 	}
@@ -173,7 +176,9 @@ func cleanup() {
 		return
 	}
 
-	log.Printf("Cleanup: check-in entries deleted: %v, inactive locations purged: %v", rows, locationsRows)
+	if rows > 0 || locationsRows > 0 {
+		log.Printf("Cleanup: check-in entries deleted: %v, inactive locations purged: %v", rows, locationsRows)
+	}
 }
 
 func schedule(f func(), delay time.Duration) chan bool {
@@ -198,7 +203,7 @@ func schedule(f func(), delay time.Duration) chan bool {
 // if arg "authenticated" is true then it checks if the email is already authenticated
 func checkCookie(w http.ResponseWriter, r *http.Request, userExists, userAuthenticated bool) (*User, error) {
 	session, err := store.Get(r, "irmagast")
-	if err != nil {
+	if err != nil && userExists {
 		http.Error(w, "No session", http.StatusForbidden)
 		return nil, err
 	}
@@ -243,7 +248,6 @@ func getUser(ctx context.Context) (*User, error) {
 }
 
 func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
-	log.Println("Starting email authentication")
 	w.Header().Add("Cache-Control", "no-store") // Do not cache the response
 
 	request := irma.NewDisclosureRequest()
@@ -274,7 +278,6 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		httpReq.Header.Add("Authorization", conf.RequestorToken)
 	}
 
-	log.Printf("Sending session request to: %v", conf.IrmaServerURL+"/session/")
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		log.Printf("Failed to post session request to irma server: %v", err)
@@ -311,6 +314,8 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(pkg)
 	if err != nil {
 		log.Printf("error encoding session package: %v", err)
@@ -318,8 +323,6 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 // Finishes authentication for an admin
@@ -369,9 +372,10 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 }
 
 type registerData struct {
-	Name     string `json:"name"`
-	Location string `json:"location"`
-	Onetime  bool   `json:"onetime"`
+	Name      string `json:"name"`
+	Location  string `json:"location"`
+	Onetime   bool   `json:"onetime"`
+	EventDate string `json:"event_date"`
 }
 
 // Registers a new location/meeting for an authenticated admin
@@ -392,14 +396,14 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := ksuid.New().String()
-	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email, onetime) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO locations (location_id, name, location, email, onetime, event_date) VALUES (?, ?, ?, ?, ?, ?)")
 	defer stmt.Close()
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime)
+	_, err = stmt.Exec(id, received.Name, received.Location, user.Email, received.Onetime, received.EventDate)
 	if err != nil {
 		log.Printf("Storing entry failed: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -410,7 +414,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (user *User) getLocations() ([]*Location, error) {
-	rows, err := db.Query("SELECT location_id, name, location, creation_date, onetime FROM locations WHERE email=?", user.Email)
+	rows, err := db.Query("SELECT location_id, name, location, creation_date, onetime, event_date FROM locations WHERE email=?", user.Email)
 	if err != nil {
 		log.Printf("Wrong prepared statement: %v", err)
 		return nil, err
@@ -420,17 +424,18 @@ func (user *User) getLocations() ([]*Location, error) {
 	locations := []*Location{}
 	for rows.Next() {
 		var (
-			id       string
-			name     string
-			location string
-			creation string
-			onetime  bool
+			id         string
+			name       string
+			location   string
+			creation   string
+			onetime    bool
+			event_date string
 		)
-		if err = rows.Scan(&id, &name, &location, &creation, &onetime); err != nil {
+		if err = rows.Scan(&id, &name, &location, &creation, &onetime, &event_date); err != nil {
 			log.Printf("Scan error: %v", err)
 			return nil, err
 		}
-		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation})
+		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation, EventDate: event_date})
 	}
 
 	for _, loc := range locations {
@@ -480,14 +485,14 @@ func overview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	viewData := &overviewData{Email: user.Email, Locations: locs}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(viewData)
 	if err != nil {
 		log.Printf("could not encode viewdata: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 type resultEntry struct {
@@ -542,15 +547,14 @@ func results(w http.ResponseWriter, r *http.Request) {
 		entries = append(entries, &resultEntry{Time: time, Ct: base64ct})
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(resultData{entries})
 	if err != nil {
 		log.Printf("could not encode result: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }
 
 func remove(w http.ResponseWriter, r *http.Request) {
@@ -649,6 +653,34 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var (
+		onetime bool
+		date    string
+	)
+
+	rows := db.QueryRow("SELECT event_date FROM locations WHERE location_id=? AND onetime=true", received.Location_id)
+	err = rows.Scan(&date)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			onetime = false
+		} else {
+			log.Printf("Error in query: %v", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		onetime = true
+	}
+
+	currDate := time.Now()
+
+	if onetime {
+		if date != currDate.Format("2006-01-02") {
+			http.Error(w, "wrong date", http.StatusBadRequest)
+			return
+		}
+	}
+
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("Error beginning transaction: %v", err)
@@ -656,7 +688,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt1, err := tx.Prepare("INSERT INTO checkins (location_id, ct) VALUES (?, ?)")
+	stmt1, err := tx.Prepare("INSERT INTO checkins (location_id, ct, time) VALUES (?, ?, ?)")
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Couldnt prepare statement: %v", err)
@@ -666,20 +698,10 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	defer stmt1.Close()
 
 	log.Printf("Inserting gast data at location %v", received.Location_id)
-	_, err = stmt1.Exec(received.Location_id, ct_bytes)
+	_, err = stmt1.Exec(received.Location_id, ct_bytes, currDate.Format(MySQLTimeFormat))
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error storing checkin entry: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// Retrieve the last inserted timestamp
-	var time string
-	err = db.QueryRow("SELECT time FROM checkins where location_id = ? ORDER by time DESC LIMIT 1", received.Location_id).Scan(&time)
-	if err != nil {
-		tx.Rollback()
-		log.Printf("Error finding last checkin timestamp: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -694,7 +716,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt2.Close()
 
-	_, err = stmt2.Exec(time, received.Location_id)
+	_, err = stmt2.Exec(currDate.Format(MySQLTimeFormat), received.Location_id)
 	if err != nil {
 		tx.Rollback()
 		log.Printf("Error updating last checkin: %v", err)

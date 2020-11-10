@@ -83,6 +83,9 @@ function handleLogin({ getState, dispatch }) {
           }
         }
       );
+    } else if (action.type === "loggedOut") {
+      localStorage.clear("irmagast");
+      dispatch({type: "initHostPage"});
     }
     return next(action);
   };
@@ -137,6 +140,7 @@ function handleAddGuestList({ getState, dispatch }) {
           name: action.name,
           location: action.location,
           onetime: action.onetime,
+          ...(action.onetime && {event_date: action.event_date})
         }),
       })
         .then((resp) => {
@@ -164,7 +168,7 @@ function handleUpdateGuestLists({ getState, dispatch }) {
       action.type === "reloadGuestLists" ||
       (action.type === "loadGuestLists" && !getState().guestLists.loaded)
     ) {
-      dispatch({ type: "loadingGuestLists" });
+      dispatch({ type: "loadingGuestLists", reloading: action.type ==="reloadGuestLists" });
       fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;

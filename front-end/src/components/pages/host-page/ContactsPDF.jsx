@@ -8,12 +8,13 @@ import {
   Document,
   StyleSheet,
 } from "@react-pdf/renderer";
-import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import logo from "../../../images/irma_logo.png";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withTranslation } from "react-i18next";
+import GuestListButton from "./GuestListButton";
+import Button from "@material-ui/core/Button";
 
 // Create styles
 const styles = StyleSheet.create({
@@ -70,22 +71,6 @@ class ContactsPDF extends React.Component {
 
   render() {
     return this._renderState();
-  }
-
-  _renderState() {
-    if (
-      this.props.locations === {} ||
-      this.props.locations[this.props.id] === undefined
-    ) {
-      return this._renderLoadCheckins();
-    } else {
-      switch (this.props.locations[this.props.id].location_state) {
-        case "done":
-          return this._renderDownloadLink();
-        default:
-          return this._renderLoadCheckins();
-      }
-    }
   }
 
   _renderButtonText() {
@@ -145,9 +130,13 @@ class ContactsPDF extends React.Component {
                   {this.props.host}
                 </Text>
                 <Image style={styles.image} src={logo} />
-                <Text style={styles.text}>{this.props.t("contacts.text1")}</Text>
+                <Text style={styles.text}>
+                  {this.props.t("contacts.text1")}
+                </Text>
                 <View style={styles.spacer}></View>
-                <Text style={styles.text}>{this.props.t("contacts.text2")}</Text>
+                <Text style={styles.text}>
+                  {this.props.t("contacts.text2")}
+                </Text>
                 <View style={styles.spacer}></View>
                 {this.props.locations[this.props.id].entries.map(
                   (mail, index) => {
@@ -168,11 +157,16 @@ class ContactsPDF extends React.Component {
       >
         {({ blob, url, loading, error }) =>
           loading ? (
-            this.props.t("contacts.loadingpdf")
+            <GuestListButton
+              text={this.props.t("contacts.loadingpdf")}
+              icon={<SaveIcon />}
+              disabled
+            />
           ) : (
-            <Button color="primary" size="large" startIcon={<SaveIcon />}>
-              {this.props.t("contacts.download")}
-            </Button>
+            <GuestListButton
+              text={this.props.t("contacts.download")}
+              icon={<SaveIcon />}
+            />
           )
         }
       </PDFDownloadLink>

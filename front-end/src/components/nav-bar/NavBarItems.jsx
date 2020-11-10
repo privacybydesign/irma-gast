@@ -2,6 +2,7 @@ import React from "react";
 import flagNL from "../../images/flags/nl.png";
 import flagEN from "../../images/flags/en.png";
 import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 import i18n from "i18next";
 import { withTranslation } from "react-i18next";
 
@@ -37,9 +38,9 @@ function NavBarItems({ t, onLogout, link, loggedIn }) {
               {t("items.login")} <i className="fa fa-sign-in"></i>
             </a>
           ) : (
-            <a href="/" className="w3-bar-item" onClick={onLogout}>
+            <Button className="w3-bar-item" onClick={onLogout}>
               {t("items.logout")}
-            </a>
+            </Button>
           )}
           <Tooltip
             title={t("items.switchlang")}
