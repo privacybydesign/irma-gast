@@ -69,7 +69,7 @@ type Location struct {
 	Location     string  `json:"location"`
 	Onetime      bool    `json:"onetime"`
 	CreationDate string  `json:"creation_date"`
-	EventDate    *string `json:"eventdate",omitempty`
+	EventDate    *string `json:"eventdate,omitempty"`
 	Count        int     `json:"guest_count"`
 }
 
@@ -375,7 +375,7 @@ type registerData struct {
 	Name      string  `json:"name"`
 	Location  string  `json:"location"`
 	Onetime   bool    `json:"onetime"`
-	EventDate *string `json:"event_date"`
+	EventDate *string `json:"event_date,omitempty`
 }
 
 // Registers a new location/meeting for an authenticated admin
@@ -435,7 +435,7 @@ func (user *User) getLocations() ([]*Location, error) {
 			log.Printf("Scan error: %v", err)
 			return nil, err
 		}
-		locations = append(locations, &Location{Id: id, Name: name, Location: location, CreationDate: creation, EventDate: event_date})
+		locations = append(locations, &Location{Id: id, Name: name, Location: location, Onetime: onetime, CreationDate: creation, EventDate: event_date})
 	}
 
 	for _, loc := range locations {
