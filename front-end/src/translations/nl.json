@@ -88,9 +88,9 @@
     },
     "guestcount": {
       "header": "Aanmeldingen",
-      "begin": "Er hebben zich",
-      "onetimetext": "binnen de afgelopen twee weken",
-      "permanenttext": "tot nu toe",
+      "onetimetext": "In de afgelopen twee weken",
+      "permanenttext": "Tot nu toe",
+      "begin": "hebben er zich",
       "guest": "bezoeker",
       "guest_plural": "bezoekers",
       "guest_0": "geen bezoekers",

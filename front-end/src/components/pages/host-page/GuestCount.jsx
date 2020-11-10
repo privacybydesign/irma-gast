@@ -11,10 +11,10 @@ function GuestCount({ t, count, className, listType }) {
       </Typography>
       <div style={{ height: "4px" }}></div>
       <Typography variant="body1" component="span">
-        {t("guestcount.begin")}
         {listType === "permanent"
           ? t("guestcount.onetimetext")
           : t("guestcount.permanenttext")}
+        {" "}{t("guestcount.begin")}
       </Typography>
       <Typography variant="h6" component="span">
         {" " + t("guestcount.guestWithCount", { count: count }) + " "}
