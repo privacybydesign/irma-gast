@@ -64,13 +64,13 @@ type User struct {
 }
 
 type Location struct {
-	Id           string `json:"location_id"`
-	Name         string `json:"name"`
-	Location     string `json:"location"`
-	Onetime      bool   `json:"onetime"`
-	CreationDate string `json:"creation_date"`
-	EventDate    string `json:"eventdate",omitempty`
-	Count        int    `json:"guest_count"`
+	Id           string  `json:"location_id"`
+	Name         string  `json:"name"`
+	Location     string  `json:"location"`
+	Onetime      bool    `json:"onetime"`
+	CreationDate string  `json:"creation_date"`
+	EventDate    *string `json:"eventdate",omitempty`
+	Count        int     `json:"guest_count"`
 }
 
 var (
@@ -372,10 +372,10 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 }
 
 type registerData struct {
-	Name      string `json:"name"`
-	Location  string `json:"location"`
-	Onetime   bool   `json:"onetime"`
-	EventDate string `json:"event_date"`
+	Name      string  `json:"name"`
+	Location  string  `json:"location"`
+	Onetime   bool    `json:"onetime"`
+	EventDate *string `json:"event_date"`
 }
 
 // Registers a new location/meeting for an authenticated admin
@@ -429,7 +429,7 @@ func (user *User) getLocations() ([]*Location, error) {
 			location   string
 			creation   string
 			onetime    bool
-			event_date string
+			event_date *string
 		)
 		if err = rows.Scan(&id, &name, &location, &creation, &onetime, &event_date); err != nil {
 			log.Printf("Scan error: %v", err)
