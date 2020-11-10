@@ -8,9 +8,9 @@
     "p3": "Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via <a href=\"https://sidnemailissuer.irmaconnect.nl/uitgifte/email\">deze pagina.</a>"
   },
   "footer": {
-    "header": "Vragen of opmerkingen",
+    "header": "Vragen of opmerkingen?",
     "p1": "QRona is ontwikkeld door de stichting <a href=\"https://privacybydesign.foundation/\">Privacy by Design</a> samen met de <a href=\"https://www.ru.nl/ihub/\">iHub</a> onderzoeksgroep van de Radboud Universiteit (vanuit het NWO project <a href=\"https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/\">Encryption for All</a>).",
-    "p2": "Ga naar de <a href=\"https://www.irma.app\">irma.app/?lang=nl</a> website voor informatie over de IRMA-app en bezoek de <a href=\"https://privacybydesign.foundation\">Privacy by Design</a> webpagina voor algemene achtergrond informatie over de stichting. Stuur een mail aan <a href=\"mailto:info@qrona.info\">info@qrona.info</a> voor vragen en/of opmerkingen.",
+    "p2": "Ga naar de <a href=\"https://www.irma.app/?lang=nl\">irma.app</a> website voor informatie over de IRMA-app en bezoek de <a href=\"https://privacybydesign.foundation\">Privacy by Design</a> webpagina voor algemene achtergrond informatie over de stichting. Stuur een mail aan <a href=\"mailto:info@qrona.info\">info@qrona.info</a> voor vragen en/of opmerkingen.",
     "p3": "QRona is open source. De source code en documentatie staan op GitHub. <i className=\"fa fa-github\"></i>, zie de <a href=\"https://github.com/privacybydesign/irma-welkom\"> GitHub bestanden.</a> Deze pagina gebruikt illustraties van <a href=\"https://undraw.co\">UnDraw.</a>",
     "p4": "De QRona dienst is gratis. Een financiële bijdrage, voor onderhoud en verdere ontwikkeling, wordt zeer gewaardeerd. Dat kan via deze <a href=\"https://privacybydesign.foundation/steun/\">steun pagina</a> van de stichting Privacy by Design."
   },
@@ -118,12 +118,12 @@
     "how": {
       "h1": "Hoe werkt het?",
       "h2": "De host haalt een QR-code op en hangt deze op",
-      "p1": "Als host kun je op QRona gratis en makkelijk QR-codes ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om deze QR-code te scannen en via hun <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> een e-mailadres met je te delen.",
+      "p1": "Als host kun je op QRona gratis en makkelijk QR-codes ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om deze QR-code te scannen met hun <b>reguliere</b> camera of scannerapplicatie.",
       "p2": "De e-mailadressen die je zo verzamelt worden versleuteld opgeslagen en na 2 weken automatisch weggegooid. Je hebt als host daar geen omkijken naar. Zijn de adressen nodig na een besmetting? Dan kun je ze als host ophalen door (opnieuw) in te loggen. De organisatie achter QRona kan de verzamelde e-mailadressen niet ontsleutelen: alleen jij kan dat als host. Je hebt daarvoor geen wachtwoord nodig, alleen je <a href=\"https://irma.app/?lang=nl\">IRMA-app</a>.",
       "p3": "Je kunt als host verschillende samenkomsten aanmaken, met ieder een eigen QR-code, die je op verschillende plekken op kunt hangen. Zo kun je bijvoorbeeld voor iedere verdieping of afdeling op het werk een aparte registratie van bezoekers bijhouden.",
       "p4": "Als host zul je zeker in het begin regelmatig aan je bezoekers moeten vragen om de IRMA-app te installeren. Dat hoeft maar één keer; daarna levert het alleen maar gemak op. Het installeren is makkelijk en kan ter plekke gebeuren.",
       "h3": "De bezoeker scant de QR-code en laat zijn e-mailadres achter",
-      "p5": "Bezoekers laten hun e-mailadres achter door de QR-code met de met de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> te scannen. In de IRMA-app staan persoonlijke gegevens. Bij QRona wordt alleen om een e-mailadres gevraagd. De app installeer je maar één keer. Je zet je e-mailadres daarin en kunt de app daarna overal voor QRona gebruiken. Dat is stukken makkelijker dan steeds formuliertjes invullen waarvan onduidelijk is waar ze blijven.",
+      "p5": "Bezoekers laten hun e-mailadres achter door de QR-code met hun <b>reguliere</b> camera of scannerapplicatie te scannen. Uiteindelijk wordt de bezoeker doorgestuurd naar de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a>, waar ze gemakkelijk een e-mail kunnen vrijgeven. In de IRMA-app staan persoonlijke gegevens. Bij QRona wordt alleen om een e-mailadres gevraagd. De app installeer je maar één keer. Je zet je e-mailadres daarin en kunt de app daarna overal voor QRona gebruiken. Dat is stukken makkelijker dan steeds formuliertjes invullen waarvan onduidelijk is waar ze blijven.",
       "p6": "De e-mailadressen van bezoekers worden beveiligd (versleuteld) opgeslagen en na twee weken automatisch weggegooid. Dat neemt terechte zorgen weg. Verder kan alleen de host de e-mailadressen ontsleutelen, bij een besmetting, om bezoekers zelf te waarschuwen of om hun e-mailadressen door te geven aan de GGD. De organisatie achter QRona kan en wil zelf niet zien wie bij wie op bezoek komt, zie ook de <0>privacy policy</0>."
     },
     "start": {
@@ -146,8 +146,8 @@
       "p1": "QRona is voor iedereen die samenkomsten organiseert of bezoekt. Je kunt met QRona bijvoorbeeld makkelijk contactgegevens van bezoekers verzamelen, als:",
       "li1": "eigenaar van een café, restaurant, winkel, museum, theater, garage, ...",
       "li2": "organisator van een (eenmalige) bijeenkomst, vergadering, voordracht, les, college, ...",
-      "li3": "uitoefenaar van een contactberoep",
-      "li4": "verantwoordelijke voor een werkvloer, afdeling of verdieping",
+      "li3": "uitoefenaar van een contactberoep, ",
+      "li4": "verantwoordelijke voor een werkvloer, afdeling of verdieping,",
       "li5": "privé persoon die wil bijhouden wie thuis op bezoek komt."
     }
   },
