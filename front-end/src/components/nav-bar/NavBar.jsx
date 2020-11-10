@@ -4,7 +4,7 @@ import NavBarItems from "./NavBarItems";
 import PublicBetaBanner from "./PublicBetaBanner";
 import { withTranslation } from "react-i18next";
 
-function NavBar({ t, link, onLogout }) {
+function NavBar({ t, link, loggedIn, onLogout }) {
   // Toggle between showing and hiding the sidebar when clicking the menu icon
 
   function w3_open() {
@@ -42,7 +42,7 @@ function NavBar({ t, link, onLogout }) {
           </a>
           {/* <!-- Right-sided navbar links --> */}
           <div className="w3-right w3-hide-small">
-            <NavBarItems link={link} onLogout={onLogout} />
+            <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
           <a

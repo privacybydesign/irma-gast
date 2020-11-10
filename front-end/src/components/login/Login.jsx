@@ -1,7 +1,7 @@
 import React from "react";
 import { withTranslation } from "react-i18next";
 
-function LoginPage({ t }) {
+function Login({ t }) {
   return (
     <>
       <h2>{t("header")}</h2>
@@ -23,4 +23,4 @@ function LoginPage({ t }) {
   );
 }
 
-export default withTranslation("login")(LoginPage);
+export default withTranslation("login")(Login);

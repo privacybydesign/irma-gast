@@ -8,7 +8,7 @@ import NavBar from "../../nav-bar/NavBar";
 import Footer from "../../footer/Footer";
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import { Trans, withTranslation } from "react-i18next";
-import LoginPage from "../login-page/LoginPage";
+import Login from "../../login/Login";
 
 const mapStateToProps = (state) => {
   return {
@@ -61,8 +61,8 @@ class HostPage extends React.Component {
     if (newList.name === "") {
       newList.name = `${
         newList.type === "permanent"
-          ? this.props.t("permanent")
-          : this.props.t("onetime")
+          ? this.props.t("hostpage.permanent")
+          : this.props.t("hostpage.onetime")
       } samenkomst`;
     }
 
@@ -98,7 +98,7 @@ class HostPage extends React.Component {
   _renderHostPage() {
     return (
       <div>
-        <h2>{this.props.t("header")}</h2>
+        <h2>{this.props.t("hostpage.header")}</h2>
         <CreateListForm onAdd={(guestList) => this._addGuestList(guestList)} />
         {this._renderGuestLists()}
         <AutoDeleteText />
@@ -121,7 +121,7 @@ class HostPage extends React.Component {
           />
         );
       default:
-        return <LoginPage />;
+        return <Login />;
     }
   }
 
@@ -129,7 +129,8 @@ class HostPage extends React.Component {
     return (
       <div className="App">
         <NavBar
-          link="logout"
+          link="menu"
+          loggedIn={this.props.loggedIn}
           onLogout={() => {
             this.props.dispatch({ type: "logOut" });
           }}
@@ -141,4 +142,7 @@ class HostPage extends React.Component {
   }
 }
 
-export default compose(connect(mapStateToProps), withTranslation())(HostPage);
+export default compose(
+  connect(mapStateToProps),
+  withTranslation("host")
+)(HostPage);

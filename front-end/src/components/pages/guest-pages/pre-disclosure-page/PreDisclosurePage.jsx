@@ -7,7 +7,7 @@ import irmaFrontend from "@privacybydesign/irma-frontend";
 import NavBar from "../../../nav-bar/NavBar";
 import DisclosurePage from "../disclosure-page/DisclosurePage";
 import { Trans, withTranslation } from "react-i18next";
-import LoginPage from "../../login-page/LoginPage";
+import Login from "../../../login/Login";
 
 const mapStateToProps = (state) => {
   return {
@@ -78,7 +78,7 @@ class PreDisclosurePage extends React.Component {
   _renderState() {
     switch (this.props.state) {
       case "start":
-        return <LoginPage/>;
+        return <Login />;
       case "disclosurePage":
         const onNext = () => {
           this.props.dispatch({ type: "sendGuestData" });
