@@ -62,6 +62,7 @@ function GuestList({
   name,
   location,
   listType,
+  event_date,
   date,
   count,
 }) {
@@ -94,6 +95,13 @@ function GuestList({
     setDialog(true);
   };
 
+  const subheader = () => {
+    let subheader =`${t("guestlist.made")} ${date}`;
+    if (listType === "event") {
+      subheader = `${subheader}, ${t("guestlist.usable")} ${event_date}`
+    }
+    return subheader;
+  }
   // TODO: extract subcomponents used in GuestList.jsx into their individual files
 
   return (
@@ -118,7 +126,7 @@ function GuestList({
           </IconButton>
         }
         title={name}
-        subheader={date}
+        subheader={subheader()}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent className={classes.noPadding}>

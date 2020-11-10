@@ -105,7 +105,9 @@
       "genqr": "Generate PDF",
       "rmlist": "Remove list",
       "keeplist": "Keep list",
-      "rmdialog": "Upon proceeding the list <0>{{name}}, {{date}}</0> and all contact data on that list are deleted. The associated QR-code then no longer works; please don't forget to remove it, from the wall, or from tables etc."
+      "rmdialog": "Upon proceeding the list <0>{{name}}, {{date}}</0> and all contact data on that list are deleted. The associated QR-code then no longer works; please don't forget to remove it, from the wall, or from tables etc.",
+      "made": "Created :",
+      "usable": "usable on:"
     },
     "hostpage": {
       "header": "Your visitor lists",

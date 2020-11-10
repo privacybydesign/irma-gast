@@ -13,7 +13,7 @@ function How({ t }) {
           <p dangerouslySetInnerHTML={{ __html: t("how.p2") }} />
           <p>{t("how.p3")}</p>
           <p>{t("how.p4")}</p>
-          <h4>{t("how.h2")}</h4>
+          <h4>{t("how.h3")}</h4>
           <p dangerouslySetInnerHTML={{ __html: t("how.p5") }} />
           <p>
             <Trans

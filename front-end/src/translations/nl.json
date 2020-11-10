@@ -105,7 +105,9 @@
       "genqr": "Genereer PDF",
       "rmlist": "Lijst verwijderen",
       "keeplist": "Lijst bewaren",
-      "rmdialog": "Als je doorgaat verwijder je de lijst <0>{{name}}, {{date}}</0> en alle contactgegevens die op deze lijst geregistreerd staan. De bijbehorende QR-code werkt dan niet meer. Vergeet niet die QR-code te verwijderen, van de muur, of van tafel enz."
+      "rmdialog": "Als je doorgaat verwijder je de lijst <0>{{name}}, {{date}}</0> en alle contactgegevens die op deze lijst geregistreerd staan. De bijbehorende QR-code werkt dan niet meer. Vergeet niet die QR-code te verwijderen, van de muur, of van tafel enz.",
+      "made": "Aangemaakt op:",
+      "usable": "te gebruiken op:"
     },
     "hostpage": {
       "header": "Je bezoekerslijsten",

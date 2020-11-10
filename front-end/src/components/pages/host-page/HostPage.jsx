@@ -86,9 +86,10 @@ class HostPage extends React.Component {
           key={id}
           id={id}
           location={list["location"]}
-          date={list["creation_date"]}
+          date={list["creation_date"].split(" ")[0]}
           name={list["name"]}
-          listType={list["type"]}
+          listType={list["onetime"] ? "event" : "permament"}
+          event_date={list["event_date"]}
           host={this.props.email}
           count={list["guest_count"]}
           onDelete={() =>
