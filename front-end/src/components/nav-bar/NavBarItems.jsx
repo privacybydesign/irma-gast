@@ -1,45 +1,60 @@
 import React from "react";
-import flag from "../../images/flags/nl.png";
+import flagNL from "../../images/flags/nl.png";
+import flagEN from "../../images/flags/en.png";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
+import i18n from "i18next";
+import { withTranslation } from "react-i18next";
 
-function NavBarItems(props) {
+function NavBarItems({ t, onLogout, link, loggedIn }) {
+  const getLanguage = () => i18n.language || window.localStorage.i18nextLng;
+
+  const handleClick = () =>
+    i18n.changeLanguage(getLanguage() === "nl" ? "en" : "nl");
+
   return (
     <div>
       {/* <a href="#why" className="w3-bar-item">
         Waarom?
       </a> */}
-      {props.link === "logout" && props.loggedIn && (
-        <Button className="w3-bar-item" onClick={props.onLogout}>
-          Log uit
-        </Button>
-      )}
-      {/* {props.link === "more" && (
+      {/* {link === "more" && (
         <a href="/" className="w3-bar-item">
           Over IRMA-welkom
         </a>
       )} */}
-      {props.link === "menu" && (
+      {link === "menu" && (
         <div>
           <a href="/#who" className="w3-bar-item">
-            Voor wie?
+            {t("items.who")}
           </a>
           <a href="/#how" className="w3-bar-item">
-            Hoe werkt het?
+            {t("items.how")}
           </a>
           <a href="/#start" className="w3-bar-item">
-            Van start
+            {t("items.start")}
           </a>
-          <a href="/host" className="w3-bar-item">
-            Host login <i className="fa fa-sign-in"></i>
-          </a>
+          {!loggedIn ? (
+            <a href="/host" className="w3-bar-item">
+              {t("items.login")} <i className="fa fa-sign-in"></i>
+            </a>
+          ) : (
+            <Button className="w3-bar-item" onClick={onLogout}>
+              {t("items.logout")}
+            </Button>
+          )}
           <Tooltip
-            title="English coming soon"
+            title={t("items.switchlang")}
             placement="left-end"
             aria-label="english"
+            onClick={handleClick}
           >
             <span className="selected-lang refs">
-              <img src={flag} className="flag" alt="nl" />
+              {getLanguage() === "nl" && (
+                <img src={flagEN} className="flag" alt="en" />
+              )}
+              {getLanguage() === "en" && (
+                <img src={flagNL} className="flag" alt="nl" />
+              )}
             </span>
           </Tooltip>
         </div>
@@ -48,4 +63,4 @@ function NavBarItems(props) {
   );
 }
 
-export default NavBarItems;
+export default withTranslation("navbar")(NavBarItems);

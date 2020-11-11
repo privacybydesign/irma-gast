@@ -242,7 +242,6 @@ function handleUpdateCheckins({ dispatch, getState }) {
       let cts = action.ciphertexts;
       let client = getState().checkins.client;
       let host_email = getState().guestLists.email;
-
       client
         .requestToken(host_email)
         .then((token) => {

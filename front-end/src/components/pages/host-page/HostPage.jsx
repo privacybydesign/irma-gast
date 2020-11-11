@@ -1,11 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import CreateListForm from "./CreateListForm";
 import GuestList from "./GuestList";
 import AutoDeleteText from "./AutoDeleteText";
 import NavBar from "../../nav-bar/NavBar";
 import Footer from "../../footer/Footer";
 import irmaFrontend from "@privacybydesign/irma-frontend";
+import { Trans, withTranslation } from "react-i18next";
+import Login from "../../login/Login";
+import i18n from "i18next";
 
 const mapStateToProps = (state) => {
   return {
@@ -14,6 +18,8 @@ const mapStateToProps = (state) => {
 };
 
 class HostPage extends React.Component {
+  getLanguage = () => i18n.language || window.localStorage.i18nextLng;
+
   componentDidMount() {
     this.props.dispatch({ type: "initHostPage" });
     this._handleIrma();
@@ -34,7 +40,7 @@ class HostPage extends React.Component {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
           element: "#irma-web-form",
-          language: "nl",
+          language: this.getLanguage(),
           session: this.props.irmaSession,
         });
         this._irmaWeb.start().then(() => {
@@ -57,7 +63,9 @@ class HostPage extends React.Component {
     // if no name/description has been given, add default name
     if (newList.name === "") {
       newList.name = `${
-        newList.type === "permanent" ? "Doorlopende" : "Eenmalige"
+        newList.type === "permanent"
+          ? this.props.t("hostpage.permanent")
+          : this.props.t("hostpage.onetime")
       } samenkomst`;
     }
 
@@ -66,7 +74,7 @@ class HostPage extends React.Component {
       name: newList.name,
       location: newList.location,
       onetime: newList.type === "event",
-      event_date: newList.date
+      event_date: newList.date,
     });
   }
 
@@ -78,9 +86,10 @@ class HostPage extends React.Component {
           key={id}
           id={id}
           location={list["location"]}
-          date={list["creation_date"]}
+          date={list["creation_date"].split(" ")[0]}
           name={list["name"]}
-          listType={list["type"]}
+          listType={list["onetime"] ? "event" : "permament"}
+          event_date={list["event_date"]}
           host={this.props.email}
           count={list["guest_count"]}
           onDelete={() =>
@@ -94,54 +103,12 @@ class HostPage extends React.Component {
   _renderHostPage() {
     return (
       <div>
-        <h2>Je bezoekerslijsten</h2>
+        <h2>{this.props.t("hostpage.header")}</h2>
         <CreateListForm onAdd={(guestList) => this._addGuestList(guestList)} />
         {this._renderGuestLists()}
         <AutoDeleteText />
         <div style={{ height: "30px" }}></div>
       </div>
-    );
-  }
-
-  _renderMessagePage(message) {
-    return <p>{message}</p>;
-  }
-
-  // Copied from PreDisclosurePage
-  // TODO: can save code duplication
-  _renderStartPage() {
-    return (
-      <>
-        <h2>Meld je aan</h2>
-        <p>
-          Wil je je aanmelden? Ga dan door met IRMA en geef je e-mailadres door
-          aan IRMA-welkom.
-        </p>
-        <div style={{ height: "30px" }} />
-        <section className={"irma-web-center-child"}>
-          <section id={"irma-web-form"} />
-        </section>
-        <div style={{ height: "60px" }} />
-        <h4 className="center-content">Nog geen IRMA-app?</h4>
-        <p>
-          IRMA-welkom werkt met de gratis IRMA-app. In deze app verzamel je
-          persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan
-          maken. Voor IRMA-welkom is alleen je e-mail kaartje nodig.
-        </p>
-        <div className="center-content">
-          <a href="https://irma.app" className="btn irma-btn-secondary">
-            Installeer IRMA
-          </a>
-        </div>
-        <p>
-          {" "}
-          Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via de
-          IRMA-app of via{" "}
-          <a href="https://sidnemailissuer.irmaconnect.nl/uitgifte/email">
-            deze pagina.
-          </a>
-        </p>
-      </>
     );
   }
 
@@ -151,11 +118,16 @@ class HostPage extends React.Component {
       case "loaded":
         return this._renderHostPage();
       case "error":
-        return this._renderMessagePage(
-          `De volgende fout is opgetreden: ${this.props.error}`
+        return (
+          <Trans
+            t={this.props.t}
+            i18nKey="error"
+            values={{ error: this.props.error }}
+            components={[<p></p>]}
+          />
         );
       default:
-        return this._renderStartPage();
+        return <Login />;
     }
   }
 
@@ -163,8 +135,8 @@ class HostPage extends React.Component {
     return (
       <div className="App">
         <NavBar
+          link="menu"
           loggedIn={this.props.loggedIn}
-          link="logout"
           onLogout={() => {
             this.props.dispatch({ type: "logOut" });
           }}
@@ -176,4 +148,7 @@ class HostPage extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(HostPage);
+export default compose(
+  connect(mapStateToProps),
+  withTranslation("host")
+)(HostPage);

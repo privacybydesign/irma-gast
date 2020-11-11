@@ -1,23 +1,25 @@
 import React from "react";
+import { Trans, withTranslation } from "react-i18next";
 
-function DisclosurePage(props) {
+function DisclosurePage({ t, host, onNext }) {
   return (
     <div className="content">
-      <h2>Laat je e-mailadres achter</h2>
+      <h2>{t("disclosure.header")}</h2>
       <p>
-        Wil je je e-mailaddress achterlaten bij <b>{props.host}</b>? Je kan dan
-        in het geval van een coronamelding een waarschuwing ontvangen. Je
-        e-mailadres wordt beveiligd (versleuteld) opgeslagen en na twee weken
-        automatisch weggegooid. Alleen <b>{props.host}</b> kan je e-mailadres
-        ontsleutelen.
+        <Trans
+          t={t}
+          i18nKey="disclosure.p1"
+          values={{ host: host }}
+          components={{ bold: <b></b> }}
+        />
       </p>
       <div className="center-content">
-        <div className="btn irma-btn" onClick={props.onNext}>
-          Laat email achter
+        <div className="btn irma-btn" onClick={onNext}>
+          {t("disclosure.button")}
         </div>
       </div>
     </div>
   );
 }
 
-export default DisclosurePage;
+export default withTranslation("guest")(DisclosurePage);

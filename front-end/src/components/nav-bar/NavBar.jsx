@@ -1,9 +1,10 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NavBarItems from "./NavBarItems";
-import PublicBetaBanner from './PublicBetaBanner';
+import PublicBetaBanner from "./PublicBetaBanner";
+import { withTranslation } from "react-i18next";
 
-function NavBar(props) {
+function NavBar({ t, link, loggedIn, onLogout }) {
   // Toggle between showing and hiding the sidebar when clicking the menu icon
 
   function w3_open() {
@@ -35,17 +36,13 @@ function NavBar(props) {
                   fontSize="large"
                   style={{ color: "#004C92" }}
                 />
-                welkom
+                {t("welcome")}
               </span>
             </h1>
           </a>
           {/* <!-- Right-sided navbar links --> */}
           <div className="w3-right w3-hide-small">
-            <NavBarItems
-              link={props.link}
-              loggedIn={props.loggedIn}
-              onLogout={props.onLogout}
-            />
+            <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
           <a
@@ -57,7 +54,7 @@ function NavBar(props) {
           </a>
         </div>
 
-        <PublicBetaBanner/>
+        <PublicBetaBanner />
       </div>
 
       {/* <!-- Sidebar on small screens when clicking the menu icon --> */}
@@ -73,10 +70,10 @@ function NavBar(props) {
         >
           Close ×
         </a>
-        <NavBarItems link={props.link} onLogout={props.onLogout} />
+        <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
       </nav>
     </div>
   );
 }
 
-export default NavBar;
+export default withTranslation("navbar")(NavBar);

@@ -1,15 +1,15 @@
 import React from "react";
 import errorImg from "../../../../images/error.png";
+import { withTranslation } from "react-i18next";
 
-function Error(props) {
+function Error({ t }) {
   return (
     <div className="content">
-      <h3>QR-code niet herkend</h3>
-      <br /> De QR-code is niet meer geldig, mogelijk omdat deze bijeenkomst
-      afgelopen is of de laatste twee weken geen bezoekers meer heeft gehad (en
-      daarmee automatisch opgeheven is). Klopt er iets niet? Neem dan contact op
-      met de host, via het e-mailadres boven de QR-code.
-      <br /> <br />
+      <h3>{t("error.header")}</h3>
+      <br />
+      <br />
+      {t("error.text")}
+      <br />
       <div className="flex-item-single">
         <img
           className="illustration"
@@ -21,4 +21,4 @@ function Error(props) {
   );
 }
 
-export default Error;
+export default withTranslation("guest")(Error);

@@ -1,4 +1,183 @@
 {
+  "login": {
+    "header": "Meld je aan",
+    "p1": "Wil je je aanmelden? Ga dan door met de IRMA-app en geef je e-mailadres door aan QRona.",
+    "noapp": "Nog geen IRMA-app?",
+    "p2": "QRona werkt met de gratis IRMA-app. In deze app verzamel je persoonsgegevens in de vorm van kaartjes waarmee je jezelf bekend kan maken. Voor QRona is alleen je e-mail kaartje nodig.",
+    "install": "Installeer de IRMA-app",
+    "p3": "Voeg vervolgens een kaartje toe met je e-mailadres. Dit kan via <a href=\"https://sidnemailissuer.irmaconnect.nl/uitgifte/email\">deze pagina.</a>"
+  },
+  "footer": {
+    "header": "Vragen of opmerkingen?",
+    "p1": "QRona is ontwikkeld door de stichting <a href=\"https://privacybydesign.foundation/\">Privacy by Design</a> samen met de <a href=\"https://www.ru.nl/ihub/\">iHub</a> onderzoeksgroep van de Radboud Universiteit (vanuit het NWO project <a href=\"https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/\">Encryption for All</a>).",
+    "p2": "Ga naar de <a href=\"https://www.irma.app/?lang=nl\">irma.app</a> website voor informatie over de IRMA-app en bezoek de <a href=\"https://privacybydesign.foundation\">Privacy by Design</a> webpagina voor algemene achtergrond informatie over de stichting. Stuur een mail aan <a href=\"mailto:info@qrona.info\">info@qrona.info</a> voor vragen en/of opmerkingen.",
+    "p3": "QRona is open source. De source code en documentatie staan op GitHub. <i className=\"fa fa-github\"></i>, zie de <a href=\"https://github.com/privacybydesign/irma-welkom\"> GitHub bestanden.</a> Deze pagina gebruikt illustraties van <a href=\"https://undraw.co\">UnDraw.</a>",
+    "p4": "De QRona dienst is gratis. Een financiële bijdrage, voor onderhoud en verdere ontwikkeling, wordt zeer gewaardeerd. Dat kan via deze <a href=\"https://privacybydesign.foundation/steun/\">steun pagina</a> van de stichting Privacy by Design."
+  },
+  "navbar": {
+    "welcome": "Welkom",
+    "items": {
+      "logout": "Log uit",
+      "who": "Voor wie?",
+      "how": "Hoe werkt het?",
+      "start": "Van start",
+      "login": "Host login",
+      "switchlang": "Switch to English"
+    }
+  },
+  "guest": {
+    "disclosure": {
+      "header": "Laat je e-mailadres achter",
+      "p1": "Wil je je e-mailadres achterlaten bij <bold>{{host}}</bold>? Je kan dan in het geval van een coronabesmetting een waarschuwing ontvangen. Je e-mailadres wordt beveiligd (versleuteld) opgeslagen en na twee weken automatisch weggegooid. Alleen <bold>{{host}}</bold> kan je e-mailadres ontsleutelen.",
+      "button": "Laat e-mailadres achter"
+    },
+    "predisclosure": {
+      "encrypting": "Gegevens aan het versleutelen...",
+      "sending": "Gegevens aan het verzenden...",
+      "done": "Gegevens verzonden.",
+      "loading": "Een moment geduld...",
+      "error": "De volgende fout is opgetreden: {{error}}"
+    },
+    "success": {
+      "header": "Gelukt!",
+      "p1": "Je e-mailadres is doorgegeven. Je e-mailadres wordt beveiligd (versleuteld) opgeslagen en na twee weken automatisch weggegooid. In het geval van een coronabesmetting kan de host je waarschuwen. Je kunt deze pagina nu sluiten."
+    },
+    "error": {
+      "header": "QR-code niet herkend",
+      "text": "De QR-code is niet meer geldig, mogelijk omdat deze samenkomst afgelopen is of de laatste twee weken geen bezoekers meer heeft gehad (en daarmee automatisch opgeheven is). Klopt er iets niet? Neem dan contact op met de host, via het e-mailadres boven de QR-code."
+    }
+  },
+  "host": {
+    "loc": "locatie",
+    "start": "Startdatum",
+    "host": "host",
+    "qr": {
+      "scan": "Scan de QR-code met de camera van je mobiel om je aan te melden.",
+      "scaninfo1": "Let op: scannen van deze QR kan niet met je IRMA-app, maar wel met een QR-scan (of foto) app.",
+      "scaninfo2": "Na aanmelding worden je contactgegevens beheerd door host: {{host}}. Neem bij vragen contact op met deze host.",
+      "scaninfo3": "Dit is een service van QRona. Bezoek qrona.info voor meer informatie.",
+      "loading": "QR-code laden...",
+      "download": "Download QR-code"
+    },
+    "autodelete": {
+      "header": "Je lijst is weg?",
+      "info": "Aanmeldingen worden na 14 dagen automatisch verwijderd. Als een bezoekerslijst uiteindelijk helemaal leeg is wordt de lijst zelf verwijderd. Je kunt altijd weer een nieuwe samenkomst / lijst aanmaken."
+    },
+    "contacts": {
+      "initialized": "Contactgegevens opvragen",
+      "loading": "Contactgevens laden...",
+      "decrypting": "Contactgegevens ontsleutelen...",
+      "verifying": "Contactgegevens verifiëren...",
+      "default": "Een moment geduld alstublieft...",
+      "loadingpdf": "PDF laden...",
+      "download": "Contactgegevens downloaden",
+      "text1": "Deze gegevens zijn verzameld via QRona (www.qrona.info). Het doel van het verzamelen van deze contactgegevens is: zonodig waarschuwen bij een besmetting. De gegevens mogen daarom alleen voor dit doel gebruikt worden, en niet voor iets anders, zoals klantbinding of reclame.",
+      "text2": "Het is je eigen verantwoordelijkheid als host van deze samenkomst om de aangemelde personen te waarschuwen voor een mogelijke besmetting, of om hun contactgegevens aan de GGD door te geven. Als je zelf een waarschuwingsbericht stuurt is het netjes om de naam van de besmette persoon (de bron) niet te noemen. Bij een doorlopende (niet-eenmalige) samenkomst is het belangrijk om op de datum van aanmelding te letten en alleen die mensen te (laten) waarschuwen die mogelijk besmet zijn geraakt. Vermijd onnodige onrust."
+    },
+    "createlist": {
+      "accept": "Graag eerst akkoord gaan",
+      "header": "Voeg samenkomst toe",
+      "namelabel": "Omschrijving",
+      "locationlabel": "Locatie",
+      "purpose": "Deze lijst is voor de registratie van bezoekers aan een...",
+      "onetimelabel": "eenmalige samenkomst (vergadering, lezing, bruiloft, ...)",
+      "onetimedatelabel": "Datum*",
+      "onetimedatehelpertext": "Alleen op deze dag kunnen mensen zich aanmelden voor deze eenmalige samenkomst.",
+      "permanentlabel": "doorlopende samenkomst (café, restaurant, winkel, kapper, ...)",
+      "checkboxlabel": "Ik gebruik deze contactgegevens alleen voor een coronawaarschuwing, indien nodig, en nergens anders voor. Ik geef QRona de opdracht om deze gegevens voor dat doel te verwerken."
+    },
+    "guestcount": {
+      "header": "Aanmeldingen",
+      "onetimetext": "In de afgelopen twee weken",
+      "permanenttext": "Tot nu toe",
+      "begin": "hebben er zich",
+      "guest": "bezoeker",
+      "guest_plural": "bezoekers",
+      "guest_0": "geen bezoekers",
+      "guestWithCount": "{{ count }} bezoeker",
+      "guestWithCount_plural": "{{ count }} bezoekers",
+      "end": "op deze lijst geregistreerd.",
+      "info": "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."
+    },
+    "guestlist": {
+      "expandlabel": "Laat meer zien",
+      "qrinfo": "Druk deze QR-code af en vraag bezoekers zich via deze code aan te melden.",
+      "genqr": "Genereer PDF",
+      "rmlist": "Lijst verwijderen",
+      "keeplist": "Lijst bewaren",
+      "rmdialog": "Als je doorgaat verwijder je de lijst <0>{{name}}, {{date}}</0> en alle contactgegevens die op deze lijst geregistreerd staan. De bijbehorende QR-code werkt dan niet meer. Vergeet niet die QR-code te verwijderen, van de muur, of van tafel enz.",
+      "made": "Aangemaakt op:",
+      "usable": "te gebruiken op:"
+    },
+    "hostpage": {
+      "header": "Je bezoekerslijsten",
+      "error": "De volgende fout is opgetreden: <0>{{error}}</0>",
+      "permanent": "Doorlopende",
+      "onetime": "Eenmalige"
+    }
+  },
+  "landing": {
+    "how": {
+      "h1": "Hoe werkt het?",
+      "h2": "De host haalt een QR-code op en hangt deze op",
+      "p1": "Als host kun je op QRona gratis en makkelijk QR-codes ophalen die je zelf afdrukt en ophangt. Je vraagt dan je bezoekers om deze QR-code te scannen met hun <b>reguliere</b> camera of scannerapplicatie.",
+      "p2": "De e-mailadressen die je zo verzamelt worden versleuteld opgeslagen en na 2 weken automatisch weggegooid. Je hebt als host daar geen omkijken naar. Zijn de adressen nodig na een besmetting? Dan kun je ze als host ophalen door (opnieuw) in te loggen. De organisatie achter QRona kan de verzamelde e-mailadressen niet ontsleutelen: alleen jij kan dat als host. Je hebt daarvoor geen wachtwoord nodig, alleen je <a href=\"https://irma.app/?lang=nl\">IRMA-app</a>.",
+      "p3": "Je kunt als host verschillende samenkomsten aanmaken, met ieder een eigen QR-code, die je op verschillende plekken op kunt hangen. Zo kun je bijvoorbeeld voor iedere verdieping of afdeling op het werk een aparte registratie van bezoekers bijhouden.",
+      "p4": "Als host zul je zeker in het begin regelmatig aan je bezoekers moeten vragen om de IRMA-app te installeren. Dat hoeft maar één keer; daarna levert het alleen maar gemak op. Het installeren is makkelijk en kan ter plekke gebeuren.",
+      "h3": "De bezoeker scant de QR-code en laat zijn e-mailadres achter",
+      "p5": "Bezoekers laten hun e-mailadres achter door de QR-code met hun <b>reguliere</b> camera of scannerapplicatie te scannen. Uiteindelijk wordt de bezoeker doorgestuurd naar de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a>, waar ze gemakkelijk een e-mail kunnen vrijgeven. In de IRMA-app staan persoonlijke gegevens. Bij QRona wordt alleen om een e-mailadres gevraagd. De app installeer je maar één keer. Je zet je e-mailadres daarin en kunt de app daarna overal voor QRona gebruiken. Dat is stukken makkelijker dan steeds formuliertjes invullen waarvan onduidelijk is waar ze blijven.",
+      "p6": "De e-mailadressen van bezoekers worden beveiligd (versleuteld) opgeslagen en na twee weken automatisch weggegooid. Dat neemt terechte zorgen weg. Verder kan alleen de host de e-mailadressen ontsleutelen, bij een besmetting, om bezoekers zelf te waarschuwen of om hun e-mailadressen door te geven aan de GGD. De organisatie achter QRona kan en wil zelf niet zien wie bij wie op bezoek komt, zie ook de <0>privacy policy</0>."
+    },
+    "start": {
+      "h1": "Van start met QRona",
+      "p1": "Zowel een host die een samenkomst aanmaakt als ook een bezoeker die zich aanmeldt heeft de <a href=\"https://irma.app/?lang=nl\">IRMA-app</a> nodig. In de IRMA-app verzamel je persoonlijke gegevens van jezelf, in de vorm van kaartjes.",
+      "li1": "Download de IRMA-app uit de appstore van <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> of <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a>;",
+      "li2": "Voeg een kaartje toe met je e-mailadres, via <a href=\"https://sidnemailissuer.irmaconnect.nl/uitgifte/email\">deze pagina</a>. Je kunt ook meer kaartjes toevoegen, maar die zijn niet nodig voor QRona;",
+      "li3": "Met dit e-mail kaartje in de IRMA-app kan een host op QRona inloggen en een samenkomst aanmaken en beheren;",
+      "li4": "Bezoekers kunnen zich met dit e-mail kaartje in de IRMA-app bij samenkomsten aanmelden. Ze scannen met de camera van hun mobiel de QR-code en geven zo hun e-mailadres door."
+    },
+    "welcome": {
+      "h1": "Registreer zelf bezoekers, op het werk of thuis!",
+      "p1": "Met QRona kan iedereen host zijn en gemakkelijk en veilig e-mailadressen verzamelen van bezoekers, om verspreiding van het coronavirus tegen te gaan.",
+      "p2": "Alles wat jij en je bezoekers hiervoor nodig hebben is de gratis IRMA-app, met daarin een e-mailadres. Je hoeft je niet vooraf te registreren.",
+      "p3": "<0>Login als host met IRMA*</0><1>Installeer eerst de IRMA-app</1>",
+      "p4": "*Door in te loggen ga je akkoord met verwerking van persoonsgegevens zoals beschreven in de <0>privacy policy</0> van QRona."
+    },
+    "who": {
+      "h1": "QRona is voor iedereen!",
+      "p1": "QRona is voor iedereen die samenkomsten organiseert of bezoekt. Je kunt met QRona bijvoorbeeld makkelijk contactgegevens van bezoekers verzamelen, als:",
+      "li1": "eigenaar van een café, restaurant, winkel, museum, theater, garage, ...",
+      "li2": "organisator van een (eenmalige) bijeenkomst, vergadering, voordracht, les, college, ...",
+      "li3": "uitoefenaar van een contactberoep, ",
+      "li4": "verantwoordelijke voor een werkvloer, afdeling of verdieping,",
+      "li5": "privé persoon die wil bijhouden wie thuis op bezoek komt."
+    }
+  },
+  "policy": {
+    "h1": "Privacy policy",
+    "p1": "QRona en de IRMA-app zijn gratis en werken transparant, met open source software; gegevens van gebruikers worden niet voor andere doeleinden gebruikt en niet aan anderen doorgegeven of doorverkocht.",
+    "p2": "De QRona dienst wordt aangeboden door de stichting <a href=\"https://privacybydesign.foundation/\">Privacy by Design</a> en het bedrijf <a href=\"https://www.procolix.com/\">ProcoliX</a>. De stichting is verwerkingsverantwoordelijke. De stichting en ProcoliX verwerken samen ieder een deel van de gegevens, zoals hieronder in meer detail beschreven wordt. De QRona dienst wordt door deze twee partijen gratis aangeboden, vanuit de eigen maatschappelijke verantwoordelijkheid, met bestrijding van het coronavirus als enige doel. Alleen daarvoor noodzakelijke gegevens worden verwerkt, zoals hieronder nader omschreven.",
+    "h2": "Host, account en samenkomsten",
+    "p3": "Een <em>host</em> is een persoon die een keer ingelogd is op het QRona portaal door zich daar bekend te maken met een e-mailadres uit de eigen IRMA-app. Hierbij worden alleen door ProcoliX gegevens verwerkt, waaronder het e-mailadres van de host. De wettelijke basis voor deze verwerking is: toestemming van de host zelf.",
+    "p4": "Indien het gebruikte e-mailadres nog niet bekend is, wordt door ProcoliX impliciet een account aangemaakt voor dit adres. Indien op een account meer dan 14 dagen geen activiteit heeft plaatsgevonden worden het account en alle bijbehorende gegevens verwijderd.",
+    "p5": "Binnen dit account kan een host een of meerdere \"samenkomsten\" (eenmalige or doorlopende bijeenkomsten waar mensen samenkomen) aanmaken door een nieuwe (passende) naam te kiezen voor zo'n samenkomst. Vervolgens wordt voor deze samenkomst een QR-code aangemaakt, die de host kan downloaden (en afdrukken of opnemen in een presentatie). Deze QR-code bevat - in leesbare vorm - de naam van de samenkomst en het e-mailadres van de host. Impliciet in de QR-code staat een verwijzing naar een webpagina waar bezoekers zich kunnen aanmelden door een eigen e-mailadres te onthullen, via hun IRMA-app.",
+    "p6": "Het is de eigen verantwoordelijkheid van de host om deze QR-code (alleen) aan de deelnemers/bezoekers van de samenkomst bekend te maken. Voorafgaand aan de productie van deze QR-code verklaart de host explicit, via een vinkje, dat:",
+    "li1": "De persoonsgegevens (met name e-mailadressen van bezoekers) die via de QR-code verzameld worden door hem/haar enkel gebruikt zullen worden om deze bezoekers te informeren, mogelijk via de GGD, enkel in het geval dat er sprake is van een coronabesmetting die gerelateerd is aan de betreffende samenkomst.",
+    "li2": "De hierbovengenoemde twee organisaties achter QRona de persoonsgegevens die via deze QR-code verzameld worden in zijn/haar opdracht verwerken. Daarmee is de host mede-verwerkingsverantwoordelijke voor deze specifieke samenkomst.",
+    "h3": "Bezoekers en versleuteling",
+    "p7": "De e-mailadressen van de bezoekers van de samenkomst worden door ProcoliX versleuteld opgeslagen, per samenkomst. Het tijdstip waarop een versleuteld e-mailadres wordt toegevoegd wordt, onversleuteld opgeslagen. Dit tijdstip wordt gebruikt om versleutelde e-mailadressen na 14 dagen automatisch te verwijderen. Wanneer alle versleutelde e-mailadressen van een samenkomst verwijderd zijn wordt de samenkomst zelf ook verwijderd, uit het account van de host.",
+    "p8": "De host zal <em>bezoekers</em> aan zijn/haar samenkomst verzoeken de bijbehorende QR-code te scannen (en zonodig daarvoor eerst de IRMA-app te installeren). Na het scannen komt een bezoeker eerst terecht op een website waar informatie beschikbaar is, grotendeels via links, over QRona en over de privacy policy. Vervolgens kan de bezoeker via een knop het proces starten om via de IRMA-app een eigen e-mailadres te onthullen. De wettelijke basis voor de gegevensverwerking die daarmee van start gaat is: toestemming van de bezoeker zelf.",
+    "p9": "De IRMA server waaraan de bezoeker een eigen e-mailadres onthult wordt beheerd door de stichting Privacy by Design. Daarmee is de stichting verwerker van alle onthulde e-mailadressen van bezoekers. Deze verwerking vindt slechts kortstondig plaats: het e-mailadres van de bezoeker wordt, samen met een publieke sleutel (<em>public key</em>, afgeleid van het e-mailadres van de host) teruggegeven aan de webpagina waarvan de bezoeker afkomstig is (via de genoemde knop). Het e-mailadres van de bezoeker wordt daarna direct verwijderd door de IRMA server bij de stichting. In het bijzonder houdt de stichting geen log bij van e-mailadressen van bezoekers.",
+    "p10": "Op deze webpagina wordt het ontvangen e-mailadres versleuteld en vervolgens toegevoegd aan de bezoekerslijst van de samenkomst, die door ProcoliX bijgehouden wordt. ProcoliX verwerkt aldus de e-mailadressen van alle hosts, maar niet van bezoekers (want die zijn versleuteld en onleesbaar voor ProcoliX). Voor de IRMA server van de stichting Privacyby Design is dit andersom: wel van bezoekers, maar niet van hosts. De versleuteling is <em>identity-based</em>: uit het e-mailadres van de host wordt een <em>public key</em> afgeleid die gebruikt wordt voor de versleuteling van de gegevens voor de samenkomst(en) van de host. De versleuteling vindt plaats in de browser van de bezoeker (en niet bij ProcoliX).",
+    "h4": "Hosts en ontsleuteling",
+    "p11": "Wanneer een host inlogt op het eigen account op het QRona portaal zijn daar alle aangemaakte (en nog niet verwijderde) samenkomsten zichtbaar voor de host. De host kan per samenkomst de verzamelde e-mailadressen ontsleutelen, zoals bedoeld in het geval dat de host weet heeft van de aanwezigheid van een besmette persoon op een bepaalde samenkomst op een bepaald tijdstip. Voor het eventuele (onbedoelde) gebruik van de verzamelde e-mailadressen voor andere doeleinden is de host zelf verantwoordelijk. In het bijzonder zijn de twee partijen achter QRona hiervoor niet verantwoordelijk of aansprakelijk.",
+    "p12": "Voor die ontsleuteling toont de host via de IRMA-app nogmaals het e-mailadres van het eigen account, maar nu aan een <em>key generating server</em>, die beheerd wordt door de stichting Privacy by Design. De stichting verwerkt daarbij kortstondig het e-mailadres van de host, op basis van diens toestemming. De genoemde server levert de <em>private key</em> horend bij het e-mailadres van de host, waarmee de opgeslagen e-mailadressen van bezoekers in de webbrowser van de host ontsleuteld worden. Vervolgens is het de verantwoordelijkheid van de host om de betrokkenen (per e-mail) zelf te waarschuwen, of om deze e-mailadressen door te geven aan de GGD.",
+    "p13": "In theorie kunnen gegevens ook ontsleuteld worden wanneer de twee partijen achter QRona samenspannen en de gegevens combineren die zij voor QRona apart bewerken. Deze partijen zullen niet zo samenspannen. Zij hebben de zaken juist technisch en organisatorisch zo uit elkaar getrokken dat niemand van hen een totaalbeeld heeft.",
+    "h5": "Algemene bepalingen",
+    "p14": "Statistische informatie over het gebruik van QRona (aantallen hosts, samenkomsten, deelnemers per dag/week/maand/jaar, herkomst enz.) kan geaggregeerd worden door ProcoliX en kan door ProcoliX en door de stichting Privacy by Design gebruikt worden voor documentatie en presentaties. Zonodig kunnen QRona gegevens ook gebruikt worden voor technische doeleinden, zoals onderhoud en optimalisatie, maar worden ze verwijderd na maximaal twee dagen.",
+    "p15": "Technische veranderingen in het QRona systeem, of eventuele nieuwe diensten, kunnen leiden tot een aanpassing van deze privacy policy. De stichting Privacy by Design en ProcoliX behouden zich het recht voor om dergelijke wijzigingen door te voeren en zullen de nieuwe privacy policy zo snel mogelijk via deze pagina bekend maken.",
+    "p16": "Voor eventuele vragen, opmerkingen, of klachten over deze verwerkingen ten behoeve van QRona kan contact opgenomen worden via het <a href=\"mailto:info@qrona.info\">contact e-mail adres</a>. Voor klachten over de verwerking van persoonsgegevens kan ook contact opgenomen worden met de Autoriteit Persoonsgegevens."
+  },
   "public_beta_banner": {
     "alert_text": "Dit is een testversie. Deze website is momenteel alleen geschikt voor kleinschalige experimenten."
   }

@@ -1,6 +1,7 @@
 // TODO Check hmac
 // TODO Handle parse errors more gracefully
 import irmaFrontend from "@privacybydesign/irma-frontend";
+import i18n from "i18next";
 
 class Client {
   // Don't use the constructor -- use Client.build().
@@ -61,6 +62,7 @@ class Client {
   requestToken(whose) {
     return irmaFrontend
       .newPopup({
+        language: i18n.language || window.localStorage.i18nextLng,
         session: {
           url: this.url,
           start: {

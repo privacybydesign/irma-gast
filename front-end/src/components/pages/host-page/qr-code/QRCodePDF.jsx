@@ -16,6 +16,7 @@ import logo from "../../../../images/irma_logo.png";
 import font from "../../../../fonts/Montserrat/Montserrat-Regular.ttf";
 import fontBold from "../../../../fonts/Montserrat/Montserrat-Bold.ttf";
 import fontSemiBold from "../../../../fonts/Montserrat/Montserrat-SemiBold.ttf";
+import { Trans, withTranslation } from "react-i18next";
 
 // Register font
 Font.register({
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function QRCodePDF(props) {
+function QRCodePDF({ t, title, location, date, host, qr }) {
   return (
     <div>
       <PDFDownloadLink
@@ -127,50 +128,41 @@ function QRCodePDF(props) {
               <View style={styles.section}>
                 <View style={styles.spacer}></View>
                 <Text style={styles.title}>
-                  {props.title}
-                  {", locatie: "}
-                  {props.location}
+                  {title}
+                  {`, ${t("loc")}: `}
+                  {location}
                 </Text>
                 <Text style={styles.subtitle}>
-                  {"Startdatum: "}
-                  {props.date}
-                  {", host: "}
-                  {props.host}
+                  {`${t("start")}: `}
+                  {date}
+                  {`, ${t("host")}: `}
+                  {host}
                 </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
                 <Image
                   style={styles.image}
                   src={document
-                    .getElementById("qr-" + props.qr)
+                    .getElementById("qr-" + qr)
                     .toDataURL("image/jpg", 0.3)}
                 />
                 <View style={styles.spacer}></View>
 
-                <Text style={styles.bolder}>
-                  Scan de QR-code met de camera van je mobiel om je aan te
-                  melden.
-                </Text>
-                <Text style={styles.smallText}>
-                  Let op: deze QR is niet scanbaar met je IRMA-app.
-                </Text>
+                <Text style={styles.bolder}>{t("qr.scan")}</Text>
+                <Text style={styles.smallText}>{t("qr.scaninfo1")}</Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
 
                 <Image style={styles.scan} src={scan} />
 
                 <Text style={styles.text}>
-                  Na aanmelding worden je contactgegevens beheerd door de host:{" "}
-                  {props.host}. Neem bij vragen contact op met deze host.
+                  <Trans t={t} i18nKey="qr.scaninfo2" values={{ host: host }} />
                 </Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
 
-                <Text style={styles.text}>
-                  Dit is een service van IRMA-welkom. Bezoek irma-welkom.nl voor
-                  meer informatie.
-                </Text>
+                <Text style={styles.text}>{t("qr.scaninfo3")}</Text>
                 <View style={styles.spacer}></View>
                 <View style={styles.spacer}></View>
 
@@ -191,10 +183,10 @@ function QRCodePDF(props) {
       >
         {({ blob, url, loading, error }) =>
           loading ? (
-            "Loading document..."
+            t("qr.loading")
           ) : (
             <Button color="primary" size="large" startIcon={<SaveIcon />}>
-              Download QR
+              {t("qr.download")}
             </Button>
           )
         }
@@ -203,4 +195,4 @@ function QRCodePDF(props) {
   );
 }
 
-export default QRCodePDF;
+export default withTranslation("host")(QRCodePDF);

@@ -1,33 +1,33 @@
 import React from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import { withTranslation } from "react-i18next";
 
-function GuestCount(props) {
+function GuestCount({ t, count, className, listType }) {
   return (
-    <CardContent className={props.className}>
+    <CardContent className={className}>
       <Typography variant="h5" component="p">
-        Aanmeldingen
+        {t("guestcount.header")}
       </Typography>
       <div style={{ height: "4px" }}></div>
       <Typography variant="body1" component="span">
-        Er hebben zich{" "}
-        {props.listType === "permanent"
-          ? "binnen de afgelopen twee weken "
-          : "tot nu toe "}
+        {listType === "event"
+          ? t("guestcount.onetimetext")
+          : t("guestcount.permanenttext")}{" "}
+        {t("guestcount.begin")}
       </Typography>
       <Typography variant="h6" component="span">
-        {props.count > 0 ? props.count + " " : "geen "}
+        {" " + t("guestcount.guestWithCount", { count: count }) + " "}
       </Typography>
       <Typography variant="body1" component="span">
-        bezoekers op deze lijst geregistreerd.
+        {t("guestcount.end")}
       </Typography>
       <div style={{ height: "4px" }}></div>
       <Typography variant="body2" color="textSecondary" component="p">
-        {props.count > 0 &&
-          "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Kies daarvoor 'contactgegevens opvragen'. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."}
+        {count > 0 && t("guestcount.info")}
       </Typography>
     </CardContent>
   );
 }
 
-export default GuestCount;
+export default withTranslation("host")(GuestCount);

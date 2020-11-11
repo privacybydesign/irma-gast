@@ -3,7 +3,7 @@ import Footer from "../../../footer/Footer";
 import NavBar from "../../../nav-bar/NavBar";
 import Error from "./Error";
 
-function ErrorPage(props) {
+function ErrorPage() {
   return (
     <div className="container">
       <NavBar link="menu" /> <p></p>

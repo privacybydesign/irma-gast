@@ -1,7 +1,8 @@
 import React from "react";
 import who from "../../../../images/who.png";
+import { withTranslation } from "react-i18next";
 
-function Who(props) {
+function Who({ t }) {
   return (
     <div className="wide" id="who">
       {" "}
@@ -12,24 +13,14 @@ function Who(props) {
         </div>{" "}
         <div className="flex-item-single">
           {" "}
-          <h4>IRMA-welkom is voor iedereen!</h4>
-          <p>
-            IRMA-welkom is voor iedereen die samenkomsten organiseert of
-            bezoekt. Je kunt met IRMA-welkom bijvoorbeeld makkelijk
-            contactgegevens van bezoekers verzamelen als:
-          </p>
+          <h4>{t("who.h1")}</h4>
+          <p>{t("who.p1")}</p>
           <ul>
-            <li>eigenaar van een café, restaurant, winkel, museum, theater, 
-                garage, ...</li>
-            <li>uitoefenaar van een contactberoep</li>
-            <li>
-              organisator van een (eenmalige) bijeenkomst, vergadering,
-              voordracht, les, college, ...
-            </li>
-            <li>
-              verantwoordelijke voor een werkvloer, afdeling of verdieping
-            </li>
-            <li>privé persoon die wil bijhouden wie thuis op bezoek komt.</li>
+            <li>{t("who.li1")}</li>
+            <li>{t("who.li2")}</li>
+            <li>{t("who.li3")}</li>
+            <li>{t("who.li4")}</li>
+            <li>{t("who.li5")}</li>
           </ul>
         </div>
       </div>
@@ -37,4 +28,4 @@ function Who(props) {
   );
 }
 
-export default Who;
+export default withTranslation("landing")(Who);
