@@ -13,7 +13,7 @@ build:
     GOOS: linux
     GOARCH: amd64
     CGO_ENABLED: 0
-    PACKAGE_NAME: github.com/privacybydesign/irma-welkom
+    PACKAGE_NAME: github.com/privacybydesign/qrona
   artifacts:
     # Disabling artifact expiry is not supported yet, so make
     expire_in: 100 year
@@ -22,7 +22,7 @@ build:
   script:
     - mkdir -p artifacts
     - cd waar
-    - go build -a -ldflags '-extldflags "-static"' -o "../artifacts/irma-gast" .
+    - go build -a -ldflags '-extldflags "-static"' -o "../artifacts/waar" .
 
       # docker:
       #   stage: package
