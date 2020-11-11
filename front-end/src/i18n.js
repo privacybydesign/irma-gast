@@ -11,16 +11,7 @@ const resources = {
 
 const options = {
   // order and from where user language should be detected
-  order: [
-    "querystring",
-    "cookie",
-    "localStorage",
-    "sessionStorage",
-    "navigator",
-    "htmlTag",
-    "path",
-    "subdomain",
-  ],
+  order: ["querystring", "cookie", "localStorage", "sessionStorage"],
 
   // keys or params to lookup language from
   lookupQuerystring: "lng",
@@ -36,7 +27,7 @@ const options = {
 
   // optional expire and domain for set cookie
   cookieMinutes: 10,
-  cookieDomain: "localhost", // TODO: set to qrona.info in production
+  cookieDomain: "qrona.info",
 
   // optional htmlTag with lang attribute, the default is:
   htmlTag: document.documentElement,
@@ -49,8 +40,10 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    load: "languageOnly",
     detection: options,
     resources: resources,
+    supportedLngs: ["nl", "en"],
     fallbackLnglng: "nl",
     keySeparator: ".",
     interpolation: {

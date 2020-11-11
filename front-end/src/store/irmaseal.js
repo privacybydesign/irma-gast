@@ -62,7 +62,7 @@ class Client {
   requestToken(whose) {
     return irmaFrontend
       .newPopup({
-        language: i18n.language || window.localStorage.i18nextLng,
+        language: i18n.language.startsWith("en") ? "en" : "nl",
         session: {
           url: this.url,
           start: {

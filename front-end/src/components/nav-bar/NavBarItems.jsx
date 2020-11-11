@@ -7,10 +7,8 @@ import i18n from "i18next";
 import { withTranslation } from "react-i18next";
 
 function NavBarItems({ t, onLogout, link, loggedIn }) {
-  const getLanguage = () => i18n.language || window.localStorage.i18nextLng;
-
   const handleClick = () =>
-    i18n.changeLanguage(getLanguage() === "nl" ? "en" : "nl");
+    i18n.changeLanguage(i18n.language.startsWith("en") ? "nl" : "en");
 
   return (
     <div>
@@ -49,10 +47,10 @@ function NavBarItems({ t, onLogout, link, loggedIn }) {
             onClick={handleClick}
           >
             <span className="selected-lang refs">
-              {getLanguage() === "nl" && (
+              {i18n.language.startsWith("nl") && (
                 <img src={flagEN} className="flag" alt="en" />
               )}
-              {getLanguage() === "en" && (
+              {i18n.language.startsWith("en") && (
                 <img src={flagNL} className="flag" alt="nl" />
               )}
             </span>

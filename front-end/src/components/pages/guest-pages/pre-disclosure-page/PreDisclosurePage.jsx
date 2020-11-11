@@ -17,8 +17,6 @@ const mapStateToProps = (state) => {
 };
 
 class PreDisclosurePage extends React.Component {
-  getLanguage = () => i18n.language || window.localStorage.i18nextLng;
-
   componentDidMount() {
     this.props.dispatch({
       type: "initDisclosurePage",
@@ -43,7 +41,7 @@ class PreDisclosurePage extends React.Component {
       case "start":
         this._irmaWeb = irmaFrontend.newWeb({
           element: "#irma-web-form",
-          language: this.getLanguage(),
+          language: i18n.language.startsWith("en") ? "en" : "nl",
           session: this.props.irmaSession,
         });
         this._irmaWeb.start().then((result) => {
