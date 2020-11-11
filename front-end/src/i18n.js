@@ -44,7 +44,7 @@ i18n
     detection: options,
     resources: resources,
     supportedLngs: ["nl", "en"],
-    fallbackLnglng: "nl",
+    fallbackLng: "nl",
     keySeparator: ".",
     interpolation: {
       escapeValue: false, // react already safes from xss
