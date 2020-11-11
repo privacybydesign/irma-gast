@@ -15,7 +15,6 @@
     "p4": "The QRona service is free. A financial contribution, for maintenance and further development, is highly appreciated. Please go to the <a href=\"https://privacybydesign.foundation/support/\">support page</a> of the Privacy by Design foundation."
   },
   "navbar": {
-    "welcome": "Welcome",
     "items": {
       "logout": "Log out",
       "who": "For whom?",

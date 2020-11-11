@@ -1,10 +1,22 @@
 import React from "react";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NavBarItems from "./NavBarItems";
 import PublicBetaBanner from "./PublicBetaBanner";
 import { withTranslation } from "react-i18next";
+import qronaLogo from "../../images/qrona_logo.png";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  logo: {
+    flex: 1,
+    width: 150,
+    height: 90,
+    resizeMode: "contain",
+  },
+}));
 
 function NavBar({ t, link, loggedIn, onLogout }) {
+  const classes = useStyles();
   // Toggle between showing and hiding the sidebar when clicking the menu icon
 
   function w3_open() {
@@ -30,13 +42,8 @@ function NavBar({ t, link, loggedIn, onLogout }) {
         <div className="w3-bar w3-white w3-card" id="myNavbar">
           <a href="/" className="w3-bar-item logo w3-wide">
             <h1>
-              IRMA
               <span>
-                <MeetingRoomIcon
-                  fontSize="large"
-                  style={{ color: "#004C92" }}
-                />
-                {t("welcome")}
+                <img className={classes.logo} src={qronaLogo} alt="logo" />
               </span>
             </h1>
           </a>
