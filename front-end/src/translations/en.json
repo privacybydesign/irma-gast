@@ -1,7 +1,7 @@
 {
   "login": {
-    "header": "Register yourself",
-    "p1": "Do you wish to register for this gathering? Proceed with the IRMA-app and disclose your email address to QRona.",
+    "header": "Sign in",
+    "p1": "Do you wish to sign in? Proceed with the IRMA-app and disclose your email address to QRona.",
     "noapp": "No IRMA-app yet?",
     "p2": "QRona uses the free IRMA-app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. QRona only requires an email card.",
     "install": "Install the IRMA-app",
@@ -79,11 +79,11 @@
       "header": "Add gathering",
       "namelabel": "Description",
       "locationlabel": "Location",
-      "purpose": "This registration list is for visitors of...",
-      "onetimelabel": "Onetime gathering (meeting, presentation, marriage, ...)",
+      "purpose": "This registration list is for visitors of a...",
+      "onetimelabel": "onetime gathering (meeting, presentation, marriage, ...)",
       "onetimedatelabel": "Date*",
       "onetimedatehelpertext": "Only on this day visitors can register for this onetime gathering.",
-      "permanentlabel": "Continuous gathering (cafe, restaurant, shop, hairdresser, ...)",
+      "permanentlabel": "continuous gathering (cafe, restaurant, shop, hairdresser, ...)",
       "checkboxlabel": "I use these contact data exclusively for corona warnings, if needed, and not for anything else. I ask QRona to process data for that purpose."
     },
     "guestcount": {
