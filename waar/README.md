@@ -1,7 +1,7 @@
-irma-welkom data back-end
+qrona data back-end
 ==========================
 
-A Go webserver that handles administrative tasks and (encrypted) data storage for irma-welkom.nl.
+A Go webserver that handles administrative tasks and (encrypted) data storage for qrona.info.
 
 
 Building

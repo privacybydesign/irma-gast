@@ -96,12 +96,12 @@ function GuestList({
   };
 
   const subheader = () => {
-    let subheader =`${t("guestlist.made")} ${date}`;
+    let subheader = `${t("guestlist.made")} ${date}`;
     if (listType === "event") {
-      subheader = `${subheader}, ${t("guestlist.usable")} ${event_date}`
+      subheader = `${subheader}, ${t("guestlist.usable")} ${event_date}`;
     }
     return subheader;
-  }
+  };
   // TODO: extract subcomponents used in GuestList.jsx into their individual files
 
   return (
@@ -137,7 +137,7 @@ function GuestList({
         <CardContent className={classes.noPadding}>
           <QRCode
             id={"qr-" + id}
-            value={encodeURI("https://irma-welkom.nl/guest/" + id + "/" + host)}
+            value={encodeURI("https://qrona.info/guest/" + id + "/" + host)}
             size={200}
             className="qr"
             bgColor={"#ffffff"}

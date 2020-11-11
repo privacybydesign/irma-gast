@@ -130,7 +130,7 @@ func initSessionStorage() {
 		Secure:   true,
 		// TODO: set Lax and domain before release
 		SameSite: http.SameSiteNoneMode,
-		//Domain:   "data.irma-welkom.nl",
+		//Domain:   "data.qrona.info",
 	}
 
 	gob.Register(User{})
@@ -202,7 +202,7 @@ func schedule(f func(), delay time.Duration) chan bool {
 // Checks cookie for a current ongoing session
 // if arg "authenticated" is true then it checks if the email is already authenticated
 func checkCookie(w http.ResponseWriter, r *http.Request, userExists, userAuthenticated bool) (*User, error) {
-	session, err := store.Get(r, "irmagast")
+	session, err := store.Get(r, "qrona")
 	if err != nil && userExists {
 		http.Error(w, "No session", http.StatusForbidden)
 		return nil, err
@@ -294,7 +294,7 @@ func irmaSessionStart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Start a user session
-	session, err := store.Get(r, "irmagast")
+	session, err := store.Get(r, "qrona")
 	if err != nil {
 		log.Printf("Error getting new session: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -352,7 +352,7 @@ func irmaSessionFinish(w http.ResponseWriter, r *http.Request) {
 	email := *result.Disclosed[0][0].RawValue
 	user.Email = email
 	user.Authenticated = true
-	session, err := store.Get(r, "irmagast")
+	session, err := store.Get(r, "qrona")
 	if err != nil {
 		log.Printf("couldnt get session: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -736,7 +736,7 @@ func gastSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	session, err := store.Get(r, "irmagast")
+	session, err := store.Get(r, "qrona")
 	if err != nil {
 		log.Printf("Error finding cookie: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -784,7 +784,7 @@ func main() {
 
 	// CORS setttings
 	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5000", "https://irma-welkom.nl"},
+		AllowedOrigins:   []string{"http://localhost:5000", "https://qrona.info"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,

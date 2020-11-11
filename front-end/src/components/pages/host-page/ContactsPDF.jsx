@@ -153,7 +153,7 @@ class ContactsPDF extends React.Component {
             </Page>
           </Document>
         }
-        fileName={`irma-welkom-${this.props.id}.pdf`}
+        fileName={`qrona-${this.props.id}.pdf`}
       >
         {({ blob, url, loading, error }) =>
           loading ? (

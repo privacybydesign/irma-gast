@@ -11,11 +11,10 @@
     "header": "Vragen of opmerkingen?",
     "p1": "QRona is ontwikkeld door de stichting <a href=\"https://privacybydesign.foundation/\">Privacy by Design</a> samen met de <a href=\"https://www.ru.nl/ihub/\">iHub</a> onderzoeksgroep van de Radboud Universiteit (vanuit het NWO project <a href=\"https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/\">Encryption for All</a>).",
     "p2": "Ga naar de <a href=\"https://www.irma.app/?lang=nl\">irma.app</a> website voor informatie over de IRMA-app en bezoek de <a href=\"https://privacybydesign.foundation\">Privacy by Design</a> webpagina voor algemene achtergrond informatie over de stichting. Stuur een mail aan <a href=\"mailto:info@qrona.info\">info@qrona.info</a> voor vragen en/of opmerkingen.",
-    "p3": "QRona is open source. De source code en documentatie staan op GitHub. <i className=\"fa fa-github\"></i>, zie de <a href=\"https://github.com/privacybydesign/irma-welkom\"> GitHub bestanden.</a> Deze pagina gebruikt illustraties van <a href=\"https://undraw.co\">UnDraw.</a>",
+    "p3": "QRona is open source. De source code en documentatie staan op GitHub. <i className=\"fa fa-github\"></i>, zie de <a href=\"https://github.com/privacybydesign/qrona\"> GitHub bestanden.</a> Deze pagina gebruikt illustraties van <a href=\"https://undraw.co\">UnDraw.</a>",
     "p4": "De QRona dienst is gratis. Een financiële bijdrage, voor onderhoud en verdere ontwikkeling, wordt zeer gewaardeerd. Dat kan via deze <a href=\"https://privacybydesign.foundation/steun/\">steun pagina</a> van de stichting Privacy by Design."
   },
   "navbar": {
-    "welcome": "Welkom",
     "items": {
       "logout": "Log uit",
       "who": "Voor wie?",
