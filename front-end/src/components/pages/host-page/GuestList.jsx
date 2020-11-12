@@ -151,7 +151,7 @@ function GuestList({
             {qrReady ? (
               <QRCodePDF
                 title={name}
-                date={date}
+                date={event_date ? event_date : date}
                 host={host}
                 location={location}
                 qr={id}
@@ -212,7 +212,7 @@ function GuestList({
           </Dialog>
           <Contacts
             name={name}
-            date={date}
+            date={event_date ? event_date : date}
             host={host}
             id={id}
             location={location}
