@@ -27,6 +27,8 @@ import Divider from "@material-ui/core/Divider";
 import { Trans, withTranslation } from "react-i18next";
 import GuestListButton from "./GuestListButton";
 import { guestQRUrl } from "../../../constants";
+import { compose } from "redux";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +57,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const mapStateToProps = (state, ownProps) => {
+  let loc = state.checkins.locations[ownProps.id];
+  return {
+    location_state: loc ? loc.location_state : "uninitialized",
+    ...ownProps,
+  };
+};
+
 function GuestList({
   t,
   onDelete,
@@ -66,6 +76,7 @@ function GuestList({
   event_date,
   date,
   count,
+  location_state,
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(true);
@@ -171,6 +182,7 @@ function GuestList({
           <GuestCount
             count={count}
             listType={listType}
+            showText={location_state !== "done"}
             className={classes.noPadding}
           />
           <GuestListButton
@@ -224,4 +236,7 @@ function GuestList({
   );
 }
 
-export default withTranslation("host")(GuestList);
+export default compose(
+  connect(mapStateToProps),
+  withTranslation("host")
+)(GuestList);

@@ -3,7 +3,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { withTranslation } from "react-i18next";
 
-function GuestCount({ t, count, className, listType }) {
+function GuestCount({ t, count, className, listType, showText }) {
   return (
     <CardContent className={className}>
       <Typography variant="h5" component="p">
@@ -24,7 +24,7 @@ function GuestCount({ t, count, className, listType }) {
       </Typography>
       <div style={{ height: "4px" }}></div>
       <Typography variant="body2" color="textSecondary" component="p">
-        {count > 0 && t("guestcount.info")}
+        {count > 0 && showText && t("guestcount.info")}
       </Typography>
     </CardContent>
   );
