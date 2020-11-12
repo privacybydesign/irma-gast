@@ -75,6 +75,7 @@ function GuestList({
   listType,
   event_date,
   date,
+  show_date,
   count,
   location_state,
 }) {

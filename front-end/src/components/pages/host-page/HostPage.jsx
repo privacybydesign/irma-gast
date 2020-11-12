@@ -77,13 +77,14 @@ class HostPage extends React.Component {
   }
 
   _renderGuestLists() {
-    return this.props.entries.map((list) => {
+    let guestLists = this.props.entries.map((list) => {
       let id = list["location_id"];
       return (
         <GuestList
           key={id}
           id={id}
           location={list["location"]}
+          datetime={list["creation_date"]}
           date={list["creation_date"].split(" ")[0]}
           name={list["name"]}
           listType={list["onetime"] ? "event" : "permament"}
@@ -96,6 +97,12 @@ class HostPage extends React.Component {
         />
       );
     });
+
+    let sortedGuestLists = guestLists.sort(
+      (a, b) => new Date(a.datetime) - new Date(b.datetime)
+    ).reverse();
+
+    return sortedGuestLists;
   }
 
   _renderHostPage() {
