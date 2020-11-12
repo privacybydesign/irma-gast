@@ -179,7 +179,7 @@ function QRCodePDF({ t, title, location, date, host, qr }) {
             </Page>
           </Document>
         }
-        fileName="IRMA-welkom-QR.pdf"
+        fileName={`qrona-${qr}-QR.pdf`}
       >
         {({ blob, url, loading, error }) =>
           loading ? (
