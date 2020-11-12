@@ -4,13 +4,12 @@ import PublicBetaBanner from "./PublicBetaBanner";
 import { withTranslation } from "react-i18next";
 import qronaLogo from "../../images/qrona_logo.png";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
     flex: 1,
-    width: 150,
-    height: 90,
+    height: 80,
+    width: "auto",
     resizeMode: "contain",
   },
 }));
