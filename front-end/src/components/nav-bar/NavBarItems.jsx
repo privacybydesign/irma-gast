@@ -2,14 +2,23 @@ import React from "react";
 import flagNL from "../../images/flags/nl.png";
 import flagEN from "../../images/flags/en.png";
 import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
 import i18n from "i18next";
 import { withTranslation } from "react-i18next";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    "text-decoration": "underline",
+    color: "#004c92",
+    backgroundColor: "transparent"
+  },
+}));
 
 function NavBarItems({ t, onLogout, link, loggedIn }) {
   const handleClick = () =>
     i18n.changeLanguage(i18n.language.startsWith("en") ? "nl" : "en");
 
+  const classes = useStyles();
   return (
     <div>
       {/* <a href="#why" className="w3-bar-item">
@@ -36,9 +45,9 @@ function NavBarItems({ t, onLogout, link, loggedIn }) {
               {t("items.login")} <i className="fa fa-sign-in"></i>
             </a>
           ) : (
-            <Button className="w3-bar-item" onClick={onLogout}>
+            <button className={`w3-bar-item ${classes.button}`} onClick={onLogout}>
               {t("items.logout")}
-            </Button>
+            </button>
           )}
           <Tooltip
             title={t("items.switchlang")}
