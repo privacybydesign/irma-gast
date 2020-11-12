@@ -63,13 +63,17 @@
       "info": "Registrations are removed automatically after 14 days. If, in the end, the visitor list is completely empty, the list (and gathering) is deleted. You can always create a new gathering / list."
     },
     "contacts": {
+      "cardheader": "Requested contact data",
+      "cardheadercontent": "contact data",
+      "noguests": "No visitors have registered yet.",
       "initialized": "Access contact data",
       "loading": "Loading contact data...",
       "decrypting": "Decrypting contact data...",
       "verifying": "Verifying contact data...",
       "default": "One moment please...",
       "loadingpdf": "Loading PDF document...",
-      "download": "Download contact data",
+      "actionmail": "mail directly",
+      "actiondownload": "download as PDF",
       "text1": "These data have been collected via QRona (www.qrona.info). The (sole) purpose of collecting these contact data is: if needed, sending a corona warning. The data can be used only for this purpose, and not for any other purpose such as customer relations or advertising.",
       "text2": "It is your own responsibility as host of this gathering to warn visitors against a possible corona infection, or to transfer their contact data to the health authorities. When you send the warning yourself, please avoid naming the infected person (the source). For a continuous (not onetime) gathering it is important to take the data/time of the infection into account and to warn (or pass on) only those visitors that could be infected as a result. Please avoid unnecessary unrest."
     },

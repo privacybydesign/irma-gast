@@ -63,13 +63,17 @@
       "info": "Aanmeldingen worden na 14 dagen automatisch verwijderd. Als een bezoekerslijst uiteindelijk helemaal leeg is wordt de lijst zelf verwijderd. Je kunt altijd weer een nieuwe samenkomst / lijst aanmaken."
     },
     "contacts": {
+      "cardheader": "Opgevraagde contactgegevens",
+      "cardheadercontent": "Contactgegevens",
+      "noguests": "Er zijn nog geen aanmeldingen.",
       "initialized": "Contactgegevens opvragen",
       "loading": "Contactgevens laden...",
       "decrypting": "Contactgegevens ontsleutelen...",
       "verifying": "Contactgegevens verifiëren...",
       "default": "Een moment geduld alstublieft...",
       "loadingpdf": "PDF laden...",
-      "download": "Contactgegevens downloaden",
+      "actionmail": "direct mailen",
+      "actiondownload": "download als PDF",
       "text1": "Deze gegevens zijn verzameld via QRona (www.qrona.info). Het doel van het verzamelen van deze contactgegevens is: zonodig waarschuwen bij een besmetting. De gegevens mogen daarom alleen voor dit doel gebruikt worden, en niet voor iets anders, zoals klantbinding of reclame.",
       "text2": "Het is je eigen verantwoordelijkheid als host van deze samenkomst om de aangemelde personen te waarschuwen voor een mogelijke besmetting, of om hun contactgegevens aan de GGD door te geven. Als je zelf een waarschuwingsbericht stuurt is het netjes om de naam van de besmette persoon (de bron) niet te noemen. Bij een doorlopende (niet-eenmalige) samenkomst is het belangrijk om op de datum van aanmelding te letten en alleen die mensen te (laten) waarschuwen die mogelijk besmet zijn geraakt. Vermijd onnodige onrust."
     },

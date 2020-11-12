@@ -104,7 +104,7 @@ const ContactsPDF = (props) => {
           />
         ) : (
           <GuestListButton
-            text={props.t("contacts.download")}
+            text={props.t("contacts.actiondownload")}
             icon={<SaveIcon />}
           />
         )

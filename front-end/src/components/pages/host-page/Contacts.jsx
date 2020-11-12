@@ -1,10 +1,19 @@
 import React from "react";
 import SaveIcon from "@material-ui/icons/Save";
 import MailIcon from "@material-ui/icons/Mail";
+import { compose } from "redux";
 import { connect } from "react-redux";
-import GuestListButton from './GuestListButton';
-import {Box, Card, CardHeader, CardContent, ClickAwayListener, Tooltip} from '@material-ui/core';
-import ContactsPDF from './ContactsPDF';
+import GuestListButton from "./GuestListButton";
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardContent,
+  ClickAwayListener,
+  Tooltip,
+} from "@material-ui/core";
+import ContactsPDF from "./ContactsPDF";
+import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state) => {
   return {
@@ -34,10 +43,10 @@ class Contacts extends React.Component {
         return this._renderLoadCheckins();
       case "done":
         return (
-          <Box style={{paddingTop: "20px"}}>
+          <Box style={{ paddingTop: "20px" }}>
             <Card raised>
               <Box bgcolor="#AADACE">
-                <CardHeader title="Opgevraagde contactgegevens" />
+                <CardHeader title={this.props.t("contacts.cardheader")} />
                 <CardContent>
                   <ContactsPDF
                     title={this.props.name}
@@ -55,12 +64,14 @@ class Contacts extends React.Component {
         );
       default:
         return (
-          <Box style={{paddingTop: "20px"}}>
+          <Box style={{ paddingTop: "20px" }}>
             <Card>
               <Box bgcolor="#B1CDE5">
-                <CardHeader title="Opgevraagde contactgegevens">Contactgegevens</CardHeader>
+                <CardHeader title={this.props.t("contacts.cardheader")}>
+                  {this.props.t("contacts.cardheadercontent")}
+                </CardHeader>
                 <CardContent>
-                  {this._renderLoadingText(locationState)}
+                  {this.props.t(`contacts.${locationState}`)}
                 </CardContent>
               </Box>
             </Card>
@@ -69,52 +80,48 @@ class Contacts extends React.Component {
     }
   }
 
-  _renderLoadingText(locationState) {
-    switch (locationState) {
-      case "initialized":
-        return "Contactgegevens opvragen";
-      case "loading":
-        return "Contactgegevens laden...";
-      case "decrypting":
-        return "Contactgegevens ontsleutelen...";
-      case "verifying":
-        return "Contactgegevens verifieren...";
-      default:
-        return "Laden...";
-    }
-  }
-
   _renderLoadCheckins() {
     return (
-      <ClickAwayListener onClickAway={() => this.setState({tooltipOpen: false})}>
+      <ClickAwayListener
+        onClickAway={() => this.setState({ tooltipOpen: false })}
+      >
         <Tooltip
-          title="Er zijn nog geen aanmeldingen."
+          title={this.props.t("contacts.noguests")}
           disableFocusListener={this.props.count > 0}
           disableHoverListener={this.props.count > 0}
           disableTouchListener={this.props.count > 0}
           open={this.state.tooltipOpen}
         >
           <span
-            onClick={this.props.count > 0 ? null : () =>
-              this.setState({tooltipOpen: true}, () =>
-                // Auto-close tooltip after 5 seconds.
-                setTimeout(() => this.setState({tooltipOpen: false}), 5000)
-              )
+            onClick={
+              this.props.count > 0
+                ? null
+                : () =>
+                    this.setState({ tooltipOpen: true }, () =>
+                      // Auto-close tooltip after 5 seconds.
+                      setTimeout(
+                        () => this.setState({ tooltipOpen: false }),
+                        5000
+                      )
+                    )
             }
           >
-          <GuestListButton
-            color="primary"
-            size="large"
-            startIcon={<SaveIcon />}
-            disabled={this.props.count === 0}
-            onClick={this.props.count > 0 ? () =>
-              this.props.dispatch({
-                type: "loadCheckins",
-                location_id: this.props.id,
-              }) : null
-            }
-            text="Contactgegevens opvragen"
-          />
+            <GuestListButton
+              color="primary"
+              size="large"
+              startIcon={<SaveIcon />}
+              disabled={this.props.count === 0}
+              onClick={
+                this.props.count > 0
+                  ? () =>
+                      this.props.dispatch({
+                        type: "loadCheckins",
+                        location_id: this.props.id,
+                      })
+                  : null
+              }
+              text={this.props.t("contacts.initialized")}
+            />
           </span>
         </Tooltip>
       </ClickAwayListener>
@@ -131,10 +138,13 @@ class Contacts extends React.Component {
           );
           window.location.href = `mailto:?bcc=${addresses}`;
         }}
-        text="Mail"
+        text={this.props.t("contacts.actionmail")}
       />
     );
   }
 }
 
-export default connect(mapStateToProps)(Contacts);
+export default compose(
+  connect(mapStateToProps),
+  withTranslation("host")
+)(Contacts);
