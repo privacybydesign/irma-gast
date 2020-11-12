@@ -4,15 +4,7 @@ import checkins from "./checkins";
 import guest_page from "./guest_page";
 import Client from "./irmaseal";
 import JWT from "jsonwebtoken";
-
-// URL of waar server
-const waarServerUrl = "https://data.qrona.info/api/v1";
-
-// IRMA server for authenticating guests
-const irmaServerUrl = "https://qrona.info/irma";
-
-// Private key generator URL
-const pkgServerUrl = "https://qrona.info/pkg";
+import { WAARSERVERURL, IRMASERVERURL, PKGSERVERURL } from "../constants";
 
 /**
  * Handles all dispatches for changing the login state
@@ -27,7 +19,7 @@ function handleLogin({ getState, dispatch }) {
   return (next) => (action) => {
     if (action.type === "initHostPage") {
       dispatch({ type: "loadingGuestLists" });
-      fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
+      fetch(`${WAARSERVERURL}/admin/overview`, { credentials: "include" })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
@@ -46,7 +38,7 @@ function handleLogin({ getState, dispatch }) {
             dispatch({
               type: "startHostPage",
               irmaSession: {
-                url: waarServerUrl,
+                url: WAARSERVERURL,
                 start: {
                   credentials: "include",
                   url: (o) => `${o.url}/admin/irmasession_start`,
@@ -61,14 +53,14 @@ function handleLogin({ getState, dispatch }) {
           }
         });
     } else if (getState().guestLists.loggedIn && action.type === "logOut") {
-      fetch(`${waarServerUrl}/admin/logout`, { credentials: "include" }).then(
+      fetch(`${WAARSERVERURL}/admin/logout`, { credentials: "include" }).then(
         (resp) => {
           if (resp.status === 204) {
             dispatch({
               type: "loggedOut",
               irmaSession: {
                 credentials: "include",
-                url: waarServerUrl,
+                url: WAARSERVERURL,
                 start: {
                   credentials: "include",
                   url: (o) => `${o.url}/admin/irmasession_start`,
@@ -85,7 +77,7 @@ function handleLogin({ getState, dispatch }) {
       );
     } else if (action.type === "loggedOut") {
       localStorage.clear("irmagast");
-      dispatch({type: "initHostPage"});
+      dispatch({ type: "initHostPage" });
     }
     return next(action);
   };
@@ -102,7 +94,7 @@ function handleDeleteGuestList({ getState, dispatch }) {
   return (next) => (action) => {
     if (getState().guestLists.loggedIn && action.type === "deleteGuestList") {
       dispatch({ type: "loadingGuestLists" });
-      fetch(`${waarServerUrl}/admin/remove/${action.location_id}`, {
+      fetch(`${WAARSERVERURL}/admin/remove/${action.location_id}`, {
         method: "DELETE",
         credentials: "include",
       })
@@ -131,7 +123,7 @@ function handleAddGuestList({ getState, dispatch }) {
   return (next) => (action) => {
     if (getState().guestLists.loggedIn && action.type === "addGuestList") {
       dispatch({ type: "loadingGuestLists" });
-      fetch(`${waarServerUrl}/admin/register`, {
+      fetch(`${WAARSERVERURL}/admin/register`, {
         mode: "cors",
         method: "POST",
         credentials: "include",
@@ -140,7 +132,7 @@ function handleAddGuestList({ getState, dispatch }) {
           name: action.name,
           location: action.location,
           onetime: action.onetime,
-          ...(action.onetime && {event_date: action.event_date})
+          ...(action.onetime && { event_date: action.event_date }),
         }),
       })
         .then((resp) => {
@@ -168,8 +160,11 @@ function handleUpdateGuestLists({ getState, dispatch }) {
       action.type === "reloadGuestLists" ||
       (action.type === "loadGuestLists" && !getState().guestLists.loaded)
     ) {
-      dispatch({ type: "loadingGuestLists", reloading: action.type ==="reloadGuestLists" });
-      fetch(`${waarServerUrl}/admin/overview`, { credentials: "include" })
+      dispatch({
+        type: "loadingGuestLists",
+        reloading: action.type === "reloadGuestLists",
+      });
+      fetch(`${WAARSERVERURL}/admin/overview`, { credentials: "include" })
         .then((resp) => {
           if (resp.status !== 200) throw resp.status;
           return resp.json();
@@ -203,7 +198,7 @@ function handleUpdateCheckins({ dispatch, getState }) {
   return (next) => (action) => {
     if (action.type === "initCheckins") {
       // TODO: initialize client globally
-      Client.build(pkgServerUrl).then((client) => {
+      Client.build(PKGSERVERURL).then((client) => {
         dispatch({
           type: "initializedCheckins",
           client: client,
@@ -215,7 +210,7 @@ function handleUpdateCheckins({ dispatch, getState }) {
       getState().checkins.state === "initialized"
     ) {
       dispatch({ type: "loadingCheckins", location_id: action.location_id });
-      fetch(`${waarServerUrl}/admin/results/${action.location_id}`, {
+      fetch(`${WAARSERVERURL}/admin/results/${action.location_id}`, {
         credentials: "include",
       })
         .then((resp) => {
@@ -289,7 +284,7 @@ function handleUpdateCheckins({ dispatch, getState }) {
         });
     } else if (action.type === "verifyingCheckins") {
       let entries = [];
-      fetch(irmaServerUrl + "/publickey")
+      fetch(IRMASERVERURL + "/publickey")
         .then((resp) => resp.text())
         .then((pk) => {
           action.jwts.forEach((entry) => {
@@ -335,7 +330,7 @@ function handleDisclosurePage({ getState, dispatch }) {
       dispatch({
         type: "startDisclosurePage",
         irmaSession: {
-          url: irmaServerUrl,
+          url: IRMASERVERURL,
           start: {
             url: (o) => `${o.url}/session`,
             method: "POST",
@@ -370,7 +365,7 @@ function handleDisclosurePage({ getState, dispatch }) {
       let id = getState().DisclosurePage.id;
 
       // TODO: initalize client while waiting for e.g. button press
-      Client.build(pkgServerUrl).then((client) => {
+      Client.build(PKGSERVERURL).then((client) => {
         try {
           let ct = client.encrypt(host, { jwt: result });
           const base64ct = new Buffer(ct).toString("base64");
@@ -384,7 +379,7 @@ function handleDisclosurePage({ getState, dispatch }) {
         }
       });
     } else if (action.type === "guestDataEncrypted") {
-      fetch(`${waarServerUrl}/gast/gastsession`, {
+      fetch(`${WAARSERVERURL}/gast/gastsession`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

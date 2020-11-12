@@ -26,6 +26,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Divider from "@material-ui/core/Divider";
 import { Trans, withTranslation } from "react-i18next";
 import GuestListButton from "./GuestListButton";
+import { guestQRUrl } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -137,7 +138,7 @@ function GuestList({
         <CardContent className={classes.noPadding}>
           <QRCode
             id={"qr-" + id}
-            value={encodeURI("https://qrona.info/guest/" + id + "/" + host)}
+            value={guestQRUrl(id, host)}
             size={200}
             className="qr"
             bgColor={"#ffffff"}
