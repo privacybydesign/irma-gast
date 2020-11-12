@@ -12,7 +12,7 @@ import {
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import scan from "../../../../images/scan.png";
-import logo from "../../../../images/irma_logo.png";
+import logo from "../../../../images/qrona_logo.png";
 import font from "../../../../fonts/Montserrat/Montserrat-Regular.ttf";
 import fontBold from "../../../../fonts/Montserrat/Montserrat-Bold.ttf";
 import fontSemiBold from "../../../../fonts/Montserrat/Montserrat-SemiBold.ttf";

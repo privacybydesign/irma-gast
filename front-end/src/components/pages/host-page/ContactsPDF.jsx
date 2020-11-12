@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import SaveIcon from "@material-ui/icons/Save";
-import logo from "../../../images/irma_logo.png";
+import logo from "../../../images/qrona_logo.png";
 import { withTranslation } from "react-i18next";
 import GuestListButton from "./GuestListButton";
 
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     height: 20,
   },
   image: {
-    height: 90,
-    width: 100,
+    height: 80,
+    width: 120,
     marginBottom: 30,
     marginHorizontal: "auto",
   },
