@@ -18,6 +18,7 @@ function Start({ t }) {
             <li>{t("start.li3")}</li>
             <li>{t("start.li4")}</li>
           </ul>
+          <p dangerouslySetInnerHTML={{ __html: t("start.p2") }} />
         </div>
       </div>
     </div>
