@@ -20,8 +20,8 @@ class PreDisclosurePage extends React.Component {
   componentDidMount() {
     this.props.dispatch({
       type: "initDisclosurePage",
-      id: this.props.match.params.id,
-      host: this.props.match.params.host,
+      id: decodeURIComponent(this.props.match.params.id),
+      host: decodeURIComponent(this.props.match.params.host),
     });
     this._handleIrma();
   }
@@ -90,7 +90,13 @@ class PreDisclosurePage extends React.Component {
       case "done":
         return this._renderMessagePage(this.props.state);
       case "error":
-        return <p>`De volgende fout is opgetreden: ${this.props.error}`</p>;
+        return (
+          <Trans
+            t={this.props.t}
+            i18nKey="predisclosure.error"
+            value={this.props.error}
+          />
+        );
       default:
         return this._renderMessagePage("loading");
     }
