@@ -132,7 +132,7 @@ class HostPage extends React.Component {
           />
         );
       default:
-        return <Login />;
+        return <Login guest={false} />;
     }
   }
 

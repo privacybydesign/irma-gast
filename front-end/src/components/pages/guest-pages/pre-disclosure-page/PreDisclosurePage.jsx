@@ -79,7 +79,7 @@ class PreDisclosurePage extends React.Component {
   _renderState() {
     switch (this.props.state) {
       case "start":
-        return <Login />;
+        return <Login guest={true} />;
       case "disclosurePage":
         const onNext = () => {
           this.props.dispatch({ type: "sendGuestData" });

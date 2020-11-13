@@ -1,11 +1,12 @@
 import React from "react";
 import { withTranslation } from "react-i18next";
 
-function Login({ t }) {
+function Login({ t, guest }) {
+  let postfix = guest ? "guest" : "host";
   return (
     <>
-      <h2>{t("header")}</h2>
-      <p>{t("p1")}</p>
+      <h2>{t(`header${postfix}`)}</h2>
+      <p>{t(`p1${postfix}`)}</p>
       <div style={{ height: "30px" }} />
       <section className={"irma-web-center-child"}>
         <section id={"irma-web-form"} />

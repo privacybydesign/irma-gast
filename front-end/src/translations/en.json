@@ -1,7 +1,9 @@
 {
   "login": {
-    "header": "Register for the gathering",
-    "p1": "Do you wish to register? Proceed with the IRMA-app and disclose your email address to QRona.",
+    "headerhost": "Sign in as host",
+    "headerguest": "Register for the gathering",
+    "p1host": "Do you wish to sign in as a host? Proceed with the IRMA-app and disclose your email address to QRona.",
+    "p1guest": "Do you wish to register? Proceed with the IRMA-app and disclose your email address to QRona.",
     "noapp": "No IRMA-app yet?",
     "p2": "QRona uses the free IRMA-app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. QRona only requires an email card.",
     "install": "Install the IRMA-app",
