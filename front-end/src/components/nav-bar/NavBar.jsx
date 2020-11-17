@@ -50,13 +50,12 @@ function NavBar({ t, link, loggedIn, onLogout }) {
             <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
           </div>
           {/* <!-- Hide right-floated links on small screens and replace them with a menu icon --> */}
-          <a
-            href=""
+          <button
             className="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
             onClick={w3_open}
           >
             <i className="fa fa-bars"></i>
-          </a>
+          </button>
         </div>
 
       </div>
