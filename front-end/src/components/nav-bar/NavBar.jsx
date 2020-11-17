@@ -1,6 +1,5 @@
 import React from "react";
 import NavBarItems from "./NavBarItems";
-import PublicBetaBanner from "./PublicBetaBanner";
 import { withTranslation } from "react-i18next";
 import qronaLogo from "../../images/qrona_logo.png";
 import { makeStyles } from "@material-ui/core/styles";
@@ -60,7 +59,6 @@ function NavBar({ t, link, loggedIn, onLogout }) {
           </a>
         </div>
 
-        <PublicBetaBanner />
       </div>
 
       {/* <!-- Sidebar on small screens when clicking the menu icon --> */}
