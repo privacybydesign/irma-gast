@@ -66,13 +66,12 @@ function NavBar({ t, link, loggedIn, onLogout }) {
         style={{ display: "none" }}
         id="mySidebar"
       >
-        <a
-          href=""
+        <button
           onClick={w3_close}
           className="w3-bar-item w3-button w3-large w3-padding-16"
         >
           Close ×
-        </a>
+        </button>
         <NavBarItems link={link} loggedIn={loggedIn} onLogout={onLogout} />
       </nav>
     </div>
