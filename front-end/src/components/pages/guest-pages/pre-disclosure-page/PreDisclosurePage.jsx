@@ -107,7 +107,7 @@ class PreDisclosurePage extends React.Component {
       <div className="App">
         <NavBar link="menu" />
         <div className="content">{this._renderState()}</div>
-        <Footer />
+        { ["start", "disclosurePage"].includes(this.props.state) && (<Footer />)}
       </div>
     );
   }
