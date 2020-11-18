@@ -106,7 +106,7 @@
     },
     "guestlist": {
       "expandlabel": "Show more",
-      "qrinfo": "Print this QR-code and ask visitors to scan it for registration.",
+      "qrinfo": "Show this QR-code to visitors to allow them to register.",
       "genqr": "Generate PDF",
       "rmlist": "Remove list",
       "keeplist": "Keep list",

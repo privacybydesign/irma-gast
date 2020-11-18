@@ -106,7 +106,7 @@
     },
     "guestlist": {
       "expandlabel": "Laat meer zien",
-      "qrinfo": "Druk deze QR-code af en vraag bezoekers zich via deze code aan te melden.",
+      "qrinfo": "Toon deze QR-code aan bezoekers zodat ze zich kunnen registreren.",
       "genqr": "Genereer PDF",
       "rmlist": "Lijst verwijderen",
       "keeplist": "Lijst bewaren",
