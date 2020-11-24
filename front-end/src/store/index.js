@@ -76,7 +76,7 @@ function handleLogin({ getState, dispatch }) {
         }
       );
     } else if (action.type === "loggedOut") {
-      localStorage.clear("irmagast");
+      localStorage.clear("qrona");
       dispatch({ type: "initHostPage" });
     }
     return next(action);
@@ -240,36 +240,45 @@ function handleUpdateCheckins({ dispatch, getState }) {
       client
         .requestToken(host_email)
         .then((token) => {
-          let jwtPromises = [];
+          let jwtOrEmailPromises = [];
           cts.forEach(function (entry) {
             let ct = Buffer.from(entry.ct, "base64");
-            jwtPromises.push(
+            jwtOrEmailPromises.push(
               new Promise(function (resolve, reject) {
                 let ts = client.extractTimestamp(ct);
                 if (ts === -1) return reject(new Error("no timestamp"));
                 return client
                   .requestKey(token, ts)
-                  .then((key) =>
+                  .then((key) => {
+                    let plain = client.decrypt(key, ct);
+                    var obj;
+                    if ("jwt" in plain) {
+                      obj = { jwt: plain.jwt };
+                    } else if ("email" in plain) {
+                      obj = { email: plain.email };
+                    } else {
+                      throw new Error("plain should contain jwt or email");
+                    }
                     resolve({
                       time: entry.time,
-                      jwt: client.decrypt(key, ct).jwt,
-                    })
-                  )
+                      ...obj,
+                    });
+                  })
                   .catch((err) => reject(err));
               })
             );
           });
-          Promise.allSettled(jwtPromises)
+          Promise.allSettled(jwtOrEmailPromises)
             .then((promises) =>
               promises
                 .filter((promise) => promise.status === "fulfilled")
                 .map((promise) => promise.value)
             )
-            .then((jwts) =>
+            .then((jwtOrEmails) =>
               dispatch({
                 type: "verifyingCheckins",
                 location_id: action.location_id,
-                jwts: jwts,
+                jwtOrEmails: jwtOrEmails,
               })
             );
         })
@@ -287,23 +296,27 @@ function handleUpdateCheckins({ dispatch, getState }) {
       fetch(IRMASERVERURL + "/publickey")
         .then((resp) => resp.text())
         .then((pk) => {
-          action.jwts.forEach((entry) => {
-            JWT.verify(
-              entry.jwt,
-              pk,
-              { maxAge: "14d", algorithms: ["RS256"] },
-              function (err, decoded) {
-                if (!err && decoded.proofStatus === "VALID") {
-                  let email = decoded.disclosed[0][0].rawvalue;
-                  let split = entry.time.split(" ");
-                  entries.push({
-                    mail: email,
-                    date: split[0],
-                    time: split[1],
-                  });
+          action.jwtOrEmails.forEach((entry) => {
+            let [date, time] = entry.time.split(" ");
+            if ("jwt" in entry) {
+              JWT.verify(
+                entry.jwt,
+                pk,
+                { maxAge: "14d", algorithms: ["RS256"] },
+                function (err, decoded) {
+                  if (!err && decoded.proofStatus === "VALID") {
+                    let email = decoded.disclosed[0][0].rawvalue;
+                    entries.push({
+                      mail: email,
+                      date: date,
+                      time: time,
+                    });
+                  }
                 }
-              }
-            );
+              );
+            } else if ("email" in entry) {
+              entries.push({ mail: entry.email, date: date, time: time });
+            } else throw new Error("decrypted entry should have email or jwt");
           });
           dispatch({
             type: "loadedCheckins",
@@ -361,13 +374,14 @@ function handleDisclosurePage({ getState, dispatch }) {
       dispatch({ type: "disclosurePage" });
     } else if (action.type === "sendGuestData") {
       let result = getState().DisclosurePage.result;
+      let resultType = getState().DisclosurePage.resultType;
       let host = getState().DisclosurePage.host;
       let id = getState().DisclosurePage.id;
 
-      // TODO: initalize client while waiting for e.g. button press
+      // TODO: initalize client earlier to avoid loading time
       Client.build(PKGSERVERURL).then((client) => {
         try {
-          let ct = client.encrypt(host, { jwt: result });
+          let ct = client.encrypt(host, { [resultType]: result });
           const base64ct = new Buffer(ct).toString("base64");
           dispatch({
             type: "guestDataEncrypted",

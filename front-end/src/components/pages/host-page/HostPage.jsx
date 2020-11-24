@@ -8,7 +8,7 @@ import NavBar from "../../nav-bar/NavBar";
 import Footer from "../../footer/Footer";
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import { Trans, withTranslation } from "react-i18next";
-import Login from "../../login/Login";
+import HostLogin from "../../login/HostLogin";
 import i18n from "i18next";
 
 const mapStateToProps = (state) => {
@@ -132,7 +132,7 @@ class HostPage extends React.Component {
           />
         );
       default:
-        return <Login guest={false} />;
+        return <HostLogin />;
     }
   }
 
