@@ -2,20 +2,20 @@
   "login": {
     "headerhost": "Sign in as host",
     "headerguest": "Register for the gathering",
-    "p1host": "Do you wish to sign in as a host? Proceed with the IRMA-app and disclose your email address to QRona.",
+    "p1host": "Do you wish to sign in as a host? Proceed with the IRMA app and disclose your email address to QRona.",
     "p1guest": "Do you wish to register? Continue by disclosing your email address to the host.",
-    "headerloginirmaguest": "Rather login using IRMA? Then continue with the IRMA app",
+    "headerloginirmaguest": "... or continue using the IRMA app for a more seamless experience.",
     "guestregisterbuttontext": "Register",
     "email": "E-mail address",
-    "noapp": "No IRMA-app yet?",
-    "p2": "QRona uses the free IRMA-app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. QRona only requires an email card.",
-    "install": "Install the IRMA-app",
+    "noapp": "No IRMA app yet?",
+    "p2": "QRona uses the free IRMA app. Within this app you can collect personal data in the form of cards; with these cards you can make yourself known. QRona only requires an email card.",
+    "install": "Install the IRMA app",
     "p3": "Now you can add a card with your email addres. This can be done via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page.</a>"
   },
   "footer": {
     "header": "Questions or remarks?",
     "p1": "QRona has been developed by the Privacy by the <a href=\"https://privacybydesign.foundation/en\">Privacy by Design</a> foundation, together with the <a href=\"https://www.ru.nl/ihub/\">iHub</a> research group of Radboud University Nijmegen (from the NWO project <a href=\"https://www.ru.nl/fnwi/onderzoek/radboud-innovation-science/nieuwsberichten-ris/2020/interdisciplinaire-samenwerking-encryption-4-all/\">Encryption for All</a>). This version is still being developed further.",
-    "p2": "Go to <a href=\"https://irma.app/?lang=en\">irma.app</a> website for information about the IRMA-app and visit the <a href=\"https://privacybydesign.foundation\"> Privacy by Design Foundation </a> webpage for general background information. Send an email to <a href=\"mailto:info@qrona.info\">info@qrona.info</a> for questions and/or remarks or for large scale use.",
+    "p2": "Go to <a href=\"https://irma.app/?lang=en\">irma.app</a> website for information about the IRMA app and visit the <a href=\"https://privacybydesign.foundation\"> Privacy by Design Foundation </a> webpage for general background information. Send an email to <a href=\"mailto:info@qrona.info\">info@qrona.info</a> for questions and/or remarks or for large scale use.",
     "p3": "QRona is open source. The source code and documentation are at GitHub <i className=\"fa fa-github\"></i>, see the <a href=\"https://github.com/privacybydesign/qrona\"> GitHub files.</a> This page uses illustrations from <a href=\"https://undraw.co\">UnDraw.</a>",
     "p4": "The QRona service is free. A financial contribution, for maintenance and further development, is highly appreciated. Please go to the <a href=\"https://privacybydesign.foundation/support/\">support page</a> of the Privacy by Design foundation."
   },
@@ -57,7 +57,7 @@
     "host": "host",
     "qr": {
       "scan": "Scan the QR-code with the camera of your mobile phone to start registration.",
-      "scaninfo1": "Please note: scanning this QR does not work with your IRMA-app, but requires a QR-scan (or camera) app.",
+      "scaninfo1": "Please note: scanning this QR does not work with your IRMA app, but requires a QR-scan (or camera) app.",
       "scaninfo2": "After registration your contact data will be managed by host: {{host}}. For questions, please contact this host.",
       "scaninfo3": "This service is provided by QRona. Visit qrona.info for more information.",
       "loading": "loading QR-code...",
@@ -101,7 +101,7 @@
       "guest": "<0>{{ count }} visitor</0> has registered",
       "guest_plural": "<0>{{ count }} visitors</0> have registered",
       "end": "on this list.",
-      "info": "Contact data of registered visitors are encrypted. When an infected person was present, you can decrypt and download the contact data of the registered visitors. You then have to disclose your email address via your IRMA-app."
+      "info": "Contact data of registered visitors are encrypted. When an infected person was present, you can decrypt and download the contact data of the registered visitors. You then have to disclose your email address via your IRMA app."
     },
     "guestlist": {
       "expandlabel": "Show more",
@@ -124,27 +124,27 @@
     "how": {
       "h1": "How does it work?",
       "h2": "The host gets a QR-code and displays it in a clearly visible way.",
-      "p1": "As host you can easily and freely obtain a QR-code that you can put up yourself. You then ask your visitors to scan this QR-code and share their email address with you via their <b>regular</b> camera app — and not with the IRMA-app.",
-      "p2": "The email addresses that you collect in this way are stored in encrypted form and are automatically deleted after two weeks. You don't have to worry about this as host. Are the collected addresses needed when a visitor turns out to be infected? You can retrieve them as host by logging in (again). The organisation behind QRona cannot decrypt the collected email addresses: only you can do that. You do not need a password to do so, just your <a href=\"https://irma.app/?lang=en\">IRMA-app</a>.",
+      "p1": "As host you can easily and freely obtain a QR-code that you can put up yourself. You then ask your visitors to scan this QR-code and share their email address with you via their <b>regular</b> camera app — and not with the IRMA app.",
+      "p2": "The email addresses that you collect in this way are stored in encrypted form and are automatically deleted after two weeks. You don't have to worry about this as host. Are the collected addresses needed when a visitor turns out to be infected? You can retrieve them as host by logging in (again). The organisation behind QRona cannot decrypt the collected email addresses: only you can do that. You do not need a password to do so, just your <a href=\"https://irma.app/?lang=en\">IRMA app</a>.",
       "p3": "As host you can create multiple gatherings, each with their own QR-code, which you can put up at different locations. For instance, in this way you can keep separate registrations for separate floors or departments at an office.",
-      "p4": "Certainly in the beginning you, as host, will regularly have to ask your visitors to install the IRMA-app. That needs to be done only once; from then onwards, using QRona is really quick and easy. Installing the IRMA-app is not hard and can be done on the spot.",
+      "p4": "Certainly in the beginning you, as host, will regularly have to ask your visitors to install the IRMA app. That needs to be done only once; from then onwards, using QRona is really quick and easy. Installing the IRMA app is not hard and can be done on the spot.",
       "h3": "Visitors scan the QR-code and disclose their email address",
-      "p5": "Visitors leave their email addresses behind by scanning the host's QR-code with their <b>regular</b> QR-code scanner application. The page then redirects to the IRMA-app, asking the visitor to disclose some personal information. QRona only asks for email addresses. You install the app only once; you load your email address(es) into the app; then you can use it everywhere for QRona. That's much easier than filling out forms that may be lost, copied, or mis-used. te scannen.",
+      "p5": "Visitors leave their email addresses behind by scanning the host's QR-code with their <b>regular</b> QR-code scanner application. The page then redirects to the IRMA app, asking the visitor to disclose some personal information. QRona only asks for email addresses. You install the app only once; you load your email address(es) into the app; then you can use it everywhere for QRona. That's much easier than filling out forms that may be lost, copied, or mis-used. te scannen.",
       "p6": "The email addresses of visitors are stored securely (encrypted) and are automatically removed after two weeks. So no reason for privacy worries there. Only the host can decrypt these addresses, upon an infection, in order to warn registered visitors him/herself or to pass them on to health authorities. The organisation behind QRona can not and does not want to see who goes where. For more information, see our <0>privacy policy</0>."
     },
     "start": {
       "h1": "Getting started with QRona",
-      "p1": "Both hosts, creating gatherings, and visitors who register there, need the <a href=\"https://irma.app/?lang=en\">IRMA-app</a>. Within the IRMA-app users collect personal data about themselves in the form of cards.",
-      "li1": "Download the IRMA-app from the appstore of <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> or <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a>;",
+      "p1": "Both hosts, creating gatherings, and visitors who register there, need the <a href=\"https://irma.app/?lang=en\">IRMA app</a>. Within the IRMA app users collect personal data about themselves in the form of cards.",
+      "li1": "Download the IRMA app from the appstore of <a href=\"https://play.google.com/store/apps/details?id=org.irmacard.cardemu\">Google</a> or <a href=\"https://apps.apple.com/nl/app/irma-authenticatie/id1294092994\">Apple</a>;",
       "li2": "Add a card with your email address, via <a href=\"https://sidnemailissuer.irmaconnect.nl/issuance/email\">this page</a>. You can add more cards, but that's not needed for QRona;",
-      "li3": "With this email card in the IRMA-app hosts can login to QRona to create and and manage gatherings;",
+      "li3": "With this email card in the IRMA app hosts can login to QRona to create and and manage gatherings;",
       "li4": "Visitors can register at gatherings, by scanning the QR-code with their mobile phone, and disclosing their email card.",
-      "p2": "With the IRMA-app you can login at more and more places, not just at QRona."
+      "p2": "With the IRMA app you can login at more and more places, not just at QRona."
     },
     "welcome": {
       "h1": "Register visitors yourself, at work or at home!",
       "p1": "With QRona everyone can help to control the spread of the COVID-19 corona virus: become a host and collect email addresses of visitors, in an easy, privacy-friendly, and secure manner.",
-      "p2": "All you and your visitors need is the free IRMA-app, containing an email address. No prior registration is needed.",
+      "p2": "All you and your visitors need is the free IRMA app, containing an email address. No prior registration is needed.",
       "p3": "<0>Login as host with IRMA*</0><1>Install IRMA first</1>",
       "p4": "*By logging in you agree with the processing of personal data, as described in the QRona's <0>privacy policy</0>."
     },
@@ -160,10 +160,10 @@
   },
   "policy": {
     "h1": "Privacy policy",
-    "p1": "QRona, and the IRMA-app, are free and work in a transparent manner, with open source software; user data are not used for other purposes and are not passed on or sold to others.",
+    "p1": "QRona, and the IRMA app, are free and work in a transparent manner, with open source software; user data are not used for other purposes and are not passed on or sold to others.",
     "p2": "The QRona service is offered jointly by the <a href=\"https://privacybydesign.foundation/en/\">Privacy by Design Foundation</a> and the company <a href=\"https://www.procolix.com/\">ProcoliX</a>. The foundation is responsible for data processing. The foundation and ProcoliX each process part of the data, as described in greater detail below. They jointly offer the QRona service for free, based on their societal responsibility, with controling the corona virus as sole purpose. Only data that are necessary for that purpose are processed, as described below.",
     "h2": "Host, account and gatherings",
-    "p3": "A <em>host</em> is an individual who has once logged in at the QRona portal by disclosing his/her email address from his/her IRMA-app. Upon doing so ProcoliX processes information, including the disclosed email address of the host. The legal basis for this processing is: consent of the host.",
+    "p3": "A <em>host</em> is an individual who has once logged in at the QRona portal by disclosing his/her email address from his/her IRMA app. Upon doing so ProcoliX processes information, including the disclosed email address of the host. The legal basis for this processing is: consent of the host.",
     "p4": "If the disclosed email address is not known yet, ProcoliX implicitly opens an account for this address. When there is no activity on this account for more than two weeks, the account and all associated data are automatically removed after another two weeks.",
     "p5": "Within this account a host can create one or more \"gatherings\" (onetime or continuous meetings where people come together) by choosing a new (appropriate) name for such a gathering. Subsequently, a QR-code is produced for this gathering, which the host can download (and print or integrate in a presentation). The QR-code contains — in readable form — the name of the gathering and the email address of the host. Implicitly, the QR-code contains a pointer to a webpage where visitors can choose to disclose their email address, via their IRMA app.",
     "p6": "It is the individual responsibility of the host to make this QR-code known (only) to visitors/participants of the gathering. Before the actual generation of the QR-code the host is asked to declare explicitly, via a checkmark, that:",
@@ -171,12 +171,12 @@
     "li2": "The two organisations mentioned above behind QRona process personal information in the QRona context on his/her behalf. This makes the host also responsible for the data processing for this particular gathering.",
     "h3": "Visitors and encryption",
     "p7": "The email addresses of the visitors that attended the gathering are stored by ProcoliX in encrypted form. Upon visitor registration an unencrypted timestamp is stored alongside the encrypted email address. This timestamp is used to remove encrypted email addresses automatically after two weeks. When all encrypted email addresses have been removed from a gathering, the gathering itself is also removed, from the account of the host.",
-    "p8": "Hosts will ask <em>visitors</em> of their gatherings to scan the associated QR-code (and to install the IRMA-app, if needed). After scanning, visitors go to a website with additional information, partly via links, about QRona and its privacy policy. Subsequently, visitors can push a button to start the disclosure of their own email address via the IRMA-app. The legal basis for the data processing that starts in this way is: consent of the visitor.",
+    "p8": "Hosts will ask <em>visitors</em> of their gatherings to scan the associated QR-code (and to install the IRMA app, if needed). After scanning, visitors go to a website with additional information, partly via links, about QRona and its privacy policy. Subsequently, visitors can push a button to start the disclosure of their own email address via the IRMA app. The legal basis for the data processing that starts in this way is: consent of the visitor.",
     "p9": "The IRMA server to which visitors disclose their email addresses is managed by the Privacy by Design Foundation. This makes the foundation processor of all disclosed email addresses of visitors of gatherings. This processing happens only briefly: the email address is returned immediately, together with a <em>public key</em> (derived from the  email address of the host) to the original webpage of the visitor (the one with the button). The email address is subsequently (immediately) removed by the IRMA server of the foundation. In particular, the foundation does not keep a log of email addresses of visitors.",
     "p10": "On this webpage the received email address is encrypted and subsequently added to the list of visitors attending the gathering, which is managed by ProcoliX. ProcoliX thus manages email addresses of all hosts, but not of visitors (because they are encrypted and unreadable by ProcoliX). For the IRMA server of the Privacy by Design foundation the situation is the other way around: it processes email addresses of visitors, not of hosts. The encryption is <em>identity-based</em>: from the email address of the host a <em>public key</em> is derived which is used for the encryption of the data of gatherings of the host. This encryption happens in the browser of the visitor (and not at ProcoliX).",
     "h4": "Hosts and decryption",
     "p11": "When hosts login to their own account on the QRona portal they can see all gatherings that they created (that have not been deleted yet). Hosts can decrypt the contact details of visitors, per gathering. Hosts have committed themselves to do so only when they learned about the presence of an infected person at a particular gathering, at a particular point in time. Hosts are individually responsible for other possible (unintended) usage of the collected email addresses. In particular, the two organisations behind QRona are not responsible and not liable for such uninteded use.",
-    "p12": "In order to activate decryption hosts disclose once again, via their IRMA-app, the email address of their account, but now to a <em>key generating server</em> which is managed by the Privacy by Design foundation. The foundation then briefly processes the email address of the host, based on his/her consent to do so. The said key server produces the <em>private key</em> associated with the email address of the host, for decryption, in the webbrowser of the host. It is then the responsibility of the hosts to warn the visitors involved him/herself (via email) or to pass on these email addresses to health authorities.",
+    "p12": "In order to activate decryption hosts disclose once again, via their IRMA app, the email address of their account, but now to a <em>key generating server</em> which is managed by the Privacy by Design foundation. The foundation then briefly processes the email address of the host, based on his/her consent to do so. The said key server produces the <em>private key</em> associated with the email address of the host, for decryption, in the webbrowser of the host. It is then the responsibility of the hosts to warn the visitors involved him/herself (via email) or to pass on these email addresses to health authorities.",
     "p13": "In theory, contact details can also be decrypted when the two parties behind QRona collude and combine the data that they process for QRona. These parties will not engage in such collusion. They have deliberately separated matters, both organisationally and technically, so that none have them has a complete picture of what is going on.",
     "h5": "General provisions",
     "p14": "Statistical information about usage of QRona may be aggregated (numbers of hosts, gatherings, visitors per day/week/month/year, origin etc.) and may be used by ProcoliX and by the Privacy by Design Foundation for documentation and publications. If needed, QRona data can be used in a minimal way for technical purposes, such as maintenance and performance tuning, but they will be destroyed after a maximum of two days.",
