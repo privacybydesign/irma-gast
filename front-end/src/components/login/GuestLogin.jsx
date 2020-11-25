@@ -41,7 +41,7 @@ class GuestLogin extends React.Component {
             </div>
           </form>
         </div>
-        <h4 class="center-content">{this.props.t("headerloginirmaguest")}</h4>
+        <h4 className="center-content">{this.props.t("headerloginirmaguest")}</h4>
         <div style={{ height: "30px" }} />
         <section className={"irma-web-center-child"}>
           <section id={"irma-web-form"} />
