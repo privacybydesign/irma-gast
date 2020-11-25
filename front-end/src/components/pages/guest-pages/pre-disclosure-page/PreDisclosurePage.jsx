@@ -17,6 +17,11 @@ const mapStateToProps = (state) => {
 };
 
 class PreDisclosurePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.contentRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.dispatch({
       type: "initDisclosurePage",
@@ -28,6 +33,7 @@ class PreDisclosurePage extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     this._handleIrma();
+    this.contentRef.current.scrollIntoView();
   }
 
   componentWillUnmount() {
@@ -44,19 +50,23 @@ class PreDisclosurePage extends React.Component {
           language: i18n.language.startsWith("en") ? "en" : "nl",
           session: this.props.irmaSession,
         });
-        this._irmaWeb.start().then((result) => {
-          // Delay dispatch to make IRMA success animation visible.
-          setTimeout(() => {
-            this.props.dispatch({
-              type: "showDisclosurePage",
-              result: result,
-              resultType: "jwt",
-            });
-          }, 1000);
-        }).catch((err) => {
-          if (err === "Aborted") {
-          // pass
-        }});
+        this._irmaWeb
+          .start()
+          .then((result) => {
+            // Delay dispatch to make IRMA success animation visible.
+            setTimeout(() => {
+              this.props.dispatch({
+                type: "showDisclosurePage",
+                result: result,
+                resultType: "jwt",
+              });
+            }, 1000);
+          })
+          .catch((err) => {
+            if (err === "Aborted") {
+              // pass
+            }
+          });
         return;
       default:
         if (this._irmaWeb) {
@@ -123,7 +133,9 @@ class PreDisclosurePage extends React.Component {
     return (
       <div className="App">
         <NavBar link="menu" />
-        <div className="content">{this._renderState()}</div>
+        <div ref={this.contentRef} className="content">
+          {this._renderState()}
+        </div>
         {["start", "disclosurePage"].includes(this.props.state) && <Footer />}
       </div>
     );
