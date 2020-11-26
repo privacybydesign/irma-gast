@@ -95,12 +95,8 @@
       "header": "Aanmeldingen",
       "onetimetext": "In de afgelopen twee weken",
       "permanenttext": "Tot nu toe",
-      "begin": "hebben er zich",
-      "guest": "bezoeker",
-      "guest_plural": "bezoekers",
-      "guest_0": "geen bezoekers",
-      "guestWithCount": "{{ count }} bezoeker",
-      "guestWithCount_plural": "{{ count }} bezoekers",
+      "guest": "heeft er zich <0> {{ count }} bezoeker</0>",
+      "guest_plural": "hebben er zich <0> {{ count }} bezoekers</0>",
       "end": "op deze lijst geregistreerd.",
       "info": "De contactgegevens van de aangemelde bezoekers zijn versleuteld. Als er een besmette persoon aanwezig was kun je de contactgevens van de aangemelde bezoekers ontsleutelen en downloaden. Je wordt dan gevraagd je e-mailadres nog een keer met je IRMA-app te tonen."
     },
@@ -140,7 +136,7 @@
       "li2": "Voeg een kaartje toe met je e-mailadres, via <a href=\"https://sidnemailissuer.irmaconnect.nl/uitgifte/email\">deze pagina</a>. Je kunt ook meer kaartjes toevoegen, maar die zijn niet nodig voor QRona;",
       "li3": "Met dit e-mail kaartje in de IRMA-app kan een host op QRona inloggen en een samenkomst aanmaken en beheren;",
       "li4": "Bezoekers kunnen zich met dit e-mail kaartje in de IRMA-app bij samenkomsten aanmelden. Ze scannen met de camera van hun mobiel de QR-code en geven zo hun e-mailadres door.",
-	"p2": "Met de IRMA-app kun je op steeds meer plaatsen inloggen, niet alleen by QRona"
+      "p2": "Met de IRMA-app kun je op steeds meer plaatsen inloggen, niet alleen by QRona"
     },
     "welcome": {
       "h1": "Registreer zelf bezoekers, op het werk of thuis!",

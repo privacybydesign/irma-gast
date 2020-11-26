@@ -95,13 +95,9 @@
       "header": "Registrations",
       "onetimetext": "During the past two weeks",
       "permanenttext": "So far,",
-      "begin": "",
-      "guest": "visitor",
-      "guest_plural": "visitors",
-      "guest_0": "no visitors",
-      "guestWithCount": "{{ count }} visitor",
-      "guestWithCount_plural": "{{ count }} visitors",
-      "end": "have registered on this list.",
+      "guest": "<0>{{ count }} visitor</0> has registered",
+      "guest_plural": "<0>{{ count }} visitors</0> have registered",
+      "end": "on this list.",
       "info": "Contact data of registered visitors are encrypted. When an infected person was present, you can decrypt and download the contact data of the registered visitors. You then have to disclose your email address via your IRMA-app."
     },
     "guestlist": {

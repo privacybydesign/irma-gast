@@ -1,7 +1,7 @@
 import React from "react";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { withTranslation } from "react-i18next";
+import { Trans, withTranslation } from "react-i18next";
 
 function GuestCount({ t, count, className, listType, showText }) {
   return (
@@ -14,13 +14,17 @@ function GuestCount({ t, count, className, listType, showText }) {
         {listType === "event"
           ? t("guestcount.onetimetext")
           : t("guestcount.permanenttext")}{" "}
-        {t("guestcount.begin")}
-      </Typography>
-      <Typography variant="h6" component="span">
-        {" " + t("guestcount.guestWithCount", { count: count }) + " "}
       </Typography>
       <Typography variant="body1" component="span">
-        {t("guestcount.end")}
+        <Trans
+          t={t}
+          i18nKey="guestcount.guest"
+          count={count}
+          components={[<b></b>]}
+        />
+      </Typography>
+      <Typography variant="body1" component="span">
+        {" " + t("guestcount.end")}
       </Typography>
       <div style={{ height: "4px" }}></div>
       <Typography variant="body2" color="textSecondary" component="p">
