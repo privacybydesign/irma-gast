@@ -4,6 +4,7 @@ use irmaseal_core::api::*;
 use irmaseal_core::stream::{OpenerSealed, Sealer};
 use irmaseal_core::{Error, Identity, Readable, UserSecretKey, Writable};
 
+use js_sys::Error as JsError;
 use js_sys::{Date, Number, Uint8Array};
 
 use std::cmp::min;
@@ -70,7 +71,7 @@ pub fn encrypt(attribute_type: &str, whom: &str, what: &Uint8Array, pars: &str) 
 
 // Extracts timestamp from the identity for the ciphertext.
 //
-// TODO Returning Number we loose some precission here, but not all browsers
+// TODO Returning Number we loose some precision here, but not all browsers
 //      support BigInt64Array yet, which wasm_bindgen uses to return i64.
 #[wasm_bindgen]
 pub fn extract_timestamp(ciphertext: &Uint8Array) -> Number {
@@ -82,17 +83,26 @@ pub fn extract_timestamp(ciphertext: &Uint8Array) -> Number {
 }
 
 // Decrypts ct using the given base64 encoded key.
-#[wasm_bindgen]
-pub fn decrypt(ciphertext: &Uint8Array, key: &str) -> Uint8Array {
+// Throws a javascript error if the HMAC does not validate.
+#[wasm_bindgen(catch)]
+pub fn decrypt(ciphertext: &Uint8Array, key: &str) -> Result<Uint8Array, JsValue> {
     let (_, o) = OpenerSealed::new(Buf::new(ciphertext.to_vec())).unwrap();
     let pkey: UserSecretKey =
         serde_json::from_str(&serde_json::to_string(key).unwrap()[..]).unwrap();
     let mut o = o.unseal(&pkey).unwrap();
     let mut buf = Buf::new(Vec::<u8>::new());
-    o.write_to(&mut buf);
+
+    if let Err(_) = o.write_to(&mut buf) {
+        return Err(JsError::new("IRMAseal error").into());
+    }
+
+    if let false = o.validate() {
+        return Err(JsError::new("HMAC does not validate").into());
+    }
 
     buf.c.seek(SeekFrom::Start(0)).unwrap();
     let mut ret = Vec::new();
     buf.c.read_to_end(&mut ret).unwrap();
-    (&ret[..]).into()
+
+    Ok((&ret[..]).into())
 }
