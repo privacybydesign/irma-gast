@@ -7,7 +7,7 @@ import irmaFrontend from "@privacybydesign/irma-frontend";
 import NavBar from "../../../nav-bar/NavBar";
 import DisclosurePage from "../disclosure-page/DisclosurePage";
 import { Trans, withTranslation } from "react-i18next";
-import Login from "../../../login/Login";
+import GuestLogin from "../../../login/GuestLogin";
 import i18n from "i18next";
 
 const mapStateToProps = (state) => {
@@ -17,6 +17,11 @@ const mapStateToProps = (state) => {
 };
 
 class PreDisclosurePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.contentRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.dispatch({
       type: "initDisclosurePage",
@@ -28,6 +33,7 @@ class PreDisclosurePage extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     this._handleIrma();
+    this.contentRef.current.scrollIntoView();
   }
 
   componentWillUnmount() {
@@ -44,12 +50,23 @@ class PreDisclosurePage extends React.Component {
           language: i18n.language.startsWith("en") ? "en" : "nl",
           session: this.props.irmaSession,
         });
-        this._irmaWeb.start().then((result) => {
-          // Delay dispatch to make IRMA success animation visible.
-          setTimeout(() => {
-            this.props.dispatch({ type: "showDisclosurePage", result: result });
-          }, 1000);
-        });
+        this._irmaWeb
+          .start()
+          .then((result) => {
+            // Delay dispatch to make IRMA success animation visible.
+            setTimeout(() => {
+              this.props.dispatch({
+                type: "showDisclosurePage",
+                result: result,
+                resultType: "jwt",
+              });
+            }, 1000);
+          })
+          .catch((err) => {
+            if (err === "Aborted") {
+              // pass
+            }
+          });
         return;
       default:
         if (this._irmaWeb) {
@@ -79,7 +96,17 @@ class PreDisclosurePage extends React.Component {
   _renderState() {
     switch (this.props.state) {
       case "start":
-        return <Login guest={true} />;
+        return (
+          <GuestLogin
+            onSubmit={(email) =>
+              this.props.dispatch({
+                type: "showDisclosurePage",
+                result: email,
+                resultType: "email",
+              })
+            }
+          />
+        );
       case "disclosurePage":
         const onNext = () => {
           this.props.dispatch({ type: "sendGuestData" });
@@ -106,8 +133,10 @@ class PreDisclosurePage extends React.Component {
     return (
       <div className="App">
         <NavBar link="menu" />
-        <div className="content">{this._renderState()}</div>
-        { ["start", "disclosurePage"].includes(this.props.state) && (<Footer />)}
+        <div ref={this.contentRef} className="content">
+          {this._renderState()}
+        </div>
+        {["start", "disclosurePage"].includes(this.props.state) && <Footer />}
       </div>
     );
   }
