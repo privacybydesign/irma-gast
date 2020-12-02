@@ -1,3 +1,5 @@
+// TODO Check hmac
+// TODO Handle parse errors more gracefully
 import irmaFrontend from "@privacybydesign/irma-frontend";
 import i18n from "i18next";
 
@@ -15,6 +17,8 @@ class Client {
     let resp = await fetch(url + "/v1/parameters");
     let params = await resp.text();
     let client = new Client(url, params, module);
+    //console.log("initalizing panic hook");
+    //client.module.init_panic_hook();
     return client;
   }
 

@@ -1,5 +1,9 @@
 import init, {encrypt, decrypt, extract_timestamp} from "./wasm.js";
 
+// TODO Check hmac
+// TODO Handle parse errors more gracefully
+// TODO Use PBKDF server.
+
 class Client {
     // Don't use the constructor -- use Client.build().
     constructor(url, params) {

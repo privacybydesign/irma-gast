@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import guest_lists from "./guest_lists";
 import checkins from "./checkins";
 import guest_page from "./guest_page";
-import Client from "../irmaseal";
+import Client from "./irmaseal";
 import JWT from "jsonwebtoken";
 import { WAARSERVERURL, IRMASERVERURL, PKGSERVERURL } from "../constants";
 
