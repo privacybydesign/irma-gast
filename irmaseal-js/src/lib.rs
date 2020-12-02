@@ -10,19 +10,20 @@ use js_sys::{Date, Number, Uint8Array};
 use std::cmp::min;
 use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 
+// Wrap errors that occur in IRMASeal
 pub struct IRMASealError(Error);
 
 impl From<IRMASealError> for JsValue {
     fn from(err: IRMASealError) -> Self {
-        match err.0 {
-            Error::NotIRMASEAL => JsError::new("Not IRMAseal"),
-            Error::IncorrectVersion => JsError::new("Incorrect version"),
-            Error::ConstraintViolation => JsError::new("Constraint violation"),
-            Error::FormatViolation => JsError::new("Format violation"),
-            Error::UpstreamWritableError => JsError::new("Upstream writable error"),
-            Error::EndOfStream => JsError::new("End of stream"),
-            Error::PrematureEndError => JsError::new("Premature end"),
-        }
+        JsError::new(match err.0 {
+            Error::NotIRMASEAL => "Not IRMAseal",
+            Error::IncorrectVersion => "Incorrect version",
+            Error::ConstraintViolation => "Constraint violation",
+            Error::FormatViolation => "Format violation",
+            Error::UpstreamWritableError => "Upstream writable error",
+            Error::EndOfStream => "End of stream",
+            Error::PrematureEndError => "Premature end",
+        })
         .into()
     }
 }
