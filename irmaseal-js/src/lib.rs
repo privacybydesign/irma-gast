@@ -10,6 +10,23 @@ use js_sys::{Date, Number, Uint8Array};
 use std::cmp::min;
 use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 
+pub struct IRMASealError(Error);
+
+impl From<IRMASealError> for JsValue {
+    fn from(err: IRMASealError) -> Self {
+        match err.0 {
+            Error::NotIRMASEAL => JsError::new("Not IRMAseal"),
+            Error::IncorrectVersion => JsError::new("Incorrect version"),
+            Error::ConstraintViolation => JsError::new("Constraint violation"),
+            Error::FormatViolation => JsError::new("Format violation"),
+            Error::UpstreamWritableError => JsError::new("Upstream writable error"),
+            Error::EndOfStream => JsError::new("End of stream"),
+            Error::PrematureEndError => JsError::new("Premature end"),
+        }
+        .into()
+    }
+}
+
 // Wrap Cursor<Vec<u8>> to be a Writable
 struct Buf {
     pub c: Cursor<Vec<u8>>,
@@ -50,28 +67,34 @@ impl Readable for Buf {
 
 // Encrypts the buffer what for the e-mail address whom using the given
 // parameters.
-#[wasm_bindgen]
-pub fn encrypt(attribute_type: &str, whom: &str, what: &Uint8Array, pars: &str) -> Uint8Array {
+#[wasm_bindgen(catch)]
+pub fn encrypt(
+    attribute_type: &str,
+    whom: &str,
+    what: &Uint8Array,
+    pars: &str,
+) -> Result<Uint8Array, JsValue> {
     let now = (Date::now() as u64) / 1000;
     let mut rng = rand::thread_rng();
-    let id = Identity::new(now, attribute_type, Some(whom)).unwrap();
+    let id = Identity::new(now, attribute_type, Some(whom)).map_err(IRMASealError)?;
     let ppars: Parameters = serde_json::from_str(pars).unwrap();
     let mut buf = Buf::new(Vec::<u8>::new());
 
     {
-        let mut sealer = Sealer::new(&id, &ppars.public_key, &mut rng, &mut buf).unwrap();
-        sealer.write(&what.to_vec()).unwrap();
+        let mut sealer =
+            Sealer::new(&id, &ppars.public_key, &mut rng, &mut buf).map_err(IRMASealError)?;
+        sealer.write(&what.to_vec()).map_err(IRMASealError)?;
     }
 
     buf.c.seek(SeekFrom::Start(0)).unwrap();
     let mut ret = Vec::new();
     buf.c.read_to_end(&mut ret).unwrap();
-    (&ret[..]).into()
+    Ok((&ret[..]).into())
 }
 
 // Extracts timestamp from the identity for the ciphertext.
-//
-// TODO Returning Number we loose some precision here, but not all browsers
+// Returns -1 on failure.
+// TODO: Returning Number we loose some precision here, but not all browsers
 //      support BigInt64Array yet, which wasm_bindgen uses to return i64.
 #[wasm_bindgen]
 pub fn extract_timestamp(ciphertext: &Uint8Array) -> Number {
@@ -86,15 +109,13 @@ pub fn extract_timestamp(ciphertext: &Uint8Array) -> Number {
 // Throws a javascript error if the HMAC does not validate.
 #[wasm_bindgen(catch)]
 pub fn decrypt(ciphertext: &Uint8Array, key: &str) -> Result<Uint8Array, JsValue> {
-    let (_, o) = OpenerSealed::new(Buf::new(ciphertext.to_vec())).unwrap();
+    let (_, o) = OpenerSealed::new(Buf::new(ciphertext.to_vec())).map_err(IRMASealError)?;
     let pkey: UserSecretKey =
         serde_json::from_str(&serde_json::to_string(key).unwrap()[..]).unwrap();
-    let mut o = o.unseal(&pkey).unwrap();
+    let mut o = o.unseal(&pkey).map_err(IRMASealError)?;
     let mut buf = Buf::new(Vec::<u8>::new());
 
-    if let Err(_) = o.write_to(&mut buf) {
-        return Err(JsError::new("IRMAseal error").into());
-    }
+    o.write_to(&mut buf).map_err(IRMASealError)?;
 
     if let false = o.validate() {
         return Err(JsError::new("HMAC does not validate").into());
