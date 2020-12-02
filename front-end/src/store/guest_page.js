@@ -2,6 +2,7 @@ const initialState = {
   state: "unknown",
   error: null,
   result: null, // session results
+  resultType: null,
   host: "",
   id: "",
 };
@@ -26,6 +27,7 @@ export default function (state = initialState, action) {
         ...state,
         state: "disclosurePage",
         result: action.result,
+        resultType: action.resultType
       };
     case "sendGuestData":
       return {
