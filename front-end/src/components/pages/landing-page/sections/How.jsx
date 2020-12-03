@@ -19,7 +19,10 @@ function How({ t }) {
             <Trans
               t={t}
               i18nKey="how.p6"
-              components={[<a href="/policy"></a>]}
+              components={[
+                /* eslint-disable-next-line */
+                <a href="/policy"></a>,
+              ]}
             />
           </p>
         </div>

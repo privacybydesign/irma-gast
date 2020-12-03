@@ -16,7 +16,9 @@ function Welcome({ t }) {
                 t={t}
                 i18nKey="welcome.p3"
                 components={[
+                  /* eslint-disable-next-line */
                   <a href="/host" className="btn irma-btn" />,
+                  /* eslint-disable-next-line */
                   <a
                     href="https://irma.app/"
                     className="btn irma-btn-secondary"
@@ -28,7 +30,10 @@ function Welcome({ t }) {
               <Trans
                 t={t}
                 i18nKey="welcome.p4"
-                components={[<a href="/policy"/>]}
+                components={[
+                  /* eslint-disable-next-line */
+                  <a href="/policy" />,
+                ]}
               />
             </p>
           </div>
