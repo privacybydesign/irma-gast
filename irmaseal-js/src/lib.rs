@@ -11,7 +11,7 @@ use std::cmp::min;
 use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 
 // Wrap errors that occur in IRMASeal
-pub struct IRMASealError(Error);
+pub struct IRMASealError(pub Error);
 
 impl From<IRMASealError> for JsValue {
     fn from(err: IRMASealError) -> Self {
